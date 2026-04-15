@@ -253,27 +253,59 @@ var BOOK_ODDS={LAD:{m:-600,x:420},ATL:{m:-320,x:245},MIN:{m:-195,x:160},SD:{m:-2
 function otp(o){return o<0?(-o)/(-o+100):100/(o+100);}
 function rn(){var u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
 function runMC(stnd,strks){
-  var N=40000,ct={};
+  var N=30000,ct={};
   stnd.forEach(function(t){ct[t.t]=0;});
   var pr={};
   stnd.forEach(function(t){
-    var gp=t.w+t.l,vp=(VEGAS_WINS[t.t]||77)/162;
-    var xp=t.xWins?t.xWins/162:(gp>0?t.w/gp:0.5);
-    var ap=gp>0?t.w/gp:0.5;
-    var sd=strks[t.t]||{},lp=sd.last10>0?sd.l10w/sd.last10:ap;
-    var rd=gp>0?Math.max(-0.05,Math.min(0.05,t.runDiff/gp*0.015)):0;
-    pr[t.t]={p:Math.min(0.70,Math.max(0.30,0.42*vp+0.33*xp+0.15*lp+0.10*ap+rd)),rem:162-gp,w:t.w,div:t.div};
+    var gp=Math.max(1,t.w+t.l);
+    // Vegas O/U = dominant signal early season (70%)
+    // Do NOT use xWins from API - wildly noisy after 17 games (shows ATL=117, CIN=64)
+    var vp=(VEGAS_WINS[t.t]||77)/162;
+    // Actual win% = 20% weight
+    var ap=t.w/gp;
+    // Last-10 = 10% weight for recent form
+    var sd=strks[t.t]||{};
+    var lp=(sd.last10>0)?(sd.l10w/sd.last10):ap;
+    // Run differential per game = tiny signal (small cap)
+    var rd=(t.runDiff!=null&&gp>0)?Math.max(-0.02,Math.min(0.02,(t.runDiff/gp)*0.006)):0;
+    // Weighted base win probability per game
+    var base=0.70*vp+0.20*ap+0.10*lp+rd;
+    // TIGHTER CAP: 0.60 max, 0.40 min - prevents near-certain simulation outcomes
+    pr[t.t]={p:Math.min(0.60,Math.max(0.40,base)),rem:162-gp,w:t.w,div:t.div};
   });
+  function rn(){var u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
   for(var i=0;i<N;i++){
     var fw={};
-    stnd.forEach(function(t){var p=pr[t.t];fw[t.t]=Math.max(0,Math.min(162,p.w+Math.round(p.rem*p.p+Math.sqrt(p.rem*p.p*(1-p.p))*rn())));});
+    stnd.forEach(function(t){
+      var p=pr[t.t];
+      fw[t.t]=Math.max(0,Math.min(162,p.w+Math.round(p.rem*p.p+Math.sqrt(p.rem*p.p*(1-p.p))*rn())));
+    });
     var al={},nl={};
-    stnd.forEach(function(t){var d=t.div;if(d.indexOf('AL')===0){if(!al[d])al[d]=[];al[d].push({t:t.t,w:fw[t.t]});}else{if(!nl[d])nl[d]=[];nl[d].push({t:t.t,w:fw[t.t]});}});
-    function lp2(dv){var wn={},all=[];Object.keys(dv).forEach(function(d){var s=dv[d].slice().sort(function(a,b){return b.w-a.w;});wn[s[0].t]=true;dv[d].forEach(function(t){all.push(t);});});all.filter(function(t){return !wn[t.t];}).sort(function(a,b){return b.w-a.w;}).slice(0,3).forEach(function(t){wn[t.t]=true;});return wn;}
-    var po=Object.assign({},lp2(al),lp2(nl));
+    stnd.forEach(function(t){
+      var d=t.div;
+      if(d.indexOf('AL')===0){if(!al[d])al[d]=[];al[d].push({t:t.t,w:fw[t.t]});}
+      else{if(!nl[d])nl[d]=[];nl[d].push({t:t.t,w:fw[t.t]});}
+    });
+    function playoffs(dv){
+      var wn={},all=[];
+      Object.keys(dv).forEach(function(d){
+        var s=dv[d].slice().sort(function(a,b){return b.w-a.w;});
+        wn[s[0].t]=true;
+        dv[d].forEach(function(t){all.push(t);});
+      });
+      all.filter(function(t){return !wn[t.t];})
+        .sort(function(a,b){return b.w-a.w;})
+        .slice(0,3)
+        .forEach(function(t){wn[t.t]=true;});
+      return wn;
+    }
+    var po=Object.assign({},playoffs(al),playoffs(nl));
     stnd.forEach(function(t){if(po[t.t])ct[t.t]++;});
   }
-  var out={};stnd.forEach(function(t){out[t.t]=ct[t.t]/N;});return out;
+  var out={};
+  // Cap outputs: never show 100% or 0% - always 5-95%
+  stnd.forEach(function(t){out[t.t]=Math.min(0.95,Math.max(0.05,ct[t.t]/N));});
+  return out;
 }
 
 // ── STYLES ─────────────────────────────────────────────────────────────────────
@@ -1371,23 +1403,25 @@ function computePlayoffScore(team, streaks) {
 
 function buildScoutData(standings, streaks) {
   return standings.map(function(t){
-    var score = computePlayoffScore(t, streaks);
-    var streakData = streaks[t.t]||{};
-    var l10w = streakData.l10w; var l10l = streakData.l10l;
-    var hot = l10w >= 7; var cold = l10w !== undefined && l10w <= 3;
-    var vegasWins = VEGAS_WINS[t.t]||77;
-    var xWins = t.xWins||Math.round((t.w/(t.w+t.l||1))*162);
-    var rdPerGame = (t.w+t.l)>0?(t.runDiff/(t.w+t.l)).toFixed(1):'0.0';
-    var streakLabel = t.streakType==='wins'?'W'+t.streakNum:t.streakType==='losses'?'L'+t.streakNum:'-';
+    // simMakePct set by Monte Carlo - use as primary. Fallback to computePlayoffScore
+    var score = (t.simMakePct!=null) ? t.simMakePct : computePlayoffScore(t, streaks);
+    var sd = streaks[t.t]||{};
+    var l10w = sd.l10w; var l10l = sd.l10l;
+    var hot = (l10w!=null && l10w>=7);
+    var cold = (l10w!=null && l10w<=3);
+    var vegasWins = VEGAS_WINS ? (VEGAS_WINS[t.t]||77) : 77;
+    var gp = Math.max(1,t.w+t.l);
+    var rdPerGame = (t.runDiff!=null) ? (t.runDiff/gp).toFixed(1) : '0.0';
+    var streakLabel = t.streakType==='wins'?('W'+t.streakNum):t.streakType==='losses'?('L'+t.streakNum):'-';
     return Object.assign({},t,{
       score:score,
-      l10: l10w!==undefined?(l10w+'-'+l10l):'-',
+      l10:(l10w!=null)?(l10w+'-'+l10l):'-',
       hot:hot, cold:cold,
-      vegasWins:vegasWins, xWins:xWins,
+      vegasWins:vegasWins,
       rdPerGame:rdPerGame,
       streakLabel:streakLabel,
-      homeRec:t.homeW+'-'+t.homeL,
-      awayRec:t.awayW+'-'+t.awayL,
+      homeRec:(t.homeW!=null)?(t.homeW+'-'+t.homeL):'--',
+      awayRec:(t.awayW!=null)?(t.awayW+'-'+t.awayL):'--',
     });
   }).sort(function(a,b){return b.score-a.score;});
 }
@@ -1668,8 +1702,8 @@ function TabParlays(){
 
           {!mlbLoading&&(function(){
             var ranked = scoutData;
-            var makeTeams = ranked.filter(function(t){return t.score>=50;});
-            var missTeams = ranked.filter(function(t){return t.score<50;}).slice().sort(function(a,b){return a.simMakePct!=null?(a.simMakePct-b.simMakePct):(a.score-b.score);});
+            var makeTeams = ranked.filter(function(t){return (t.simMakePct!=null?t.simMakePct:t.score)>=50;}).sort(function(a,b){var as=a.simMakePct!=null?a.simMakePct:a.score;var bs=b.simMakePct!=null?b.simMakePct:b.score;return bs-as;});
+            var missTeams = ranked.filter(function(t){return (t.simMakePct!=null?t.simMakePct:t.score)<50;}).sort(function(a,b){var as=a.simMakePct!=null?a.simMakePct:a.score;var bs=b.simMakePct!=null?b.simMakePct:b.score;return as-bs;});}).slice().sort(function(a,b){return a.simMakePct!=null?(a.simMakePct-b.simMakePct):(a.score-b.score);});
             var inParlay = function(tm){return PARLAY_DATA.some(function(p){return p.make.includes(tm)||p.miss.includes(tm);});};
             var parlayType = function(tm){
               if(PARLAY_DATA.some(function(p){return p.make.includes(tm);}))return "MAKE";
