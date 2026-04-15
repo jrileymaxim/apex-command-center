@@ -1392,8 +1392,9 @@ function runMonteCarlo(standings, streaks) {
 
 // Step 6: Build full edge data
 function buildEdgeData(standings, streaks, simResults) {
+  simResults = simResults || {};
   return standings.map(function(t){
-    var simMake = simResults[t.t]||0;
+    var simMake = simResults[t.t]!==undefined ? simResults[t.t] : (t.w/(Math.max(1,t.w+t.l))*0.5+0.1);
     var odds = BOOK_ODDS[t.t]||{make:200,miss:-250};
     var bookMake = oddsToImplied(odds.make);
     var bookMiss = oddsToImplied(odds.miss);
@@ -1424,30 +1425,36 @@ function buildEdgeData(standings, streaks, simResults) {
 
 // Step 7: Build tiered parlay tickets
 function buildParlayTickets(edgeData, yourParlayData) {
-  // Separate best MAKE and MISS legs by sim probability + positive edge
+  if(!edgeData||!edgeData.length) return [];
   var makeLegs = edgeData.filter(function(t){return t.simMakePct>=55;})
-    .sort(function(a,b){return parseFloat(b.edgeMake)-parseFloat(a.edgeMake);});
+    .sort(function(a,b){return parseFloat(b.edgeMake||0)-parseFloat(a.edgeMake||0);});
   var missLegs = edgeData.filter(function(t){return t.simMissPct>=55;})
-    .sort(function(a,b){return parseFloat(b.edgeMiss)-parseFloat(a.edgeMiss);});
+    .sort(function(a,b){return parseFloat(b.edgeMiss||0)-parseFloat(a.edgeMiss||0);});
+  // Ensure we have at least some legs
+  if(!makeLegs.length) makeLegs = edgeData.slice(0,4);
+  if(!missLegs.length) missLegs = edgeData.slice(-4).reverse();
 
   function buildTicket(mLegs, xLegs, name, target) {
     var legs = mLegs.concat(xLegs);
+    if(!legs.length) return {name:name,target:target,legs:[],makeLegs:[],missLegs:[],simProb:'0',bookProb:'0',edge:'1.00',weakest:'N/A'};
     var simProb = legs.reduce(function(acc,l){
-      return acc * (l.edgeMake!==undefined && mLegs.includes(l) ? l.simMakePct/100 : l.simMissPct/100);
+      var p = mLegs.indexOf(l)>=0 ? (l.simMakePct||50)/100 : (l.simMissPct||50)/100;
+      return acc * p;
     }, 1);
     var bookProb = legs.reduce(function(acc,l){
-      return acc * (mLegs.includes(l) ? l.bookMakePct/100 : l.bookMissPct/100);
+      var p = mLegs.indexOf(l)>=0 ? (l.bookMakePct||50)/100 : (l.bookMissPct||50)/100;
+      return acc * p;
     }, 1);
-    var edge = simProb > 0 && bookProb > 0 ? (simProb/bookProb).toFixed(2) : '1.00';
-    var weakest = legs.reduce(function(w,l){
-      var e = mLegs.includes(l)?parseFloat(l.edgeMake):parseFloat(l.edgeMiss);
-      return e < (mLegs.includes(w)?parseFloat(w.edgeMake):parseFloat(w.edgeMiss)) ? l : w;
-    });
+    var edge = simProb>0&&bookProb>0 ? (simProb/bookProb).toFixed(2) : '1.00';
+    var weakest = legs.length ? legs.reduce(function(w,l){
+      var e = mLegs.indexOf(l)>=0?parseFloat(l.edgeMake||0):parseFloat(l.edgeMiss||0);
+      var we = mLegs.indexOf(w)>=0?parseFloat(w.edgeMake||0):parseFloat(w.edgeMiss||0);
+      return e < we ? l : w;
+    }).t : 'N/A';
     return {name:name,target:target,legs:legs,makeLegs:mLegs,missLegs:xLegs,
       simProb:(simProb*100).toFixed(2),bookProb:(bookProb*100).toFixed(2),
-      edge:edge,weakest:weakest.t};
+      edge:edge,weakest:weakest};
   }
-
   return [
     buildTicket(makeLegs.slice(0,2), missLegs.slice(0,2), 'ANCHOR', '35-45% hit rate'),
     buildTicket(makeLegs.slice(0,3), missLegs.slice(0,3), 'MID-TIER', '10-15% hit rate'),
@@ -1506,12 +1513,22 @@ function getLegSt(team,type,mlbData){
 }
 
 function calcProb(parlay,mlbData){
-  var MLB_USE=mlbData||MLB_STATIC;
+  var MLB_USE=mlbData&&mlbData.length?mlbData:MLB_STATIC;
   var legs=[];
-  parlay.make.forEach(function(t){var s=MLB_USE.find(function(x){return x.t===t;});if(s)legs.push(s.conf/100);});
-  parlay.miss.forEach(function(t){var s=MLB_USE.find(function(x){return x.t===t;});if(s)legs.push(s.conf/100);});
+  parlay.make.forEach(function(t){
+    var s=MLB_USE.find(function(x){return x.t===t;});
+    // Use simMakePct if available, else conf, else estimate from win%
+    var prob = s ? (s.simMakePct?s.simMakePct/100 : s.conf?s.conf/100 : (s.w&&s.l?(s.w/(s.w+s.l)*0.6+0.2):0.5)) : 0.5;
+    legs.push(prob);
+  });
+  parlay.miss.forEach(function(t){
+    var s=MLB_USE.find(function(x){return x.t===t;});
+    var prob = s ? (s.simMissPct?s.simMissPct/100 : s.conf?s.conf/100 : (s.w&&s.l?(1-s.w/(s.w+s.l))*0.6+0.2:0.5)) : 0.5;
+    legs.push(prob);
+  });
   if(!legs.length)return 0;
   return Math.min(99,Math.max(0.001,legs.reduce(function(a,b){return a*b;},1)*100));
+},1)*100));
 }
 
 function TabParlays(){
@@ -1525,16 +1542,35 @@ function TabParlays(){
   useEffect(function(){
     Promise.all([fetchMLBStandings(),fetchStreaks()]).then(function(res){
       var standings=res[0]; var streakMap=res[1];
-      setMlbData(standings);
       setSimStatus('running');
       setTimeout(function(){
-        var simResults=runMonteCarlo(standings,streakMap);
-        var ed=buildEdgeData(standings,streakMap,simResults);
-        setEdgeData(ed.slice().sort(function(a,b){return b.simMakePct-a.simMakePct;}));
-        setTickets(buildParlayTickets(ed,PARLAY_DATA));
+        try {
+          var simResults=runMonteCarlo(standings,streakMap);
+          var ed=buildEdgeData(standings,streakMap,simResults);
+          var sorted=ed.slice().sort(function(a,b){return b.simMakePct-a.simMakePct;});
+          setEdgeData(sorted);
+          // Merge simMakePct/simMissPct into mlbData so calcProb works
+          var mergedStandings = standings.map(function(t){
+            var match = sorted.find(function(e){return e.t===t.t;});
+            return match ? match : t;
+          });
+          setMlbData(mergedStandings);
+          setTickets(buildParlayTickets(ed,PARLAY_DATA));
+        } catch(err) {
+          console.log('Monte Carlo error:', err.message);
+          // Fallback: use static data
+          var fallbackEd = buildEdgeData(MLB_STATIC, streakMap, {});
+          setEdgeData(fallbackEd.slice().sort(function(a,b){return b.simMakePct-a.simMakePct;}));
+          setMlbData(MLB_STATIC);
+        }
         setSimStatus('done');
         setMlbLoading(false);
       },50);
+    }).catch(function(err){
+      console.log('Fetch error:', err.message);
+      setMlbData(MLB_STATIC);
+      setSimStatus('done');
+      setMlbLoading(false);
     });
   },[]);
   var p=PARLAY_DATA[ap];
