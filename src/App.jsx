@@ -1446,13 +1446,23 @@ function calcProb(parlay,mlbData){
   var legs=[];
   parlay.make.forEach(function(t){
     var s=MLB_USE.find(function(x){return x.t===t;});
-    var p=s?(s.simMakePct!=null?s.simMakePct/100:s.conf!=null?s.conf/100:Math.min(0.9,Math.max(0.1,s.w/Math.max(1,s.w+s.l)*0.7+0.15)):0.5);
-    legs.push(p);
+    var prob=0.5;
+    if(s){
+      if(s.simMakePct!=null) prob=s.simMakePct/100;
+      else if(s.conf!=null) prob=s.conf/100;
+      else if(s.w!=null&&s.l!=null) prob=Math.min(0.85,Math.max(0.15,s.w/Math.max(1,s.w+s.l)*0.7+0.15));
+    }
+    legs.push(prob);
   });
   parlay.miss.forEach(function(t){
     var s=MLB_USE.find(function(x){return x.t===t;});
-    var p=s?(s.simMissPct!=null?s.simMissPct/100:s.conf!=null?s.conf/100:Math.min(0.9,Math.max(0.1,(1-s.w/Math.max(1,s.w+s.l))*0.7+0.15)):0.5);
-    legs.push(p);
+    var prob=0.5;
+    if(s){
+      if(s.simMissPct!=null) prob=s.simMissPct/100;
+      else if(s.conf!=null) prob=s.conf/100;
+      else if(s.w!=null&&s.l!=null) prob=Math.min(0.85,Math.max(0.15,(1-s.w/Math.max(1,s.w+s.l))*0.7+0.15));
+    }
+    legs.push(prob);
   });
   if(!legs.length)return 0;
   return Math.min(99,Math.max(0.001,legs.reduce(function(a,b){return a*b;},1)*100));
