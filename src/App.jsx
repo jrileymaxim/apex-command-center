@@ -1703,7 +1703,7 @@ function TabParlays(){
           {!mlbLoading&&(function(){
             var ranked = scoutData;
             var makeTeams = ranked.filter(function(t){return (t.simMakePct!=null?t.simMakePct:t.score)>=50;}).sort(function(a,b){var as=a.simMakePct!=null?a.simMakePct:a.score;var bs=b.simMakePct!=null?b.simMakePct:b.score;return bs-as;});
-            var missTeams = ranked.filter(function(t){return (t.simMakePct!=null?t.simMakePct:t.score)<50;}).sort(function(a,b){var as=a.simMakePct!=null?a.simMakePct:a.score;var bs=b.simMakePct!=null?b.simMakePct:b.score;return as-bs;});}).slice().sort(function(a,b){return a.simMakePct!=null?(a.simMakePct-b.simMakePct):(a.score-b.score);});
+            var missTeams = ranked.filter(function(t){return (t.simMakePct!=null?t.simMakePct:t.score)<50;}).sort(function(a,b){var as=a.simMakePct!=null?a.simMakePct:a.score;var bs=b.simMakePct!=null?b.simMakePct:b.score;return as-bs;;
             var inParlay = function(tm){return PARLAY_DATA.some(function(p){return p.make.includes(tm)||p.miss.includes(tm);});};
             var parlayType = function(tm){
               if(PARLAY_DATA.some(function(p){return p.make.includes(tm);}))return "MAKE";
