@@ -1,4 +1,32 @@
-import { useState, useEffect } from "react";
+missTeams.map(function(t,i){var sm=t.simMakePct!=null?t.simMakePct:t.score;var ds=100-sm;return renderTeam(t,i,"miss",ds);}            var renderTeam = function(t, idx, side, ds) {
+              var col=ds>=80?CG:ds>=65?CY:ds>=50?CB:ds>=35?CY:CR;
+              var inP=inParlay(t.t);
+              var pType=parlayType(t.t);
+              var pMatch=pType==="MAKE"?t.score>=50:pType==="MISS"?t.score<50:null;
+              var rdCol=parseFloat(t.rdPerGame)>1?CG:parseFloat(t.rdPerGame)<-1?CR:CD;
+              var lbl=side==="miss"?(ds+"% MISS"):(ds+"% MAKE");
+              return (
+                <div key={t.t} style={{padding:"8px 10px",marginBottom:"4px",background:inP?"rgba(240,163,10,.05)":BD,border:"1px solid "+(inP?CA+"55":"#1a1520")}}>
+                  <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
+                    <span style={{fontFamily:"Orbitron",fontSize:"9px",color:CD,minWidth:"16px"}}>{idx+1}</span>
+                    <span style={{fontFamily:"Orbitron",fontSize:"12px",fontWeight:800,color:inP?CA:CB,minWidth:"38px"}}>{t.t}</span>
+                    <div style={{flex:1,height:"5px",background:"#0c0a14",borderRadius:"3px"}}>
+                      <div style={{height:"100%",width:ds+"%",background:col,borderRadius:"3px"}}/>
+                    </div>
+                    <span style={{fontFamily:"Orbitron",fontSize:"11px",fontWeight:700,color:col,minWidth:"78px",textAlign:"right"}}>{lbl}</span>
+                  </div>
+                  <div style={{display:"flex",gap:"8px",marginTop:"4px",flexWrap:"wrap"}}>
+                    <span style={{fontSize:"9px",color:CD}}>REC: <span style={{color:CB}}>{t.w}-{t.l}</span></span>
+                    <span style={{fontSize:"9px",color:CD}}>VEGAS: <span style={{color:CC}}>{t.vegasWins}W</span></span>
+                    <span style={{fontSize:"9px",color:rdCol}}>RD/G: {parseFloat(t.rdPerGame)>0?"+":""}{t.rdPerGame}</span>
+                    <span style={{fontSize:"9px",color:t.hot?CG:t.cold?CR:CD}}>L10: {t.l10}{t.hot?" HOT":t.cold?" COLD":""}</span>
+                    <span style={{fontSize:"9px",color:t.streakLabel&&t.streakLabel[0]==="W"?CG:CR}}>STK: {t.streakLabel}</span>
+                    <span style={{fontSize:"9px",color:CD}}>H: {t.homeRec} A: {t.awayRec}</span>
+                    {inP&&<span style={{fontFamily:"Orbitron",fontSize:"8px",padding:"1px 6px",background:pMatch?CG+"22":CR+"22",color:pMatch?CG:CR,border:"1px solid "+(pMatch?CG:CR)+"44"}}>{pType} {pMatch?"ON TRACK":"AT RISK"}</span>}
+                  </div>
+                </div>
+              );
+            }; from "react";
 
 // ── PORTFOLIO DATA ─────────────────────────────────────────────────────────────
 const POSITIONS = [
@@ -258,52 +286,23 @@ function runMC(stnd,strks){
   var pr={};
   stnd.forEach(function(t){
     var gp=Math.max(1,t.w+t.l);
-    // Vegas O/U = dominant signal early season (70%)
-    // Do NOT use xWins from API - wildly noisy after 17 games (shows ATL=117, CIN=64)
-    var vp=(VEGAS_WINS[t.t]||77)/162;
-    // Actual win% = 20% weight
-    var ap=t.w/gp;
-    // Last-10 = 10% weight for recent form
+    var vp=(VEGAS_WINS[t.t]||77)/162, ap=t.w/gp;
     var sd=strks[t.t]||{};
     var lp=(sd.last10>0)?(sd.l10w/sd.last10):ap;
-    // Run differential per game = tiny signal (small cap)
     var rd=(t.runDiff!=null&&gp>0)?Math.max(-0.02,Math.min(0.02,(t.runDiff/gp)*0.006)):0;
-    // Weighted base win probability per game
-    var base=0.70*vp+0.20*ap+0.10*lp+rd;
-    // TIGHTER CAP: 0.60 max, 0.40 min - prevents near-certain simulation outcomes
-    pr[t.t]={p:Math.min(0.60,Math.max(0.40,base)),rem:162-gp,w:t.w,div:t.div};
+    pr[t.t]={p:Math.min(0.60,Math.max(0.40,0.70*vp+0.20*ap+0.10*lp+rd)),rem:162-gp,w:t.w,div:t.div};
   });
   function rn(){var u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
   for(var i=0;i<N;i++){
     var fw={};
-    stnd.forEach(function(t){
-      var p=pr[t.t];
-      fw[t.t]=Math.max(0,Math.min(162,p.w+Math.round(p.rem*p.p+Math.sqrt(p.rem*p.p*(1-p.p))*rn())));
-    });
+    stnd.forEach(function(t){var p=pr[t.t];fw[t.t]=Math.max(0,Math.min(162,p.w+Math.round(p.rem*p.p+Math.sqrt(p.rem*p.p*(1-p.p))*rn())));});
     var al={},nl={};
-    stnd.forEach(function(t){
-      var d=t.div;
-      if(d.indexOf('AL')===0){if(!al[d])al[d]=[];al[d].push({t:t.t,w:fw[t.t]});}
-      else{if(!nl[d])nl[d]=[];nl[d].push({t:t.t,w:fw[t.t]});}
-    });
-    function playoffs(dv){
-      var wn={},all=[];
-      Object.keys(dv).forEach(function(d){
-        var s=dv[d].slice().sort(function(a,b){return b.w-a.w;});
-        wn[s[0].t]=true;
-        dv[d].forEach(function(t){all.push(t);});
-      });
-      all.filter(function(t){return !wn[t.t];})
-        .sort(function(a,b){return b.w-a.w;})
-        .slice(0,3)
-        .forEach(function(t){wn[t.t]=true;});
-      return wn;
-    }
-    var po=Object.assign({},playoffs(al),playoffs(nl));
+    stnd.forEach(function(t){var dv=t.div;if(dv.indexOf('AL')===0){if(!al[dv])al[dv]=[];al[dv].push({t:t.t,w:fw[t.t]});}else{if(!nl[dv])nl[dv]=[];nl[dv].push({t:t.t,w:fw[t.t]});}});
+    function pf(dv){var wn={},all=[];Object.keys(dv).forEach(function(d){var sorted=dv[d].slice().sort(function(a,b){return b.w-a.w;});wn[sorted[0].t]=true;dv[d].forEach(function(t){all.push(t);});});all.filter(function(t){return !wn[t.t];}).sort(function(a,b){return b.w-a.w;}).slice(0,3).forEach(function(t){wn[t.t]=true;});return wn;}
+    var po=Object.assign({},pf(al),pf(nl));
     stnd.forEach(function(t){if(po[t.t])ct[t.t]++;});
   }
   var out={};
-  // Cap outputs: never show 100% or 0% - always 5-95%
   stnd.forEach(function(t){out[t.t]=Math.min(0.95,Math.max(0.05,ct[t.t]/N));});
   return out;
 }
@@ -1401,25 +1400,20 @@ function computePlayoffScore(team, streaks) {
   return Math.min(97, Math.max(3, Math.round(composite)));
 }
 
-function buildScoutData(standings, streaks) {
+function buildScoutData(standings,streaks){
   return standings.map(function(t){
-    // simMakePct set by Monte Carlo - use as primary. Fallback to computePlayoffScore
-    var score = (t.simMakePct!=null) ? t.simMakePct : computePlayoffScore(t, streaks);
-    var sd = streaks[t.t]||{};
-    var l10w = sd.l10w; var l10l = sd.l10l;
-    var hot = (l10w!=null && l10w>=7);
-    var cold = (l10w!=null && l10w<=3);
-    var vegasWins = VEGAS_WINS ? (VEGAS_WINS[t.t]||77) : 77;
-    var gp = Math.max(1,t.w+t.l);
-    var rdPerGame = (t.runDiff!=null) ? (t.runDiff/gp).toFixed(1) : '0.0';
-    var streakLabel = t.streakType==='wins'?('W'+t.streakNum):t.streakType==='losses'?('L'+t.streakNum):'-';
+    var sc=(t.simMakePct!=null)?t.simMakePct:computePlayoffScore(t,streaks);
+    var sd=streaks[t.t]||{};
+    var l10w=sd.l10w, l10l=sd.l10l;
+    var gp=Math.max(1,t.w+t.l);
     return Object.assign({},t,{
-      score:score,
-      l10:(l10w!=null)?(l10w+'-'+l10l):'-',
-      hot:hot, cold:cold,
-      vegasWins:vegasWins,
-      rdPerGame:rdPerGame,
-      streakLabel:streakLabel,
+      score:sc,
+      l10:(l10w!=null)?(l10w+'-'+l10l):'--',
+      hot:(l10w!=null&&l10w>=7),
+      cold:(l10w!=null&&l10w<=3),
+      vegasWins:VEGAS_WINS?(VEGAS_WINS[t.t]||77):77,
+      rdPerGame:(t.runDiff!=null)?(t.runDiff/gp).toFixed(1):'0.0',
+      streakLabel:t.streakType==='wins'?('W'+t.streakNum):t.streakType==='losses'?('L'+t.streakNum):'--',
       homeRec:(t.homeW!=null)?(t.homeW+'-'+t.homeL):'--',
       awayRec:(t.awayW!=null)?(t.awayW+'-'+t.awayL):'--',
     });
@@ -1702,8 +1696,8 @@ function TabParlays(){
 
           {!mlbLoading&&(function(){
             var ranked = scoutData;
-            var makeTeams = ranked.filter(function(t){return (t.simMakePct!=null?t.simMakePct:t.score)>=50;}).sort(function(a,b){var as=a.simMakePct!=null?a.simMakePct:a.score;var bs=b.simMakePct!=null?b.simMakePct:b.score;return bs-as;});
-            var missTeams = ranked.filter(function(t){return (t.simMakePct!=null?t.simMakePct:t.score)<50;}).sort(function(a,b){var as=a.simMakePct!=null?a.simMakePct:a.score;var bs=b.simMakePct!=null?b.simMakePct:b.score;return as-bs;;
+            var makeTeams=ranked.filter(function(t){var sm=t.simMakePct!=null?t.simMakePct:t.score;return sm>=50;}).sort(function(a,b){var sa=a.simMakePct!=null?a.simMakePct:a.score;var sb=b.simMakePct!=null?b.simMakePct:b.score;return sb-sa;});
+            var missTeams=ranked.filter(function(t){var sm=t.simMakePct!=null?t.simMakePct:t.score;return sm<50;}).sort(function(a,b){var sa=a.simMakePct!=null?a.simMakePct:a.score;var sb=b.simMakePct!=null?b.simMakePct:b.score;return sa-sb;});});
             var inParlay = function(tm){return PARLAY_DATA.some(function(p){return p.make.includes(tm)||p.miss.includes(tm);});};
             var parlayType = function(tm){
               if(PARLAY_DATA.some(function(p){return p.make.includes(tm);}))return "MAKE";
@@ -1760,55 +1754,7 @@ function TabParlays(){
 
                 <Panel label={"◈ MOST LIKELY TO MAKE PLAYOFFS — TOP "+makeTeams.length+" TEAMS"}>
                   <div style={{fontSize:"9px",color:CD,marginBottom:"8px"}}>Ranked #1 = most likely to make playoffs. Score 50-97%.</div>
-                  {makeTeams.map(function(t,i){return renderTeam(t,i,"make",t.simMakePct!=null?t.simMakePct:t.score);})}
-                </Panel>
-
-                <Panel label={"◈ MOST LIKELY TO MISS PLAYOFFS — BOTTOM "+missTeams.length+" TEAMS"}>
-                  <div style={{fontSize:"9px",color:CD,marginBottom:"8px"}}>Ranked #1 = most certain to miss playoffs. Score 3-49%.</div>
-                  {missTeams.map(function(t,i){return renderTeam(t,i,"miss",t.simMissPct!=null?t.simMissPct:100-t.score);})}
-                </Panel>
-
-                <Panel label={"◈ MARCUS — RECOMMENDED NEXT PARLAY LEGS"}>
-                  <div style={{fontSize:"9px",color:CD,marginBottom:"10px",lineHeight:1.7}}>
-                    Top 3 MAKE legs + top 3 MISS legs by composite score. These are the highest-conviction picks today.
-                  </div>
-                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px",marginBottom:"12px"}}>
-                    <div>
-                      <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CG,letterSpacing:"2px",marginBottom:"6px"}}>TOP MAKE LEGS</div>
-                      {makeTeams.slice(0,4).map(function(t){return(
-                        <div key={t.t+"m"} style={{display:"flex",justifyContent:"space-between",padding:"6px 8px",marginBottom:"3px",background:"rgba(24,201,58,.06)",border:"1px solid "+CG+"22"}}>
-                          <div>
-                            <span style={{fontFamily:"Orbitron",fontSize:"11px",color:CA,fontWeight:700}}>{t.t}</span>
-                            <span style={{fontSize:"9px",color:CD,marginLeft:"6px"}}>{t.w}-{t.l} ▪ {t.vegasWins}W O/U</span>
-                          </div>
-                          <span style={{fontFamily:"Orbitron",fontSize:"10px",color:CG}}>{t.score}%</span>
-                        </div>
-                      );})}
-                    </div>
-                    <div>
-                      <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CR,letterSpacing:"2px",marginBottom:"6px"}}>TOP MISS LEGS</div>
-                      {missTeams.slice(0,4).map(function(t){return(
-                        <div key={t.t+"ms"} style={{display:"flex",justifyContent:"space-between",padding:"6px 8px",marginBottom:"3px",background:"rgba(224,48,16,.06)",border:"1px solid "+CR+"22"}}>
-                          <div>
-                            <span style={{fontFamily:"Orbitron",fontSize:"11px",color:CA,fontWeight:700}}>{t.t}</span>
-                            <span style={{fontSize:"9px",color:CD,marginLeft:"6px"}}>{t.w}-{t.l} ▪ {t.vegasWins}W O/U</span>
-                          </div>
-                          <span style={{fontFamily:"Orbitron",fontSize:"10px",color:CR}}>{t.score}%</span>
-                        </div>
-                      );})}
-                    </div>
-                  </div>
-                  <div style={{padding:"10px",background:"#08080f",border:"1px solid "+CA+"33"}}>
-                    <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CA,letterSpacing:"2px",marginBottom:"6px"}}>MARCUS — CONSTRUCTION ADVICE</div>
-                    <div style={{fontSize:"10px",color:CB,lineHeight:1.8}}>
-                      Stack your highest-score MAKE legs with your lowest-score MISS legs. Legs above 80% are your anchors — build around them.
-                      Legs 60-79% are strong value adds. Avoid legs 50-60% — too close to call this early.
-                      Watch the run differential column: teams winning with poor RD are due for regression. Teams with strong RD but losing are due to bounce back.
-                    </div>
-                  </div>
-                </Panel>
-              </div>
-            );
+                  {makeTeams.map(function(t,i){var sm=t.simMakePct!=null?t.simMakePct:t.score;return renderTeam(t,i,"make",sm);};
           })()}
         </div>
       )}
