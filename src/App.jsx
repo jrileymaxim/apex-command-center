@@ -1472,7 +1472,7 @@ function TabParlays(){
       {/* SCOUT */}
       {view==="scout"&&(
         <Panel label="◈ MARCUS PARLAY SCOUT — DAILY RECOMMENDATIONS">
-          <div style={{fontSize:"9px",color:CD,marginBottom:"12px"}}>Based on live standings. High-confidence legs for your next parlay. Not financial advice.</div>
+          <div style={{fontSize:"9px",color:CD,marginBottom:"12px",letterSpacing:"1px"}}>Based on live standings. Best legs for your next parlay. Not financial advice.</div>
           {mlbLoading&&<Spinner label="ANALYZING LIVE STANDINGS"/>}
           {!mlbLoading&&scout.length===0&&<div style={{fontSize:"10px",color:CD}}>No high-confidence legs found today.</div>}
           {!mlbLoading&&scout.map(function(s){
@@ -1488,8 +1488,8 @@ function TabParlays(){
                   <div style={{fontFamily:"Orbitron",fontSize:"12px",fontWeight:700,color:col}}>{s.conf}%</div>
                 </div>
                 <div style={{fontSize:"9px",color:CC,marginBottom:"3px"}}>{s.div}</div>
-                <div style={{fontSize:"10px",color:CB}}>{s.reason}</div>
-                <div style={{marginTop:"6px",height:"3px",background:"#0c0a18",borderRadius:"2px"}}>
+                <div style={{fontSize:"10px",color:CB,marginBottom:"6px"}}>{s.reason}</div>
+                <div style={{height:"3px",background:"#0c0a18",borderRadius:"2px"}}>
                   <div style={{height:"100%",width:s.conf+"%",background:col,borderRadius:"2px"}}/>
                 </div>
               </div>
@@ -1499,9 +1499,10 @@ function TabParlays(){
             <div style={{marginTop:"12px",padding:"12px",background:"#08080f",border:"1px solid "+CA+"33"}}>
               <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CA,letterSpacing:"2px",marginBottom:"8px"}}>MARCUS — PARLAY CONSTRUCTION ADVICE</div>
               <div style={{fontSize:"10px",color:CB,lineHeight:1.8}}>
-                Top legs today: <span style={{color:CA}}>{scout.slice(0,3).map(function(s){return s.team+" "+s.type;}).join(", ")}</span>. 
-                For maximum value, combine 4-6 high-confidence legs. LAD ({mlbData.find(function(t){return t.t==="LAD";})||{w:0,l:0}}.w}-{(mlbData.find(function(t){return t.t==="LAD";})||{w:0,l:0}).l}), CWS MISS, and COL MISS are your strongest current legs. 
-                Avoid legs with confidence below 65% — they increase variance without proportional return. Stack confirmed bottom-feeders against proven contenders.
+                Top legs today: <span style={{color:CA,fontFamily:"Orbitron"}}>{scout.slice(0,3).map(function(s){return s.team+" "+s.type;}).join(", ")}</span>.
+                For maximum value, combine 4-6 high-confidence legs. Stack confirmed bottom-feeders against proven division leaders.
+                Avoid legs below 65% confidence — they increase variance without proportional return.
+                Early in the season — monitor weekly and adjust. Patience is the correct posture.
               </div>
             </div>
           )}
