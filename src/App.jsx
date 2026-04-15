@@ -1223,17 +1223,17 @@ const PARLAY_DATA = [
 ];
 
 const MLB = [
-  {t:"NYY",w:5,l:3,div:"AL East",status:"make",conf:85},{t:"BOS",w:4,l:4,div:"AL East",status:"miss",conf:55},
-  {t:"TOR",w:4,l:4,div:"AL East",status:"make",conf:52},{t:"BAL",w:3,l:5,div:"AL East",status:"make",conf:60},
-  {t:"CLE",w:6,l:2,div:"AL Central",status:"make",conf:78},{t:"CWS",w:2,l:6,div:"AL Central",status:"miss",conf:88},
-  {t:"MIN",w:4,l:4,div:"AL Central",status:"make",conf:55},{t:"HOU",w:3,l:5,div:"AL West",status:"miss",conf:62},
-  {t:"SEA",w:5,l:3,div:"AL West",status:"make",conf:70},{t:"LAA",w:2,l:6,div:"AL West",status:"miss",conf:82},
-  {t:"ATL",w:6,l:2,div:"NL East",status:"make",conf:82},{t:"PHI",w:5,l:3,div:"NL East",status:"make",conf:75},
-  {t:"NYM",w:4,l:4,div:"NL East",status:"make",conf:58},{t:"MIA",w:2,l:6,div:"NL East",status:"miss",conf:80},
-  {t:"WSH",w:2,l:6,div:"NL East",status:"miss",conf:85},{t:"CHC",w:3,l:5,div:"NL Central",status:"miss",conf:65},
-  {t:"MIL",w:3,l:5,div:"NL Central",status:"miss",conf:68},{t:"CIN",w:3,l:5,div:"NL Central",status:"miss",conf:55},
-  {t:"LAD",w:7,l:1,div:"NL West",status:"make",conf:92},{t:"SD",w:5,l:3,div:"NL West",status:"make",conf:72},
-  {t:"SF",w:2,l:6,div:"NL West",status:"miss",conf:78},{t:"COL",w:1,l:7,div:"NL West",status:"miss",conf:92},
+  {t:"NYY",w:9,l:8,div:"AL East",status:"make",conf:80},{t:"BOS",w:6,l:11,div:"AL East",status:"miss",conf:65},
+  {t:"TOR",w:7,l:9,div:"AL East",status:"make",conf:48},{t:"BAL",w:9,l:8,div:"AL East",status:"make",conf:62},
+  {t:"CLE",w:10,l:8,div:"AL Central",status:"make",conf:75},{t:"CWS",w:6,l:11,div:"AL Central",status:"miss",conf:90},
+  {t:"MIN",w:11,l:7,div:"AL Central",status:"make",conf:68},{t:"HOU",w:7,l:11,div:"AL West",status:"miss",conf:72},
+  {t:"SEA",w:8,l:10,div:"AL West",status:"make",conf:55},{t:"LAA",w:9,l:9,div:"AL West",status:"miss",conf:60},
+  {t:"ATL",w:11,l:7,div:"NL East",status:"make",conf:84},{t:"PHI",w:8,l:9,div:"NL East",status:"make",conf:68},
+  {t:"NYM",w:7,l:11,div:"NL East",status:"make",conf:50},{t:"MIA",w:9,l:9,div:"NL East",status:"miss",conf:58},
+  {t:"WSH",w:8,l:9,div:"NL East",status:"miss",conf:72},{t:"CHC",w:8,l:9,div:"NL Central",status:"miss",conf:62},
+  {t:"MIL",w:8,l:8,div:"NL Central",status:"miss",conf:60},{t:"CIN",w:10,l:7,div:"NL Central",status:"miss",conf:45},
+  {t:"LAD",w:13,l:4,div:"NL West",status:"make",conf:95},{t:"SD",w:11,l:6,div:"NL West",status:"make",conf:80},
+  {t:"SF",w:6,l:11,div:"NL West",status:"miss",conf:82},{t:"COL",w:6,l:11,div:"NL West",status:"miss",conf:90},
 ];
 
 function getLegSt(team,type){
