@@ -1612,8 +1612,8 @@ function TabParlays(){
               return null;
             };
 
-            var renderTeam = function(t, idx, side) {
-              var col = t.score>=80?CG:t.score>=65?CY:t.score>=50?CC:t.score>=35?CY:CR;
+            var renderTeam = function(t, idx, side, displayScore) {
+              var col = displayScore>=80?CG:displayScore>=65?CY:displayScore>=50?CC:displayScore>=35?CY:CR;
               var inP = inParlay(t.t);
               var pType = parlayType(t.t);
               var pMatch = pType==="MAKE"?t.score>=50:pType==="MISS"?t.score<50:null;
@@ -1624,9 +1624,9 @@ function TabParlays(){
                     <span style={{fontFamily:"Orbitron",fontSize:"9px",color:CD,minWidth:"16px"}}>{idx+1}</span>
                     <span style={{fontFamily:"Orbitron",fontSize:"13px",fontWeight:800,color:inP?CA:CB,minWidth:"38px"}}>{t.t}</span>
                     <div style={{flex:1,height:"5px",background:"#0c0a18",borderRadius:"3px"}}>
-                      <div style={{height:"100%",width:t.score+"%",background:col,borderRadius:"3px",boxShadow:"0 0 4px "+col+"66"}}/>
+                      <div style={{height:"100%",width:displayScore+"%",background:col,borderRadius:"3px",boxShadow:"0 0 4px "+col+"66"}}/>
                     </div>
-                    <span style={{fontFamily:"Orbitron",fontSize:"12px",fontWeight:700,color:col,minWidth:"36px",textAlign:"right"}}>{t.score}%</span>
+                    <span style={{fontFamily:"Orbitron",fontSize:"12px",fontWeight:700,color:col,minWidth:"36px",textAlign:"right"}}>{displayScore}%</span>
                   </div>
                   <div style={{display:"flex",gap:"10px",marginTop:"5px",flexWrap:"wrap"}}>
                     <span style={{fontSize:"9px",color:CD}}>RECORD: <span style={{color:CB}}>{t.w}-{t.l}</span></span>
@@ -1654,14 +1654,14 @@ function TabParlays(){
                   <span style={{color:CA}}> GOLD border = your parlay leg.</span>
                 </div>
 
-                <Panel label={"◈ MOST LIKELY TO MAKE PLAYOFFS — TOP "+makeTeams.length+" TEAMS"}>
+                <Panel label={"◈ MOST LIKELY TO MAKE PLAYOFFS — "+makeTeams.length+" TEAMS RANKED"}>
                   <div style={{fontSize:"9px",color:CD,marginBottom:"8px"}}>Ranked #1 = most likely to make playoffs. Score 50-97%.</div>
-                  {makeTeams.map(function(t,i){return renderTeam(t,i,"make");})}
+                  {makeTeams.map(function(t,i){return renderTeam(t,i,"make",t.score);})}
                 </Panel>
 
-                <Panel label={"◈ MOST LIKELY TO MISS PLAYOFFS — BOTTOM "+missTeams.length+" TEAMS"}>
+                <Panel label="◈ MOST LIKELY TO MISS PLAYOFFS — "+missTeams.length+" TEAMS RANKED">
                   <div style={{fontSize:"9px",color:CD,marginBottom:"8px"}}>Ranked #1 = most certain to miss playoffs. Score 3-49%.</div>
-                  {missTeams.map(function(t,i){return renderTeam(t,i,"miss");})}
+                  {missTeams.map(function(t,i){return renderTeam(t,i,"miss",100-t.score);})}
                 </Panel>
 
                 <Panel label="◈ MARCUS — RECOMMENDED NEXT PARLAY LEGS">
@@ -1689,7 +1689,7 @@ function TabParlays(){
                             <span style={{fontFamily:"Orbitron",fontSize:"11px",color:CA,fontWeight:700}}>{t.t}</span>
                             <span style={{fontSize:"9px",color:CD,marginLeft:"6px"}}>{t.w}-{t.l} ▪ {t.vegasWins}W O/U</span>
                           </div>
-                          <span style={{fontFamily:"Orbitron",fontSize:"10px",color:CR}}>{t.score}%</span>
+                          <span style={{fontFamily:"Orbitron",fontSize:"10px",color:CR}}>{100-t.score}% MISS</span>
                         </div>
                       );})}
                     </div>
