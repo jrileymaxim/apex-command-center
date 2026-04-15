@@ -518,7 +518,7 @@ function TabBriefing({alf,onAlf,wx,city,setCity,onWx,fg,enriched,totP}) {
   }
   return (
     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
-      <Panel label="◈ MARCUS — MORNING BRIEFING" right={<button className="btn bsm" onClick={onAlf}>↻</button>}>
+      <Panel label={"◈ MARCUS — MORNING BRIEFING"} right={<button className="btn bsm" onClick={onAlf}>↻</button>}>
         {alf.s==="done"&&(
           <div className="fi">
             <p style={{fontSize:"12px",lineHeight:1.9,color:CB,fontStyle:"italic",marginBottom:"12px"}}>"{alf.text}"</p>
@@ -527,7 +527,7 @@ function TabBriefing({alf,onAlf,wx,city,setCity,onWx,fg,enriched,totP}) {
         )}
       </Panel>
 
-      <Panel label="◈ MARKET SENTIMENT">
+      <Panel label={"◈ MARKET SENTIMENT"}>
         {fg.s==="done"&&(
           <div className="fi" style={{display:"flex",flexDirection:"column",alignItems:"center",gap:"8px"}}>
             <Gauge score={fg.score} label={fg.label}/>
@@ -537,7 +537,7 @@ function TabBriefing({alf,onAlf,wx,city,setCity,onWx,fg,enriched,totP}) {
         {fg.s!=="done"&&<div style={{fontSize:"10px",color:CD}}>Loads with portfolio data...</div>}
       </Panel>
 
-      <Panel label="◈ ATMOSPHERIC CONDITIONS">
+      <Panel label={"◈ ATMOSPHERIC CONDITIONS"}>
         <div style={{display:"flex",gap:"6px",marginBottom:"10px"}}>
           <input className="inp" value={city} onChange={function(e){setCity(e.target.value);}} onKeyDown={function(e){if(e.key==="Enter")onWx();}} placeholder="TARGET CITY..."/>
           <button className="btn" onClick={onWx} style={{padding:"6px 10px"}}>SCAN</button>
@@ -572,7 +572,7 @@ function TabBriefing({alf,onAlf,wx,city,setCity,onWx,fg,enriched,totP}) {
         <div style={{fontSize:"9px",color:CD,letterSpacing:"2px"}}>— MARCUS {isMonday?"▪ MONDAY REVIEW":""}</div>
       </Panel>
 
-      <Panel label="◈ SYSTEM STATUS">
+      <Panel label={"◈ SYSTEM STATUS"}>
         {[["MARCUS","ONLINE",CG],["PORTFOLIO","LIVE",CG],["WEATHER","LIVE",CG],["INTEL","LIVE",CG],["SOUN OPS","LIVE",CG],["PARLAYS","LIVE",CG],["EARNINGS","LIVE",CG],["BENCHMARKS","LIVE",CG],["JOURNAL","LIVE",CG],["PWA","READY",CG]].map(function(r){return (
           <div key={r[0]} style={{display:"flex",justifyContent:"space-between",padding:"5px 0",borderBottom:"1px solid #0c0a14"}}>
             <span style={{fontSize:"10px",letterSpacing:"1px"}}>{r[0]}</span>
@@ -649,7 +649,7 @@ function TabPortfolio({enriched,totCost,totMkt,totGain,totP,leaps,status,live,on
         );})}
       </Panel>
 
-      <Panel label="◈ SOUN LEAPS — OPTIONS POSITIONS">
+      <Panel label={"◈ SOUN LEAPS — OPTIONS POSITIONS"}>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
           {leaps.map(function(l,i){
             var pct=(l.sounNow/l.breakeven*100).toFixed(0);
@@ -675,7 +675,7 @@ function TabPortfolio({enriched,totCost,totMkt,totGain,totP,leaps,status,live,on
         <div style={{marginTop:"8px",fontSize:"9px",color:CD,letterSpacing:"1px"}}>▸ Full Greeks, theta clock & probability → SOUN OPS tab</div>
       </Panel>
 
-      <Panel label="◈ EARNINGS CALENDAR — NEXT 60 DAYS">
+      <Panel label={"◈ EARNINGS CALENDAR — NEXT 60 DAYS"}>
         {upcoming.length===0&&<div style={{fontSize:"10px",color:CD}}>No earnings in next 60 days.</div>}
         {upcoming.map(function(e){var daysAway=Math.ceil((new Date(e.date)-now2)/(1000*60*60*24));var color=daysAway<=7?CR:daysAway<=21?CY:CG;return(
           <div key={e.ticker} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"7px 0",borderBottom:"1px solid #0c0a14"}}>
@@ -697,7 +697,7 @@ function TabPortfolio({enriched,totCost,totMkt,totGain,totP,leaps,status,live,on
         );})}
       </Panel>
 
-      <Panel label="◈ PERFORMANCE VS BENCHMARKS">
+      <Panel label={"◈ PERFORMANCE VS BENCHMARKS"}>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:"6px"}}>
           {[["MY PORTFOLIO",totP,true],["S&P 500 (SPY)",spyRet,false],["NASDAQ (QQQ)",qqqRet,false],["DOW (DIA)",diaRet,false]].map(function(r){
             var val=r[1];var col=val===null?CD:val>=0?CG:CR;var str=val===null?"--":(val>=0?"+":"")+val.toFixed(2)+"%";
@@ -723,7 +723,7 @@ function TabMission({tasks,newTask,setNewTask,onAdd,onToggle,onDel,wl,newWl,setN
   function addJournalEntry(){if(!newEntry.ticker.trim()||!newEntry.notes.trim())return;setJournal(function(p){return [{id:Date.now(),date:new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}),ticker:newEntry.ticker.toUpperCase(),action:newEntry.action,price:newEntry.price,notes:newEntry.notes}].concat(p);});setNewEntry({ticker:"",action:"BUY",price:"",notes:""}); }
   return (
     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
-      <Panel label="◈ MISSION OBJECTIVES">
+      <Panel label={"◈ MISSION OBJECTIVES"}>
         <div style={{display:"flex",gap:"6px",marginBottom:"10px"}}>
           <input className="inp" value={newTask} onChange={function(e){setNewTask(e.target.value);}} onKeyDown={function(e){if(e.key==="Enter")onAdd();}} placeholder="ADD OBJECTIVE..."/>
           <button className="btn" onClick={onAdd} style={{padding:"6px 10px"}}>+</button>
@@ -741,7 +741,7 @@ function TabMission({tasks,newTask,setNewTask,onAdd,onToggle,onDel,wl,newWl,setN
       </Panel>
 
       <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-        <Panel label="◈ CUSTOM WATCHLIST">
+        <Panel label={"◈ CUSTOM WATCHLIST"}>
           <div style={{display:"flex",gap:"6px",marginBottom:"10px"}}>
             <input className="inp" value={newWl} onChange={function(e){setNewWl(e.target.value);}} onKeyDown={function(e){if(e.key==="Enter")onAddWl();}} placeholder="ADD TICKER..."/>
             <button className="btn" onClick={onAddWl} style={{padding:"6px 10px"}}>+</button>
@@ -757,7 +757,7 @@ function TabMission({tasks,newTask,setNewTask,onAdd,onToggle,onDel,wl,newWl,setN
           </div>
         </Panel>
 
-        <Panel label="◈ PARLAYS SUMMARY">
+        <Panel label={"◈ PARLAYS SUMMARY"}>
           {PARLAYS.map(function(p,i){return (
             <div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"7px 0",borderBottom:"1px solid #0c0a14"}}>
               <div>
@@ -834,7 +834,7 @@ function TabIntel({enriched,status}) {
       </div>
 
       {/* Signals List */}
-      <Panel label="◈ POSITION SIGNALS — AI DERIVED">
+      <Panel label={"◈ POSITION SIGNALS — AI DERIVED"}>
         <div style={{fontSize:"9px",color:CD,marginBottom:"10px",letterSpacing:"1px"}}>Based on cost basis vs current price + day momentum. Not financial advice.</div>
         {status==="loading"&&<Spinner label="COMPUTING SIGNALS"/>}
         {signals.map(function(p){
@@ -861,7 +861,7 @@ function TabIntel({enriched,status}) {
       </Panel>
 
       {/* Discovery Picks */}
-      <Panel label="◈ MORNING DISCOVERY — HIGH CONVICTION PICKS">
+      <Panel label={"◈ MORNING DISCOVERY — HIGH CONVICTION PICKS"}>
         <div style={{fontSize:"9px",color:CD,marginBottom:"10px",letterSpacing:"1px"}}>AI-researched speculative picks. Not financial advice. Do your own due diligence.</div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
           {DISCOVERY_PICKS.map(function(pick){return (
@@ -880,7 +880,7 @@ function TabIntel({enriched,status}) {
       </Panel>
 
       {/* Bull vs Bear Debate */}
-      <Panel label="◈ AI BULL vs BEAR DEBATE">
+      <Panel label={"◈ AI BULL vs BEAR DEBATE"}>
         <div style={{display:"flex",gap:"6px",marginBottom:"12px",alignItems:"center"}}>
           <span style={{fontSize:"9px",color:CD,letterSpacing:"1px"}}>TICKER:</span>
           <select value={debateTicker} onChange={function(e){setDebateTicker(e.target.value);}} style={{background:"#080812",border:"1px solid #1a1520",color:CA,fontFamily:"'Share Tech Mono',monospace",fontSize:"11px",padding:"4px 8px",outline:"none"}}>
@@ -1016,7 +1016,7 @@ function TabSoun({port}) {
       {/* Theta Decay Section */}
       {activeSection==="theta"&&(
         <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
-          <Panel label="◈ THETA DECAY CLOCK — DAILY PREMIUM BLEED">
+          <Panel label={"◈ THETA DECAY CLOCK — DAILY PREMIUM BLEED"}>
             <div style={{fontSize:"10px",color:CD,marginBottom:"12px",letterSpacing:"1px"}}>Every day that passes, your options lose value from time decay. This is theta — your cost of holding.</div>
             {[{l:l1,theta:theta1,days:days1,label:"1/15/27 LEAPS"},{l:l2,theta:theta2,days:days2,label:"1/21/28 LEAPS"}].map(function(item,i){return (
               <div key={i} style={{background:BD,border:"1px solid #1a1520",padding:"12px",marginBottom:"8px"}}>
@@ -1040,7 +1040,7 @@ function TabSoun({port}) {
 
       {/* Sentiment Section */}
       {activeSection==="sentiment"&&(
-        <Panel label="◈ SOUN SENTIMENT ANALYSIS">
+        <Panel label={"◈ SOUN SENTIMENT ANALYSIS"}>
           <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
             {SOUN_DATA.sentiment.map(function(s){return (
               <div key={s.label} style={{background:BD,border:"1px solid #1a1520",padding:"10px"}}>
@@ -1068,7 +1068,7 @@ function TabSoun({port}) {
 
       {/* Catalysts Section */}
       {activeSection==="catalysts"&&(
-        <Panel label="◈ SOUN CATALYST CALENDAR">
+        <Panel label={"◈ SOUN CATALYST CALENDAR"}>
           <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
             {SOUN_DATA.catalysts.map(function(c,i){return (
               <div key={i} style={{display:"flex",gap:"10px",padding:"10px",background:BD,border:"1px solid #1a1520"}}>
@@ -1082,7 +1082,7 @@ function TabSoun({port}) {
 
       {/* Risks Section */}
       {activeSection==="risks"&&(
-        <Panel label="◈ SOUN RISK ASSESSMENT">
+        <Panel label={"◈ SOUN RISK ASSESSMENT"}>
           <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
             {SOUN_DATA.risks.map(function(r,i){return (
               <div key={i} style={{display:"flex",gap:"10px",padding:"10px",background:"#140000",border:"1px solid "+CR+"22"}}>
@@ -1225,9 +1225,25 @@ const PARLAY_DATA = [
 
 
 
-// ── ENHANCED SCOUT ENGINE ─────────────────────────────────────────────────────
 
-// 2026 Vegas preseason win totals (O/U lines — best early-season predictor)
+// ── MONTE CARLO PARLAY ENGINE ─────────────────────────────────────────────────
+// Implements 7-step methodology: data → simulation → edge → construction
+
+// Step 1: Sportsbook make/miss odds (DraftKings/FanDuel current lines)
+var BOOK_ODDS = {
+  LAD:{make:-600,miss:420},ATL:{make:-320,miss:245},MIN:{make:-195,miss:160},
+  SD:{make:-270,miss:215},NYY:{make:-175,miss:145},CLE:{make:-155,miss:130},
+  PHI:{make:-145,miss:120},TB:{make:-108,miss:-115},BAL:{make:-125,miss:105},
+  TOR:{make:155,miss:-185},HOU:{make:145,miss:-175},SEA:{make:115,miss:-140},
+  ATH:{make:165,miss:-200},TEX:{make:225,miss:-280},NYM:{make:205,miss:-255},
+  AZ:{make:235,miss:-295},MIL:{make:235,miss:-295},PIT:{make:265,miss:-335},
+  CHC:{make:265,miss:-335},STL:{make:285,miss:-360},MIA:{make:305,miss:-390},
+  BOS:{make:305,miss:-390},LAA:{make:285,miss:-360},CIN:{make:205,miss:-255},
+  DET:{make:335,miss:-430},WSH:{make:405,miss:-525},KC:{make:455,miss:-600},
+  SF:{make:355,miss:-455},COL:{make:660,miss:-1000},CWS:{make:710,miss:-1100},
+};
+
+// Vegas 2026 preseason win totals
 var VEGAS_WINS = {
   LAD:100,ATL:95,NYY:92,PHI:89,NYM:88,SD:87,HOU:86,MIN:86,
   CLE:85,ATH:85,SEA:84,BAL:83,TOR:82,BOS:80,TEX:79,MIL:79,
@@ -1235,6 +1251,13 @@ var VEGAS_WINS = {
   KC:72,MIA:71,WSH:68,COL:65,CWS:64,LAA:64,
 };
 
+// Step 2: American odds → implied probability (vig-adjusted)
+function oddsToImplied(odds) {
+  if(odds < 0) return (-odds)/(-odds+100);
+  return 100/(odds+100);
+}
+
+// Step 3: Fetch live standings with full stats
 async function fetchMLBStandings() {
   try {
     var r = await fetch('https://statsapi.mlb.com/api/v1/standings?leagueId=103,104&season=2026&standingsTypes=regularSeason&hydrate=team,league,division');
@@ -1245,37 +1268,29 @@ async function fetchMLBStandings() {
       var div = divMap[rec.division.id]||rec.division.name;
       rec.teamRecords.forEach(function(t,rank){
         var abbr = t.team.abbreviation;
-        // Pythagorean expected record
         var xRec = t.records&&t.records.expectedRecords&&t.records.expectedRecords.find(function(r){return r.type==='xWinLossSeason';});
-        var xWins = xRec ? parseInt(xRec.wins) : null;
-        // Home/away splits
+        var xWins = xRec?parseInt(xRec.wins):null;
         var splits = t.records&&t.records.splitRecords||[];
         var homeSplit = splits.find(function(s){return s.type==='home';});
         var awaySplit = splits.find(function(s){return s.type==='away';});
-        // Streak
         var streak = t.streak||{};
-        var streakNum = streak.streakNumber||0;
-        var streakType = streak.streakType||'';
-        // Run differential
-        var runDiff = t.runDifferential||0;
-        var gb = t.gamesBack==='-'?0:parseFloat(t.gamesBack)||0;
-        var wcgb = t.wildCardGamesBack==='-'?0:parseFloat(t.wildCardGamesBack)||0;
         out.push({
-          t:abbr, w:t.wins, l:t.losses,
-          div:div, divRank:rank+1,
-          xWins:xWins, runDiff:runDiff,
-          streakNum:streakNum, streakType:streakType,
-          homeW:homeSplit?homeSplit.wins:0, homeL:homeSplit?homeSplit.losses:0,
-          awayW:awaySplit?awaySplit.wins:0, awayL:awaySplit?awaySplit.losses:0,
-          gb:gb, wcgb:wcgb,
-          status:rank<2?'make':'miss', conf:60
+          t:abbr,w:t.wins,l:t.losses,div:div,divRank:rank+1,
+          xWins:xWins,runDiff:t.runDifferential||0,
+          streakNum:streak.streakNumber||0,streakType:streak.streakType||'',
+          homeW:homeSplit?homeSplit.wins:0,homeL:homeSplit?homeSplit.losses:0,
+          awayW:awaySplit?awaySplit.wins:0,awayL:awaySplit?awaySplit.losses:0,
+          gb:t.gamesBack==='-'?0:parseFloat(t.gamesBack)||0,
+          wcgb:t.wildCardGamesBack==='-'?0:parseFloat(t.wildCardGamesBack)||0,
+          status:rank<2?'make':'miss',conf:60
         });
       });
     });
     return out;
-  } catch(ex) { return MLB_STATIC; }
+  } catch(ex){ return MLB_STATIC; }
 }
 
+// Step 4: Fetch last-10 streaks from ESPN scoreboard
 async function fetchStreaks() {
   try {
     var today = new Date(); var d14 = new Date(today-14*864e5);
@@ -1285,119 +1300,197 @@ async function fetchStreaks() {
     var results = {};
     (data.events||[]).forEach(function(ev){
       var comp = ev.competitions&&ev.competitions[0];
-      if(!comp||comp.status.type.name!=='STATUS_FINAL') return;
+      if(!comp||comp.status.type.name!=='STATUS_FINAL')return;
       comp.competitors.forEach(function(c){
-        var abbr = c.team.abbreviation;
-        if(!results[abbr]) results[abbr] = [];
-        results[abbr].push(c.winner?1:0);
+        var a = c.team.abbreviation;
+        if(!results[a]) results[a]=[];
+        results[a].push(c.winner?1:0);
       });
     });
     var out = {};
     Object.keys(results).forEach(function(t){
-      var all = results[t];
-      var last10 = all.slice(-10);
+      var all = results[t]; var last10 = all.slice(-10);
       var l10w = last10.filter(function(x){return x===1;}).length;
-      out[t] = {last10:last10.length, l10w:l10w, l10l:last10.length-l10w};
+      out[t]={last10:last10.length,l10w:l10w,l10l:last10.length-l10w};
     });
     return out;
-  } catch(ex) { return {}; }
+  } catch(ex){ return {}; }
 }
 
-// Composite playoff probability — weighted for early season
-function computePlayoffScore(team, streaks) {
-  var gp = team.w + team.l;
-  var vegasWins = VEGAS_WINS[team.t] || 77;
+// Step 5: Monte Carlo — 75K simulations of full MLB season
+function runMonteCarlo(standings, streaks) {
+  var NUM_SIMS = 75000;
+  var counts = {};
+  standings.forEach(function(t){ counts[t.t]=0; });
 
-  // 1. VEGAS PRESEASON PROJECTION (40% weight early season)
-  // Scale 60-102 win range to 0-100
-  var vegasScore = ((vegasWins - 62) / (102 - 62)) * 100;
+  // Precompute each team's per-game win probability
+  var probs = {};
+  standings.forEach(function(t){
+    var gp = t.w+t.l;
+    var vegasPct = (VEGAS_WINS[t.t]||77)/162;
+    var pythPct = t.xWins ? t.xWins/162 : (gp>0?t.w/gp:0.5);
+    var actualPct = gp>0 ? t.w/gp : 0.5;
+    var sd = streaks[t.t]||{};
+    var l10pct = sd.last10>0 ? sd.l10w/sd.last10 : actualPct;
+    // Run differential adjustment
+    var rdAdj = gp>0 ? Math.max(-0.05, Math.min(0.05, (t.runDiff/gp)*0.015)) : 0;
+    // Weight: Vegas 40%, Pythagorean 35%, L10 15%, actual 10%
+    var w = gp<25 ? {v:0.45,py:0.35,l10:0.12,a:0.08} : {v:0.35,py:0.35,l10:0.20,a:0.10};
+    var base = w.v*vegasPct + w.py*pythPct + w.l10*l10pct + w.a*actualPct + rdAdj;
+    probs[t.t] = {pct:Math.min(0.72,Math.max(0.28,base)), rem:162-gp, curW:t.w, div:t.div};
+  });
 
-  // 2. PYTHAGOREAN EXPECTED WINS (25% weight — better than actual W-L)
-  // xWins projected over 162 games
-  var xWins = team.xWins || Math.round((team.w/(gp||1)) * 162);
-  var pythScore = ((xWins - 62) / (102 - 62)) * 100;
+  // Box-Muller normal random
+  function randn(){
+    var u=0,v=0;
+    while(!u)u=Math.random(); while(!v)v=Math.random();
+    return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);
+  }
 
-  // 3. RUN DIFFERENTIAL per game (15% weight)
-  // +1 run/game = strong, -1 run/game = weak
-  var rdPerGame = gp > 0 ? team.runDiff / gp : 0;
-  var rdScore = Math.min(100, Math.max(0, 50 + (rdPerGame * 12)));
+  // Binomial via normal approximation
+  function binom(n,p){
+    if(n<=0)return 0;
+    return Math.max(0,Math.min(n,Math.round(n*p+Math.sqrt(n*p*(1-p))*randn())));
+  }
 
-  // 4. DIVISION RANK + GAMES BACK (10% weight)
-  var divScore = Math.max(0, 100 - (team.divRank - 1) * 22 - (team.gb * 4));
+  for(var sim=0;sim<NUM_SIMS;sim++){
+    // Simulate final wins
+    var fw = {};
+    standings.forEach(function(t){
+      var p=probs[t.t];
+      fw[t.t]=p.curW+binom(p.rem,p.pct);
+    });
 
-  // 5. CURRENT STREAK (10% weight)
-  var streakData = streaks[team.t] || {};
-  var l10w = streakData.l10w !== undefined ? streakData.l10w : 5;
-  var l10g = streakData.last10 || 10;
-  var streakScore = l10g >= 5 ? 50 + ((l10w - (l10g/2)) / (l10g/2)) * 50 : 50;
-  // Also factor live streak
-  var liveStreak = team.streakType === 'wins' ? Math.min(10, team.streakNum) * 3 :
-                   team.streakType === 'losses' ? -Math.min(10, team.streakNum) * 3 : 0;
+    // Apply MLB playoff structure: 3 div winners + 3 WC per league
+    var al={},nl={};
+    standings.forEach(function(t){
+      if(t.div.indexOf('AL')===0){if(!al[t.div])al[t.div]=[];al[t.div].push({t:t.t,w:fw[t.t]});}
+      else{if(!nl[t.div])nl[t.div]=[];nl[t.div].push({t:t.t,w:fw[t.t]});}
+    });
 
-  // WEIGHTED COMPOSITE
-  var composite = (vegasScore * 0.40) + (pythScore * 0.25) + (rdScore * 0.15) + (divScore * 0.10) + (streakScore * 0.10) + liveStreak;
+    function leaguePlayoffs(divs){
+      var winners={},all=[];
+      Object.keys(divs).forEach(function(d){
+        var sorted=divs[d].slice().sort(function(a,b){return b.w-a.w;});
+        winners[sorted[0].t]=true;
+        divs[d].forEach(function(t){all.push(t);});
+      });
+      all.filter(function(t){return !winners[t.t];})
+         .sort(function(a,b){return b.w-a.w;})
+         .slice(0,3).forEach(function(t){winners[t.t]=true;});
+      return winners;
+    }
 
-  return Math.min(97, Math.max(3, Math.round(composite)));
+    var playoff=Object.assign({},leaguePlayoffs(al),leaguePlayoffs(nl));
+    standings.forEach(function(t){ if(playoff[t.t]) counts[t.t]++; });
+  }
+
+  var result={};
+  standings.forEach(function(t){ result[t.t]=counts[t.t]/NUM_SIMS; });
+  return result;
 }
 
-function buildScoutData(standings, streaks) {
+// Step 6: Build full edge data
+function buildEdgeData(standings, streaks, simResults) {
   return standings.map(function(t){
-    var score = computePlayoffScore(t, streaks);
-    var streakData = streaks[t.t]||{};
-    var l10w = streakData.l10w; var l10l = streakData.l10l;
-    var hot = l10w >= 7; var cold = l10w !== undefined && l10w <= 3;
+    var simMake = simResults[t.t]||0;
+    var odds = BOOK_ODDS[t.t]||{make:200,miss:-250};
+    var bookMake = oddsToImplied(odds.make);
+    var bookMiss = oddsToImplied(odds.miss);
+    var edgeMake = (simMake - bookMake)*100;
+    var edgeMiss = ((1-simMake) - bookMiss)*100;
+    var sd = streaks[t.t]||{};
+    var l10w = sd.l10w; var l10l = sd.l10l;
     var vegasWins = VEGAS_WINS[t.t]||77;
-    var xWins = t.xWins||Math.round((t.w/(t.w+t.l||1))*162);
-    var rdPerGame = (t.w+t.l)>0?(t.runDiff/(t.w+t.l)).toFixed(1):'0.0';
+    var xWins = t.xWins||Math.round((t.w/Math.max(1,t.w+t.l))*162);
+    var rdPerGame = (t.w+t.l)>0?(t.runDiff/(t.w+t.l)).toFixed(1):'0';
     var streakLabel = t.streakType==='wins'?'W'+t.streakNum:t.streakType==='losses'?'L'+t.streakNum:'-';
     return Object.assign({},t,{
-      score:score,
-      l10: l10w!==undefined?(l10w+'-'+l10l):'-',
-      hot:hot, cold:cold,
-      vegasWins:vegasWins, xWins:xWins,
-      rdPerGame:rdPerGame,
+      simMakePct:Math.round(simMake*100),
+      simMissPct:Math.round((1-simMake)*100),
+      bookMakePct:Math.round(bookMake*100),
+      bookMissPct:Math.round(bookMiss*100),
+      bookMakeOdds:odds.make,
+      edgeMake:edgeMake.toFixed(1),
+      edgeMiss:edgeMiss.toFixed(1),
+      vegasWins:vegasWins,xWins:xWins,rdPerGame:rdPerGame,
+      l10:l10w!==undefined?(l10w+'-'+l10l):'-',
+      hot:l10w>=7,cold:l10w!==undefined&&l10w<=3,
       streakLabel:streakLabel,
-      homeRec:t.homeW+'-'+t.homeL,
-      awayRec:t.awayW+'-'+t.awayL,
+      homeRec:t.homeW+'-'+t.homeL,awayRec:t.awayW+'-'+t.awayL,
     });
-  }).sort(function(a,b){return b.score-a.score;});
+  });
+}
+
+// Step 7: Build tiered parlay tickets
+function buildParlayTickets(edgeData, yourParlayData) {
+  // Separate best MAKE and MISS legs by sim probability + positive edge
+  var makeLegs = edgeData.filter(function(t){return t.simMakePct>=55;})
+    .sort(function(a,b){return parseFloat(b.edgeMake)-parseFloat(a.edgeMake);});
+  var missLegs = edgeData.filter(function(t){return t.simMissPct>=55;})
+    .sort(function(a,b){return parseFloat(b.edgeMiss)-parseFloat(a.edgeMiss);});
+
+  function buildTicket(mLegs, xLegs, name, target) {
+    var legs = mLegs.concat(xLegs);
+    var simProb = legs.reduce(function(acc,l){
+      return acc * (l.edgeMake!==undefined && mLegs.includes(l) ? l.simMakePct/100 : l.simMissPct/100);
+    }, 1);
+    var bookProb = legs.reduce(function(acc,l){
+      return acc * (mLegs.includes(l) ? l.bookMakePct/100 : l.bookMissPct/100);
+    }, 1);
+    var edge = simProb > 0 && bookProb > 0 ? (simProb/bookProb).toFixed(2) : '1.00';
+    var weakest = legs.reduce(function(w,l){
+      var e = mLegs.includes(l)?parseFloat(l.edgeMake):parseFloat(l.edgeMiss);
+      return e < (mLegs.includes(w)?parseFloat(w.edgeMake):parseFloat(w.edgeMiss)) ? l : w;
+    });
+    return {name:name,target:target,legs:legs,makeLegs:mLegs,missLegs:xLegs,
+      simProb:(simProb*100).toFixed(2),bookProb:(bookProb*100).toFixed(2),
+      edge:edge,weakest:weakest.t};
+  }
+
+  return [
+    buildTicket(makeLegs.slice(0,2), missLegs.slice(0,2), 'ANCHOR', '35-45% hit rate'),
+    buildTicket(makeLegs.slice(0,3), missLegs.slice(0,3), 'MID-TIER', '10-15% hit rate'),
+    buildTicket(makeLegs.slice(0,4), missLegs.slice(0,4), 'LOTTERY', '3-5% hit rate'),
+  ];
 }
 
 // Static fallback
 const MLB_STATIC = [
-  {t:"LAD",w:13,l:4,div:"NL West",divRank:1,runDiff:42,xWins:99,streakNum:1,streakType:"wins",homeW:6,homeL:2,awayW:7,awayL:2,gb:0,wcgb:0,status:"make",conf:95},
-  {t:"ATL",w:11,l:7,div:"NL East",divRank:1,runDiff:18,xWins:94,streakNum:2,streakType:"wins",homeW:5,homeL:3,awayW:6,awayL:4,gb:0,wcgb:0,status:"make",conf:84},
-  {t:"MIN",w:11,l:7,div:"AL Central",divRank:1,runDiff:12,xWins:86,streakNum:1,streakType:"losses",homeW:6,homeL:3,awayW:5,awayL:4,gb:0,wcgb:0,status:"make",conf:68},
-  {t:"SD",w:11,l:6,div:"NL West",divRank:2,runDiff:22,xWins:88,streakNum:2,streakType:"wins",homeW:5,homeL:2,awayW:6,awayL:4,gb:2,wcgb:0,status:"make",conf:80},
-  {t:"NYY",w:9,l:8,div:"AL East",divRank:2,runDiff:5,xWins:91,streakNum:1,streakType:"wins",homeW:4,homeL:4,awayW:5,awayL:4,gb:0,wcgb:0,status:"make",conf:80},
-  {t:"CLE",w:10,l:8,div:"AL Central",divRank:2,runDiff:8,xWins:85,streakNum:2,streakType:"losses",homeW:5,homeL:3,awayW:5,awayL:5,gb:1,wcgb:0,status:"make",conf:75},
-  {t:"PHI",w:8,l:9,div:"NL East",divRank:3,runDiff:2,xWins:88,streakNum:1,streakType:"wins",homeW:4,homeL:4,awayW:4,awayL:5,gb:3,wcgb:1,status:"make",conf:68},
-  {t:"HOU",w:7,l:11,div:"AL West",divRank:5,runDiff:-18,xWins:85,streakNum:2,streakType:"losses",homeW:3,homeL:5,awayW:4,awayL:6,gb:4,wcgb:3,status:"miss",conf:72},
-  {t:"SEA",w:8,l:10,div:"AL West",divRank:4,runDiff:-5,xWins:83,streakNum:1,streakType:"losses",homeW:3,homeL:5,awayW:5,awayL:5,gb:3,wcgb:2,status:"make",conf:55},
-  {t:"LAA",w:9,l:9,div:"AL West",divRank:3,runDiff:-2,xWins:63,streakNum:1,streakType:"wins",homeW:5,homeL:4,awayW:4,awayL:5,gb:2,wcgb:3,status:"miss",conf:60},
-  {t:"CIN",w:10,l:7,div:"NL Central",divRank:1,runDiff:10,xWins:75,streakNum:3,streakType:"wins",homeW:5,homeL:3,awayW:5,awayL:4,gb:0,wcgb:1,status:"miss",conf:45},
-  {t:"CWS",w:6,l:11,div:"AL Central",divRank:5,runDiff:-25,xWins:63,streakNum:1,streakType:"wins",homeW:3,homeL:5,awayW:3,awayL:6,gb:5,wcgb:5,status:"miss",conf:90},
-  {t:"COL",w:6,l:11,div:"NL West",divRank:5,runDiff:-28,xWins:64,streakNum:1,streakType:"losses",homeW:3,homeL:5,awayW:3,awayL:6,gb:7,wcgb:6,status:"miss",conf:90},
-  {t:"SF",w:6,l:11,div:"NL West",divRank:4,runDiff:-12,xWins:74,streakNum:2,streakType:"losses",homeW:3,homeL:5,awayW:3,awayL:6,gb:7,wcgb:5,status:"miss",conf:82},
-  {t:"BOS",w:6,l:11,div:"AL East",divRank:5,runDiff:-15,xWins:79,streakNum:1,streakType:"losses",homeW:3,homeL:5,awayW:3,awayL:6,gb:5,wcgb:4,status:"miss",conf:65},
-  {t:"BAL",w:9,l:8,div:"AL East",divRank:3,runDiff:3,xWins:82,streakNum:1,streakType:"wins",homeW:5,homeL:3,awayW:4,awayL:5,gb:0,wcgb:0,status:"make",conf:62},
-  {t:"TOR",w:7,l:9,div:"AL East",divRank:4,runDiff:-3,xWins:81,streakNum:1,streakType:"losses",homeW:3,homeL:5,awayW:4,awayL:4,gb:2,wcgb:1,status:"make",conf:48},
-  {t:"TB",w:9,l:7,div:"AL East",divRank:1,runDiff:-7,xWins:77,streakNum:4,streakType:"wins",homeW:4,homeL:2,awayW:5,awayL:5,gb:0,wcgb:0,status:"make",conf:70},
-  {t:"NYM",w:7,l:11,div:"NL East",divRank:5,runDiff:-8,xWins:87,streakNum:1,streakType:"losses",homeW:3,homeL:5,awayW:4,awayL:6,gb:4,wcgb:2,status:"make",conf:50},
-  {t:"MIL",w:8,l:8,div:"NL Central",divRank:3,runDiff:0,xWins:78,streakNum:1,streakType:"wins",homeW:4,homeL:4,awayW:4,awayL:4,gb:2,wcgb:2,status:"miss",conf:60},
-  {t:"WSH",w:8,l:9,div:"NL East",divRank:4,runDiff:-5,xWins:67,streakNum:1,streakType:"wins",homeW:4,homeL:4,awayW:4,awayL:5,gb:3,wcgb:2,status:"miss",conf:72},
-  {t:"MIA",w:9,l:9,div:"NL East",divRank:2,runDiff:0,xWins:70,streakNum:1,streakType:"wins",homeW:5,homeL:4,awayW:4,awayL:5,gb:2,wcgb:1,status:"miss",conf:58},
-  {t:"CHC",w:8,l:9,div:"NL Central",divRank:4,runDiff:-4,xWins:75,streakNum:1,streakType:"losses",homeW:4,homeL:4,awayW:4,awayL:5,gb:2,wcgb:2,status:"miss",conf:62},
-  {t:"PIT",w:10,l:7,div:"NL Central",divRank:2,runDiff:5,xWins:72,streakNum:2,streakType:"wins",homeW:5,homeL:3,awayW:5,awayL:4,gb:0,wcgb:2,status:"miss",conf:50},
-  {t:"STL",w:9,l:8,div:"NL Central",divRank:3,runDiff:2,xWins:77,streakNum:1,streakType:"wins",homeW:5,homeL:3,awayW:4,awayL:5,gb:1,wcgb:2,status:"miss",conf:45},
-  {t:"ATH",w:9,l:8,div:"AL West",divRank:1,runDiff:4,xWins:84,streakNum:1,streakType:"wins",homeW:5,homeL:3,awayW:4,awayL:5,gb:0,wcgb:0,status:"make",conf:55},
-  {t:"TEX",w:9,l:8,div:"AL West",divRank:2,runDiff:1,xWins:78,streakNum:1,streakType:"wins",homeW:5,homeL:3,awayW:4,awayL:5,gb:0,wcgb:0,status:"make",conf:50},
-  {t:"DET",w:8,l:9,div:"AL Central",divRank:3,runDiff:-2,xWins:73,streakNum:1,streakType:"losses",homeW:4,homeL:4,awayW:4,awayL:5,gb:3,wcgb:2,status:"miss",conf:45},
-  {t:"KC",w:7,l:10,div:"AL Central",divRank:4,runDiff:-8,xWins:71,streakNum:2,streakType:"losses",homeW:3,homeL:5,awayW:4,awayL:5,gb:4,wcgb:3,status:"miss",conf:55},
-  {t:"AZ",w:10,l:8,div:"NL West",divRank:3,runDiff:6,xWins:76,streakNum:1,streakType:"wins",homeW:5,homeL:3,awayW:5,awayL:5,gb:3,wcgb:1,status:"miss",conf:52},
+  {t:"LAD",w:13,l:4,div:"NL West",divRank:1,runDiff:42,xWins:99,streakNum:1,streakType:"wins",homeW:6,homeL:2,awayW:7,awayL:2,gb:0,wcgb:0},
+  {t:"ATL",w:11,l:7,div:"NL East",divRank:1,runDiff:18,xWins:94,streakNum:2,streakType:"wins",homeW:5,homeL:3,awayW:6,awayL:4,gb:0,wcgb:0},
+  {t:"MIN",w:11,l:7,div:"AL Central",divRank:1,runDiff:12,xWins:86,streakNum:1,streakType:"losses",homeW:6,homeL:3,awayW:5,awayL:4,gb:0,wcgb:0},
+  {t:"SD",w:11,l:6,div:"NL West",divRank:2,runDiff:22,xWins:88,streakNum:2,streakType:"wins",homeW:5,homeL:2,awayW:6,awayL:4,gb:2,wcgb:0},
+  {t:"NYY",w:9,l:8,div:"AL East",divRank:2,runDiff:5,xWins:91,streakNum:1,streakType:"wins",homeW:4,homeL:4,awayW:5,awayL:4,gb:0,wcgb:0},
+  {t:"CLE",w:10,l:8,div:"AL Central",divRank:2,runDiff:8,xWins:85,streakNum:2,streakType:"losses",homeW:5,homeL:3,awayW:5,awayL:5,gb:1,wcgb:0},
+  {t:"PHI",w:8,l:9,div:"NL East",divRank:3,runDiff:2,xWins:88,streakNum:1,streakType:"wins",homeW:4,homeL:4,awayW:4,awayL:5,gb:3,wcgb:1},
+  {t:"TB",w:9,l:7,div:"AL East",divRank:1,runDiff:-7,xWins:77,streakNum:4,streakType:"wins",homeW:4,homeL:2,awayW:5,awayL:5,gb:0,wcgb:0},
+  {t:"BAL",w:9,l:8,div:"AL East",divRank:3,runDiff:3,xWins:82,streakNum:1,streakType:"wins",homeW:5,homeL:3,awayW:4,awayL:5,gb:0,wcgb:0},
+  {t:"ATH",w:9,l:8,div:"AL West",divRank:1,runDiff:4,xWins:84,streakNum:1,streakType:"wins",homeW:5,homeL:3,awayW:4,awayL:5,gb:0,wcgb:0},
+  {t:"TEX",w:9,l:8,div:"AL West",divRank:2,runDiff:1,xWins:78,streakNum:1,streakType:"wins",homeW:5,homeL:3,awayW:4,awayL:5,gb:0,wcgb:0},
+  {t:"TOR",w:7,l:9,div:"AL East",divRank:4,runDiff:-3,xWins:81,streakNum:1,streakType:"losses",homeW:3,homeL:5,awayW:4,awayL:4,gb:2,wcgb:1},
+  {t:"SEA",w:8,l:10,div:"AL West",divRank:4,runDiff:-5,xWins:83,streakNum:1,streakType:"losses",homeW:3,homeL:5,awayW:5,awayL:5,gb:3,wcgb:2},
+  {t:"NYM",w:7,l:11,div:"NL East",divRank:5,runDiff:-8,xWins:87,streakNum:1,streakType:"losses",homeW:3,homeL:5,awayW:4,awayL:6,gb:4,wcgb:2},
+  {t:"AZ",w:10,l:8,div:"NL West",divRank:3,runDiff:6,xWins:76,streakNum:1,streakType:"wins",homeW:5,homeL:3,awayW:5,awayL:5,gb:3,wcgb:1},
+  {t:"PIT",w:10,l:7,div:"NL Central",divRank:2,runDiff:5,xWins:72,streakNum:2,streakType:"wins",homeW:5,homeL:3,awayW:5,awayL:4,gb:0,wcgb:2},
+  {t:"CIN",w:10,l:7,div:"NL Central",divRank:1,runDiff:10,xWins:75,streakNum:3,streakType:"wins",homeW:5,homeL:3,awayW:5,awayL:4,gb:0,wcgb:1},
+  {t:"MIL",w:8,l:8,div:"NL Central",divRank:3,runDiff:0,xWins:78,streakNum:1,streakType:"wins",homeW:4,homeL:4,awayW:4,awayL:4,gb:2,wcgb:2},
+  {t:"STL",w:9,l:8,div:"NL Central",divRank:3,runDiff:2,xWins:77,streakNum:1,streakType:"wins",homeW:5,homeL:3,awayW:4,awayL:5,gb:1,wcgb:2},
+  {t:"HOU",w:7,l:11,div:"AL West",divRank:5,runDiff:-18,xWins:85,streakNum:2,streakType:"losses",homeW:3,homeL:5,awayW:4,awayL:6,gb:4,wcgb:3},
+  {t:"MIA",w:9,l:9,div:"NL East",divRank:2,runDiff:0,xWins:70,streakNum:1,streakType:"wins",homeW:5,homeL:4,awayW:4,awayL:5,gb:2,wcgb:1},
+  {t:"WSH",w:8,l:9,div:"NL East",divRank:4,runDiff:-5,xWins:67,streakNum:1,streakType:"wins",homeW:4,homeL:4,awayW:4,awayL:5,gb:3,wcgb:2},
+  {t:"LAA",w:9,l:9,div:"AL West",divRank:3,runDiff:-2,xWins:63,streakNum:1,streakType:"wins",homeW:5,homeL:4,awayW:4,awayL:5,gb:2,wcgb:3},
+  {t:"DET",w:8,l:9,div:"AL Central",divRank:3,runDiff:-2,xWins:73,streakNum:1,streakType:"losses",homeW:4,homeL:4,awayW:4,awayL:5,gb:3,wcgb:2},
+  {t:"CHC",w:8,l:9,div:"NL Central",divRank:4,runDiff:-4,xWins:75,streakNum:1,streakType:"losses",homeW:4,homeL:4,awayW:4,awayL:5,gb:2,wcgb:2},
+  {t:"KC",w:7,l:10,div:"AL Central",divRank:4,runDiff:-8,xWins:71,streakNum:2,streakType:"losses",homeW:3,homeL:5,awayW:4,awayL:5,gb:4,wcgb:3},
+  {t:"BOS",w:6,l:11,div:"AL East",divRank:5,runDiff:-15,xWins:79,streakNum:1,streakType:"losses",homeW:3,homeL:5,awayW:3,awayL:6,gb:5,wcgb:4},
+  {t:"SF",w:6,l:11,div:"NL West",divRank:4,runDiff:-12,xWins:74,streakNum:2,streakType:"losses",homeW:3,homeL:5,awayW:3,awayL:6,gb:7,wcgb:5},
+  {t:"COL",w:6,l:11,div:"NL West",divRank:5,runDiff:-28,xWins:64,streakNum:1,streakType:"losses",homeW:3,homeL:5,awayW:3,awayL:6,gb:7,wcgb:6},
+  {t:"CWS",w:6,l:11,div:"AL Central",divRank:5,runDiff:-25,xWins:63,streakNum:1,streakType:"wins",homeW:3,homeL:5,awayW:3,awayL:6,gb:5,wcgb:5},
 ];
 
 const MLB = MLB_STATIC;
+
 
 
 
@@ -1426,16 +1519,22 @@ function TabParlays(){
   var [view,setView]=useState("overview");
   var [mlbData,setMlbData]=useState(MLB_STATIC);
   var [mlbLoading,setMlbLoading]=useState(true);
-  var [scoutData,setScoutData]=useState([]);
-  var [streaks,setStreaks]=useState({});
+  var [edgeData,setEdgeData]=useState([]);
+  var [tickets,setTickets]=useState([]);
+  var [simStatus,setSimStatus]=useState('idle');
   useEffect(function(){
-    Promise.all([fetchMLBStandings(), fetchStreaks()]).then(function(results){
-      var standings = results[0];
-      var streakMap = results[1];
+    Promise.all([fetchMLBStandings(),fetchStreaks()]).then(function(res){
+      var standings=res[0]; var streakMap=res[1];
       setMlbData(standings);
-      setStreaks(streakMap);
-      setScoutData(buildScoutData(standings, streakMap));
-      setMlbLoading(false);
+      setSimStatus('running');
+      setTimeout(function(){
+        var simResults=runMonteCarlo(standings,streakMap);
+        var ed=buildEdgeData(standings,streakMap,simResults);
+        setEdgeData(ed.slice().sort(function(a,b){return b.simMakePct-a.simMakePct;}));
+        setTickets(buildParlayTickets(ed,PARLAY_DATA));
+        setSimStatus('done');
+        setMlbLoading(false);
+      },50);
     });
   },[]);
   var p=PARLAY_DATA[ap];
@@ -1484,7 +1583,7 @@ function TabParlays(){
 
       {/* View nav */}
       <div style={{display:"flex",gap:"4px"}}>
-        {[["overview","OVERVIEW"],["legs","LEGS"],["standings","STANDINGS"],["calc","CALCULATOR"],["scout","SCOUT"]].map(function(v){return(
+        {[["overview","OVERVIEW"],["legs","LEGS"],["standings","STANDINGS"],["calc","CALCULATOR"],["edgeData","SCOUT"]].map(function(v){return(
           <button key={v[0]} onClick={function(){setView(v[0]);}} className="btn bsm" style={{flex:1,fontSize:"9px",borderColor:view===v[0]?CA:"#2a1e08",color:view===v[0]?CA:CC}}>{v[1]}</button>
         );})}
       </div>
@@ -1556,7 +1655,7 @@ function TabParlays(){
 
       {/* STANDINGS */}
       {view==="standings"&&(
-        <Panel label="◈ 2026 MLB STANDINGS — PLAYOFF PROJECTION">
+        <Panel label={"◈ 2026 MLB STANDINGS — PLAYOFF PROJECTION"}>
           <div style={{fontSize:"9px",color:CD,marginBottom:"10px"}}>Teams in your parlays are highlighted. Confidence = estimated playoff probability.</div>
           {["AL East","AL Central","AL West","NL East","NL Central","NL West"].map(function(div){
             var teams=mlbData.filter(function(t){return t.div===div;}).sort(function(a,b){return b.w-a.w;});
@@ -1599,12 +1698,21 @@ function TabParlays(){
       {view==="scout"&&(
         <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
 
-          {mlbLoading&&<div style={{display:"flex",alignItems:"center",gap:"10px",padding:"14px",background:BP,border:"1px solid #1a1520"}}><div className="spinA" style={{width:"10px",height:"10px",border:"1px solid #4a3408",borderTopColor:CA,borderRadius:"50%"}}/><span style={{fontFamily:"Orbitron",fontSize:"10px",color:CD,letterSpacing:"2px"}}>FETCHING LIVE DATA...</span></div>}
+          {(mlbLoading||simStatus==='running')&&(
+            <div style={{padding:"16px",background:BP,border:"1px solid "+CA+"44",display:"flex",flexDirection:"column",gap:"8px"}}>
+              <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
+                <div className="spinA" style={{width:"12px",height:"12px",border:"1px solid #4a3408",borderTopColor:CA,borderRadius:"50%"}}/>
+                <span style={{fontFamily:"Orbitron",fontSize:"10px",color:CA,letterSpacing:"2px"}}>{simStatus==='running'?"RUNNING 75,000 MONTE CARLO SIMULATIONS...":"FETCHING LIVE DATA..."}</span>
+              </div>
+              <div style={{fontSize:"9px",color:CD,lineHeight:1.6}}>
+                Pulling live standings + last-10 streaks + run differential. Simulating remaining games for all 30 teams. Calculating edge vs current sportsbook lines.
+              </div>
+            </div>
+          )}
 
-          {!mlbLoading&&(function(){
-            var ranked = scoutData;
-            var makeTeams = ranked.filter(function(t){return t.score>=50;});
-            var missTeams = ranked.filter(function(t){return t.score<50;}).slice().reverse();
+          {!mlbLoading&&edgeData.length>0&&(function(){
+            var makeTeams = edgeData.filter(function(t){return t.simMakePct>=50;});
+            var missTeams = edgeData.filter(function(t){return t.simMakePct<50;}).slice().sort(function(a,b){return a.simMakePct-b.simMakePct;});
             var inParlay = function(tm){return PARLAY_DATA.some(function(p){return p.make.includes(tm)||p.miss.includes(tm);});};
             var parlayType = function(tm){
               if(PARLAY_DATA.some(function(p){return p.make.includes(tm);}))return "MAKE";
@@ -1612,32 +1720,36 @@ function TabParlays(){
               return null;
             };
 
-            var renderTeam = function(t, idx, side, displayScore) {
-              var col = displayScore>=80?CG:displayScore>=65?CY:displayScore>=50?CC:displayScore>=35?CY:CR;
+            var renderRow = function(t, idx, side) {
+              var displayPct = side==="miss" ? t.simMissPct : t.simMakePct;
+              var bookPct = side==="miss" ? t.bookMissPct : t.bookMakePct;
+              var edgeVal = parseFloat(side==="miss" ? t.edgeMiss : t.edgeMake);
+              var col = displayPct>=80?CG:displayPct>=65?CY:displayPct>=50?CB:displayPct>=35?CY:CR;
+              var edgeCol = edgeVal>5?CG:edgeVal>0?CY:CR;
               var inP = inParlay(t.t);
               var pType = parlayType(t.t);
-              var pMatch = pType==="MAKE"?t.score>=50:pType==="MISS"?t.score<50:null;
-              var rdColor = parseFloat(t.rdPerGame)>1?CG:parseFloat(t.rdPerGame)<-1?CR:CD;
-              var pctLabel = side==="miss"?(displayScore+"% MISS"):(displayScore+"% MAKE");
+              var pMatch = pType==="MAKE"?t.simMakePct>=50:pType==="MISS"?t.simMissPct>=50:null;
+              var rdCol = parseFloat(t.rdPerGame)>1?CG:parseFloat(t.rdPerGame)<-1?CR:CD;
+              var label = side==="miss" ? displayPct+"% MISS" : displayPct+"% MAKE";
               return (
-                <div key={t.t} style={{padding:"8px 10px",marginBottom:"4px",background:inP?"rgba(240,163,10,.05)":BD,border:"1px solid "+(inP?CA+"55":"#1a1520"),borderRadius:"2px"}}>
+                <div key={t.t+side} style={{padding:"8px 10px",marginBottom:"3px",background:inP?"rgba(240,163,10,.05)":BD,border:"1px solid "+(inP?CA+"55":"#1a1520")}}>
                   <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
-                    <span style={{fontFamily:"Orbitron",fontSize:"9px",color:CD,minWidth:"16px"}}>{idx+1}</span>
-                    <span style={{fontFamily:"Orbitron",fontSize:"13px",fontWeight:800,color:inP?CA:CB,minWidth:"38px"}}>{t.t}</span>
-                    <div style={{flex:1,height:"5px",background:"#0c0a18",borderRadius:"3px"}}>
-                      <div style={{height:"100%",width:displayScore+"%",background:col,borderRadius:"3px"}}/>
+                    <span style={{fontFamily:"Orbitron",fontSize:"9px",color:CD,minWidth:"18px"}}>{idx+1}</span>
+                    <span style={{fontFamily:"Orbitron",fontSize:"12px",fontWeight:800,color:inP?CA:CB,minWidth:"36px"}}>{t.t}</span>
+                    <div style={{flex:1,height:"5px",background:"#0c0a14",borderRadius:"3px"}}>
+                      <div style={{height:"100%",width:displayPct+"%",background:col,borderRadius:"3px"}}/>
                     </div>
-                    <span style={{fontFamily:"Orbitron",fontSize:"11px",fontWeight:700,color:col,minWidth:"76px",textAlign:"right"}}>{pctLabel}</span>
+                    <span style={{fontFamily:"Orbitron",fontSize:"11px",fontWeight:700,color:col,minWidth:"78px",textAlign:"right"}}>{label}</span>
                   </div>
-                  <div style={{display:"flex",gap:"10px",marginTop:"5px",flexWrap:"wrap"}}>
+                  <div style={{display:"flex",gap:"8px",marginTop:"4px",flexWrap:"wrap",alignItems:"center"}}>
+                    <span style={{fontSize:"9px",color:CD}}>BOOK: <span style={{color:CB}}>{bookPct}%</span></span>
+                    <span style={{fontSize:"9px",color:CD}}>EDGE: <span style={{color:edgeCol,fontWeight:700}}>{edgeVal>0?"+":""}{edgeVal}%</span></span>
                     <span style={{fontSize:"9px",color:CD}}>REC: <span style={{color:CB}}>{t.w}-{t.l}</span></span>
                     <span style={{fontSize:"9px",color:CD}}>PYTH: <span style={{color:CY}}>{t.xWins}W</span></span>
                     <span style={{fontSize:"9px",color:CD}}>VEGAS: <span style={{color:CC}}>{t.vegasWins}W</span></span>
-                    <span style={{fontSize:"9px",color:CD}}>RD/G: <span style={{color:rdColor}}>{parseFloat(t.rdPerGame)>0?"+":""}{t.rdPerGame}</span></span>
-                    <span style={{fontSize:"9px",color:CD}}>L10: <span style={{color:t.hot?CG:t.cold?CR:CB}}>{t.l10}{t.hot?" HOT":t.cold?" COLD":""}</span></span>
-                    <span style={{fontSize:"9px",color:CD}}>STREAK: <span style={{color:t.streakLabel&&t.streakLabel[0]==="W"?CG:CR}}>{t.streakLabel}</span></span>
-                    <span style={{fontSize:"9px",color:CD}}>H: <span style={{color:CB}}>{t.homeRec}</span></span>
-                    <span style={{fontSize:"9px",color:CD}}>A: <span style={{color:CB}}>{t.awayRec}</span></span>
+                    <span style={{fontSize:"9px",color:rdCol}}>RD/G: {parseFloat(t.rdPerGame)>0?"+":""}{t.rdPerGame}</span>
+                    <span style={{fontSize:"9px",color:t.hot?CG:t.cold?CR:CD}}>L10: {t.l10}{t.hot?" HOT":t.cold?" COLD":""}</span>
+                    <span style={{fontSize:"9px",color:t.streakLabel&&t.streakLabel[0]==="W"?CG:CR}}>STK: {t.streakLabel}</span>
                     {inP&&<span style={{fontFamily:"Orbitron",fontSize:"8px",padding:"1px 6px",background:pMatch?CG+"22":CR+"22",color:pMatch?CG:CR,border:"1px solid "+(pMatch?CG:CR)+"44"}}>{pType} {pMatch?"ON TRACK":"AT RISK"}</span>}
                   </div>
                 </div>
@@ -1646,62 +1758,84 @@ function TabParlays(){
 
             return (
               <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-                <div style={{padding:"8px 12px",background:"#08080f",border:"1px solid #1a1520",fontSize:"9px",color:CD,lineHeight:1.7}}>
-                  <span style={{color:CA,fontFamily:"Orbitron"}}>HOW SCORES WORK: </span>
-                  Vegas O/U (40%) + Pythagorean expected wins (25%) + Run differential/game (15%) + Division standing (10%) + Last-10 streak (10%).
-                  Early season = Vegas projection weighted heavily since W-L is too small a sample.
-                  <span style={{color:CG}}> 🔥 = 7+ wins last 10. </span>
-                  <span style={{color:CR}}> ❄ = 3 or fewer last 10. </span>
-                  <span style={{color:CA}}> GOLD border = your parlay leg.</span>
+                <div style={{padding:"8px 12px",background:"#08080f",border:"1px solid "+CA+"33",fontSize:"9px",color:CD,lineHeight:1.8}}>
+                  <span style={{color:CA,fontFamily:"Orbitron",letterSpacing:"1px"}}>METHODOLOGY: </span>
+                  75K Monte Carlo simulations of full 162-game season for all 30 teams simultaneously. Inputs: Vegas O/U (40%) + Pythagorean wins (35%) + Last-10 streak (15%) + Run differential (10%). Playoff structure: 3 div winners + 3 wild cards per league. EDGE = Simulation % minus book implied %. Positive edge = value.
+                  <span style={{color:CG}}> Green edge = bet more likely than book prices.</span>
+                  <span style={{color:CR}}> Red edge = book overprices it.</span>
                 </div>
 
-                <Panel label={"◈ MOST LIKELY TO MAKE PLAYOFFS — "+makeTeams.length+" TEAMS RANKED"}>
-                  <div style={{fontSize:"9px",color:CD,marginBottom:"8px"}}>Ranked #1 = most likely to make playoffs. Score 50-97%.</div>
-                  {makeTeams.map(function(t,i){return renderTeam(t,i,"make",t.score);})}
+                <Panel label={"◈ MAKE PLAYOFFS — TOP "+makeTeams.length+" TEAMS (SIM PROBABILITY)"}>
+                  <div style={{fontSize:"9px",color:CD,marginBottom:"6px"}}>#1 = most likely to make playoffs. Shows: sim %, book %, and your edge vs the book.</div>
+                  {makeTeams.map(function(t,i){return renderRow(t,i,"make");})}
                 </Panel>
 
-                <Panel label={"◈ MOST LIKELY TO MISS PLAYOFFS — "+missTeams.length+" TEAMS RANKED"}>
-                  <div style={{fontSize:"9px",color:CD,marginBottom:"8px"}}>Ranked #1 = most certain to miss playoffs. Score 3-49%.</div>
-                  {missTeams.map(function(t,i){return renderTeam(t,i,"miss",100-t.score);})}
+                <Panel label={"◈ MISS PLAYOFFS — "+missTeams.length+" TEAMS (% CHANCE TO MISS)"}>
+                  <div style={{fontSize:"9px",color:CD,marginBottom:"6px"}}>#1 = most certain to miss playoffs. Score = % chance to MISS. Green edge = book underpricing their miss probability.</div>
+                  {missTeams.map(function(t,i){return renderRow(t,i,"miss");})}
                 </Panel>
 
-                <Panel label="◈ MARCUS — RECOMMENDED NEXT PARLAY LEGS">
-                  <div style={{fontSize:"9px",color:CD,marginBottom:"10px",lineHeight:1.7}}>
-                    Top 3 MAKE legs + top 3 MISS legs by composite score. These are the highest-conviction picks today.
-                  </div>
-                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px",marginBottom:"12px"}}>
-                    <div>
-                      <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CG,letterSpacing:"2px",marginBottom:"6px"}}>TOP MAKE LEGS</div>
-                      {makeTeams.slice(0,4).map(function(t){return(
-                        <div key={t.t+"m"} style={{display:"flex",justifyContent:"space-between",padding:"6px 8px",marginBottom:"3px",background:"rgba(24,201,58,.06)",border:"1px solid "+CG+"22"}}>
-                          <div>
-                            <span style={{fontFamily:"Orbitron",fontSize:"11px",color:CA,fontWeight:700}}>{t.t}</span>
-                            <span style={{fontSize:"9px",color:CD,marginLeft:"6px"}}>{t.w}-{t.l} ▪ {t.vegasWins}W O/U</span>
-                          </div>
-                          <span style={{fontFamily:"Orbitron",fontSize:"10px",color:CG}}>{t.score}%</span>
+                <Panel label={"◈ YOUR CURRENT PARLAYS — MONTE CARLO ANALYSIS"}>
+                  {PARLAY_DATA.map(function(pd){
+                    var simProb = 1;
+                    pd.make.forEach(function(tm){var ed=edgeData.find(function(e){return e.t===tm;});if(ed)simProb*=ed.simMakePct/100;});
+                    pd.miss.forEach(function(tm){var ed=edgeData.find(function(e){return e.t===tm;});if(ed)simProb*=ed.simMissPct/100;});
+                    var simPct = (simProb*100).toFixed(3);
+                    var col = parseFloat(simPct)>5?CG:parseFloat(simPct)>1?CY:CR;
+                    return (
+                      <div key={pd.id} style={{marginBottom:"8px",padding:"10px",background:BD,border:"1px solid #1a1520"}}>
+                        <div style={{display:"flex",justifyContent:"space-between",marginBottom:"6px"}}>
+                          <span style={{fontFamily:"Orbitron",fontSize:"12px",color:CA,fontWeight:800}}>{pd.odds}</span>
+                          <span style={{fontFamily:"Orbitron",fontSize:"10px",color:col}}>SIM HIT RATE: {simPct}%</span>
                         </div>
-                      );})}
-                    </div>
-                    <div>
-                      <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CR,letterSpacing:"2px",marginBottom:"6px"}}>TOP MISS LEGS</div>
-                      {missTeams.slice(0,4).map(function(t){return(
-                        <div key={t.t+"ms"} style={{display:"flex",justifyContent:"space-between",padding:"6px 8px",marginBottom:"3px",background:"rgba(224,48,16,.06)",border:"1px solid "+CR+"22"}}>
-                          <div>
-                            <span style={{fontFamily:"Orbitron",fontSize:"11px",color:CA,fontWeight:700}}>{t.t}</span>
-                            <span style={{fontSize:"9px",color:CD,marginLeft:"6px"}}>{t.w}-{t.l} ▪ {t.vegasWins}W O/U</span>
-                          </div>
-                          <span style={{fontFamily:"Orbitron",fontSize:"10px",color:CR}}>{100-t.score}% MISS</span>
+                        <div style={{display:"flex",gap:"6px",flexWrap:"wrap"}}>
+                          {pd.make.map(function(tm){
+                            var ed=edgeData.find(function(e){return e.t===tm;});
+                            var onTrack = ed?ed.simMakePct>=50:true;
+                            var edgeV = ed?parseFloat(ed.edgeMake):0;
+                            return <span key={tm} style={{fontSize:"9px",padding:"2px 6px",background:onTrack?CG+"22":CR+"22",color:onTrack?CG:CR,border:"1px solid "+(onTrack?CG:CR)+"33",fontFamily:"Orbitron"}}>{tm} MAKE {ed?(ed.simMakePct+"%"):""}{edgeV>3?" ✓":edgeV<-3?" ⚠":""}</span>;
+                          })}
+                          {pd.miss.map(function(tm){
+                            var ed=edgeData.find(function(e){return e.t===tm;});
+                            var onTrack = ed?ed.simMissPct>=50:true;
+                            var edgeV = ed?parseFloat(ed.edgeMiss):0;
+                            return <span key={tm} style={{fontSize:"9px",padding:"2px 6px",background:onTrack?CG+"22":CR+"22",color:onTrack?CG:CR,border:"1px solid "+(onTrack?CG:CR)+"33",fontFamily:"Orbitron"}}>{tm} MISS {ed?(ed.simMissPct+"%"):""}{edgeV>3?" ✓":edgeV<-3?" ⚠":""}</span>;
+                          })}
                         </div>
-                      );})}
-                    </div>
-                  </div>
-                  <div style={{padding:"10px",background:"#08080f",border:"1px solid "+CA+"33"}}>
-                    <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CA,letterSpacing:"2px",marginBottom:"6px"}}>MARCUS — CONSTRUCTION ADVICE</div>
-                    <div style={{fontSize:"10px",color:CB,lineHeight:1.8}}>
-                      Stack your highest-score MAKE legs with your lowest-score MISS legs. Legs above 80% are your anchors — build around them.
-                      Legs 60-79% are strong value adds. Avoid legs 50-60% — too close to call this early.
-                      Watch the run differential column: teams winning with poor RD are due for regression. Teams with strong RD but losing are due to bounce back.
-                    </div>
+                      </div>
+                    );
+                  })}
+                </Panel>
+
+                <Panel label={"◈ RECOMMENDED NEW PARLAY CONSTRUCTION — TIERED"}>
+                  {tickets.map(function(tk){
+                    return (
+                      <div key={tk.name} style={{marginBottom:"12px",padding:"12px",background:BD,border:"1px solid "+CA+"33"}}>
+                        <div style={{display:"flex",justifyContent:"space-between",marginBottom:"8px"}}>
+                          <div>
+                            <span style={{fontFamily:"Orbitron",fontSize:"11px",color:CA}}>{tk.name}</span>
+                            <span style={{fontSize:"9px",color:CD,marginLeft:"8px"}}>{tk.target}</span>
+                          </div>
+                          <div style={{textAlign:"right"}}>
+                            <div style={{fontFamily:"Orbitron",fontSize:"10px",color:CG}}>SIM: {tk.simProb}%</div>
+                            <div style={{fontSize:"9px",color:CD}}>BOOK: {tk.bookProb}% ▪ EDGE: {tk.edge}x</div>
+                          </div>
+                        </div>
+                        <div style={{display:"flex",gap:"5px",flexWrap:"wrap",marginBottom:"8px"}}>
+                          {tk.makeLegs.map(function(t){
+                            return <span key={t.t} style={{fontFamily:"Orbitron",fontSize:"9px",padding:"3px 8px",background:CG+"22",color:CG,border:"1px solid "+CG+"44"}}>{t.t} MAKE {t.simMakePct}% (+{t.edgeMake})</span>;
+                          })}
+                          {tk.missLegs.map(function(t){
+                            return <span key={t.t} style={{fontFamily:"Orbitron",fontSize:"9px",padding:"3px 8px",background:CR+"22",color:CR,border:"1px solid "+CR+"44"}}>{t.t} MISS {t.simMissPct}% (+{t.edgeMiss})</span>;
+                          })}
+                        </div>
+                        <div style={{fontSize:"9px",color:CY}}>⚠ WEAKEST LEG: {tk.weakest} — consider swapping for a higher-edge alternative</div>
+                      </div>
+                    );
+                  })}
+                  <div style={{padding:"10px",background:"#08080f",border:"1px solid "+CA+"33",fontSize:"9px",color:CB,lineHeight:1.8}}>
+                    <span style={{color:CA,fontFamily:"Orbitron"}}>MARCUS: </span>
+                    Positive edge means the simulation says the outcome is more likely than the book prices. Stack legs where your edge is 5%+ — those are the highest-conviction plays. Never add a leg purely for payout if it carries negative edge. The book is profitable precisely because bettors take negative-edge legs. Your edge is discipline.
                   </div>
                 </Panel>
               </div>
@@ -1712,7 +1846,7 @@ function TabParlays(){
 
       {/* CALCULATOR */}
       {view==="calc"&&(
-        <Panel label="◈ CASH OUT CALCULATOR — ALL 4 PARLAYS">
+        <Panel label={"◈ CASH OUT CALCULATOR — ALL 4 PARLAYS"}>
           <div style={{fontSize:"9px",color:CD,marginBottom:"12px"}}>Season is ~3% complete. Cash out values are estimates based on current win probability.</div>
           {PARLAY_DATA.map(function(pd){
             var pr=calcProb(pd);
