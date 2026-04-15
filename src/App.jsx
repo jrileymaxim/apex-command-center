@@ -1618,27 +1618,27 @@ function TabParlays(){
               var pType = parlayType(t.t);
               var pMatch = pType==="MAKE"?t.score>=50:pType==="MISS"?t.score<50:null;
               var rdColor = parseFloat(t.rdPerGame)>1?CG:parseFloat(t.rdPerGame)<-1?CR:CD;
-              var pctLabel = side==="miss" ? displayScore+"% MISS" : displayScore+"% MAKE";
+              var pctLabel = side==="miss"?(displayScore+"% MISS"):(displayScore+"% MAKE");
               return (
                 <div key={t.t} style={{padding:"8px 10px",marginBottom:"4px",background:inP?"rgba(240,163,10,.05)":BD,border:"1px solid "+(inP?CA+"55":"#1a1520"),borderRadius:"2px"}}>
                   <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
                     <span style={{fontFamily:"Orbitron",fontSize:"9px",color:CD,minWidth:"16px"}}>{idx+1}</span>
                     <span style={{fontFamily:"Orbitron",fontSize:"13px",fontWeight:800,color:inP?CA:CB,minWidth:"38px"}}>{t.t}</span>
                     <div style={{flex:1,height:"5px",background:"#0c0a18",borderRadius:"3px"}}>
-                      <div style={{height:"100%",width:displayScore+"%",background:col,borderRadius:"3px",boxShadow:"0 0 4px "+col+"66"}}/>
+                      <div style={{height:"100%",width:displayScore+"%",background:col,borderRadius:"3px"}}/>
                     </div>
                     <span style={{fontFamily:"Orbitron",fontSize:"11px",fontWeight:700,color:col,minWidth:"76px",textAlign:"right"}}>{pctLabel}</span>
                   </div>
                   <div style={{display:"flex",gap:"10px",marginTop:"5px",flexWrap:"wrap"}}>
                     <span style={{fontSize:"9px",color:CD}}>REC: <span style={{color:CB}}>{t.w}-{t.l}</span></span>
                     <span style={{fontSize:"9px",color:CD}}>PYTH: <span style={{color:CY}}>{t.xWins}W</span></span>
-                    <span style={{fontSize:"9px",color:CD}}>VEGAS: <span style={{color:CC}}>{t.vegasWins}W O/U</span></span>
+                    <span style={{fontSize:"9px",color:CD}}>VEGAS: <span style={{color:CC}}>{t.vegasWins}W</span></span>
                     <span style={{fontSize:"9px",color:CD}}>RD/G: <span style={{color:rdColor}}>{parseFloat(t.rdPerGame)>0?"+":""}{t.rdPerGame}</span></span>
-                    <span style={{fontSize:"9px",color:CD}}>L10: <span style={{color:t.hot?CG:t.cold?CR:CB}}>{t.l10}{t.hot?" 🔥":t.cold?" ❄":""}</span></span>
+                    <span style={{fontSize:"9px",color:CD}}>L10: <span style={{color:t.hot?CG:t.cold?CR:CB}}>{t.l10}{t.hot?" HOT":t.cold?" COLD":""}</span></span>
                     <span style={{fontSize:"9px",color:CD}}>STREAK: <span style={{color:t.streakLabel&&t.streakLabel[0]==="W"?CG:CR}}>{t.streakLabel}</span></span>
                     <span style={{fontSize:"9px",color:CD}}>H: <span style={{color:CB}}>{t.homeRec}</span></span>
                     <span style={{fontSize:"9px",color:CD}}>A: <span style={{color:CB}}>{t.awayRec}</span></span>
-                    {inP&&<span style={{fontFamily:"Orbitron",fontSize:"8px",padding:"1px 6px",background:pMatch?CG+"22":CR+"22",color:pMatch?CG:CR,border:"1px solid "+(pMatch?CG:CR)+"44"}}>{pType} {pMatch?"✓ ON TRACK":"⚠ AT RISK"}</span>}
+                    {inP&&<span style={{fontFamily:"Orbitron",fontSize:"8px",padding:"1px 6px",background:pMatch?CG+"22":CR+"22",color:pMatch?CG:CR,border:"1px solid "+(pMatch?CG:CR)+"44"}}>{pType} {pMatch?"ON TRACK":"AT RISK"}</span>}
                   </div>
                 </div>
               );
@@ -1660,7 +1660,7 @@ function TabParlays(){
                   {makeTeams.map(function(t,i){return renderTeam(t,i,"make",t.score);})}
                 </Panel>
 
-                <Panel label="◈ MOST LIKELY TO MISS PLAYOFFS — "+missTeams.length+" TEAMS RANKED">
+                <Panel label={"◈ MOST LIKELY TO MISS PLAYOFFS — "+missTeams.length+" TEAMS RANKED"}>
                   <div style={{fontSize:"9px",color:CD,marginBottom:"8px"}}>Ranked #1 = most certain to miss playoffs. Score 3-49%.</div>
                   {missTeams.map(function(t,i){return renderTeam(t,i,"miss",100-t.score);})}
                 </Panel>
