@@ -1,8 +1,9 @@
-missTeams.map(function(t,i){var sm=t.simMakePct!=null?t.simMakePct:t.score;var ds=100-sm;return renderTeam(t,i,"miss",ds);}            var renderTeam = function(t, idx, side, ds) {
+            var renderTeam = function(t, idx, side) {
+              var makePct = t.simMakePct!=null ? t.simMakePct : t.score;
+              var ds = side==="miss" ? (100-makePct) : makePct;
               var col=ds>=80?CG:ds>=65?CY:ds>=50?CB:ds>=35?CY:CR;
-              var inP=inParlay(t.t);
-              var pType=parlayType(t.t);
-              var pMatch=pType==="MAKE"?t.score>=50:pType==="MISS"?t.score<50:null;
+              var inP=inParlay(t.t),pType=parlayType(t.t);
+              var pMatch=pType==="MAKE"?makePct>=50:pType==="MISS"?makePct<50:null;
               var rdCol=parseFloat(t.rdPerGame)>1?CG:parseFloat(t.rdPerGame)<-1?CR:CD;
               var lbl=side==="miss"?(ds+"% MISS"):(ds+"% MAKE");
               return (
@@ -275,6 +276,39 @@ function weeklyReport(enriched, totP, fg) {
   return prefix+"Portfolio return: "+ret+". Sentiment: "+(fg&&fg.label||"Neutral")+". "+topStr+". "+worstStr+". "+(isMonday?"New week — set objectives and review stop-losses.":"Stay disciplined.");
 }
 
+function generateEOD(enriched,totCost,totMkt,totGain,totP,bench,fg){
+  if(!enriched||!enriched.length) return "Load portfolio first.";
+  var now=new Date();
+  var ds=now.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"});
+  var ts=now.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit",hour12:true});
+  var withDay=enriched.filter(function(p){return p.chgP!=null;});
+  var byDay=withDay.slice().sort(function(a,b){return b.chgP-a.chgP;});
+  var top=byDay[0],bot=byDay[byDay.length-1];
+  var upCt=withDay.filter(function(p){return p.chgP>0;}).length;
+  var dnCt=withDay.filter(function(p){return p.chgP<0;}).length;
+  var dayDollar=withDay.reduce(function(acc,p){return acc+(p.mkt!=null&&p.chgP!=null?(p.mkt-p.mkt/(1+p.chgP/100)):0);},0);
+  var ai=["NVDA","TSM","CRWV","SMCI","ANET","MU"];
+  var aiUp=enriched.filter(function(p){return ai.indexOf(p.ticker)>-1&&p.chgP>0;}).length;
+  var aiDn=enriched.filter(function(p){return ai.indexOf(p.ticker)>-1&&p.chgP<0;}).length;
+  var bd=bench&&bench.data||{};
+  var lines=[
+    "APEX EOD — "+ds+" at "+ts,
+    "",
+    "Portfolio: $"+totMkt.toFixed(2)+" / $"+totCost.toFixed(2)+" cost. Total return: "+(totGain>=0?"+":"")+totP.toFixed(2)+"% ($"+(totGain>=0?"+":"")+totGain.toFixed(2)+").",
+    upCt+" up, "+dnCt+" down today. Est. day P&L: "+(dayDollar>=0?"+":"")+dayDollar.toFixed(2)+".",
+    "",
+    top?"Best: "+top.ticker+" "+(top.chgP>0?"+":"")+top.chgP.toFixed(2)+"% at $"+top.price+".":"",
+    bot&&bot.chgP<0?"Worst: "+bot.ticker+" "+bot.chgP.toFixed(2)+"% at $"+bot.price+".":"",
+    "",
+    "AI cluster: "+aiUp+" up, "+aiDn+" down.",
+    bd.SPY?"SPY: "+bd.SPY.chg+"%  QQQ: "+(bd.QQQ?bd.QQQ.chg+"%":"--"):"",
+    "",
+    "Sentiment: "+(fg&&fg.label||"Neutral")+". Stay disciplined.",
+  ];
+  return lines.filter(function(l,idx){return idx===0||l.length>0;}).join("\n");
+}
+
+
 // ── MONTE CARLO ENGINE ────────────────────────────────────────────────────────
 var VEGAS_WINS={LAD:100,ATL:95,NYY:92,PHI:89,NYM:88,SD:87,HOU:86,MIN:86,CLE:85,ATH:85,SEA:84,BAL:83,TOR:82,BOS:80,TEX:79,MIL:79,STL:78,TB:78,AZ:77,CHC:76,CIN:76,SF:75,DET:74,PIT:73,KC:72,MIA:71,WSH:68,COL:65,CWS:64,LAA:64};
 var BOOK_ODDS={LAD:{m:-600,x:420},ATL:{m:-320,x:245},MIN:{m:-195,x:160},SD:{m:-270,x:215},NYY:{m:-175,x:145},CLE:{m:-155,x:130},PHI:{m:-145,x:120},TB:{m:-108,x:-115},BAL:{m:-125,x:105},ATH:{m:165,x:-200},TOR:{m:155,x:-185},HOU:{m:145,x:-175},SEA:{m:115,x:-140},TEX:{m:225,x:-280},NYM:{m:205,x:-255},AZ:{m:235,x:-295},MIL:{m:235,x:-295},PIT:{m:265,x:-335},CHC:{m:265,x:-335},STL:{m:285,x:-360},MIA:{m:305,x:-390},BOS:{m:305,x:-390},LAA:{m:285,x:-360},CIN:{m:205,x:-255},DET:{m:335,x:-430},WSH:{m:405,x:-525},KC:{m:455,x:-600},SF:{m:355,x:-455},COL:{m:660,x:-1000},CWS:{m:710,x:-1100}};
@@ -286,9 +320,8 @@ function runMC(stnd,strks){
   var pr={};
   stnd.forEach(function(t){
     var gp=Math.max(1,t.w+t.l);
-    var vp=(VEGAS_WINS[t.t]||77)/162, ap=t.w/gp;
-    var sd=strks[t.t]||{};
-    var lp=(sd.last10>0)?(sd.l10w/sd.last10):ap;
+    var vp=(VEGAS_WINS[t.t]||77)/162,ap=t.w/gp;
+    var sd=strks[t.t]||{},lp=(sd.last10>0)?(sd.l10w/sd.last10):ap;
     var rd=(t.runDiff!=null&&gp>0)?Math.max(-0.02,Math.min(0.02,(t.runDiff/gp)*0.006)):0;
     pr[t.t]={p:Math.min(0.60,Math.max(0.40,0.70*vp+0.20*ap+0.10*lp+rd)),rem:162-gp,w:t.w,div:t.div};
   });
@@ -298,7 +331,7 @@ function runMC(stnd,strks){
     stnd.forEach(function(t){var p=pr[t.t];fw[t.t]=Math.max(0,Math.min(162,p.w+Math.round(p.rem*p.p+Math.sqrt(p.rem*p.p*(1-p.p))*rn())));});
     var al={},nl={};
     stnd.forEach(function(t){var dv=t.div;if(dv.indexOf('AL')===0){if(!al[dv])al[dv]=[];al[dv].push({t:t.t,w:fw[t.t]});}else{if(!nl[dv])nl[dv]=[];nl[dv].push({t:t.t,w:fw[t.t]});}});
-    function pf(dv){var wn={},all=[];Object.keys(dv).forEach(function(d){var sorted=dv[d].slice().sort(function(a,b){return b.w-a.w;});wn[sorted[0].t]=true;dv[d].forEach(function(t){all.push(t);});});all.filter(function(t){return !wn[t.t];}).sort(function(a,b){return b.w-a.w;}).slice(0,3).forEach(function(t){wn[t.t]=true;});return wn;}
+    function pf(dv){var wn={},all=[];Object.keys(dv).forEach(function(d){var s=dv[d].slice().sort(function(a,b){return b.w-a.w;});wn[s[0].t]=true;dv[d].forEach(function(t){all.push(t);});});all.filter(function(t){return !wn[t.t];}).sort(function(a,b){return b.w-a.w;}).slice(0,3).forEach(function(t){wn[t.t]=true;});return wn;}
     var po=Object.assign({},pf(al),pf(nl));
     stnd.forEach(function(t){if(po[t.t])ct[t.t]++;});
   }
@@ -362,6 +395,7 @@ export default function App() {
   const [port,setPort] = useState({s:"idle",data:{},live:false});
 
   const [bench,setBench] = useState({s:"idle",data:{}});
+  const [eod,setEod]       = useState("");
   const [journal,setJournal] = useState([]);
   const [journalReady,setJournalReady] = useState(false);
   const [voice,setVoice]   = useState(false);
@@ -537,7 +571,7 @@ export default function App() {
 
       {/* CONTENT */}
       <div style={{flex:1,minHeight:0,overflow:"auto",position:"relative",zIndex:1,padding:"12px 14px"}}>
-        {tab==="briefing"  && <TabBriefing alf={alf} onAlf={function(){setAlf({s:"done",text:marcusBriefing()});}} wx={wx} city={city} setCity={setCity} onWx={doWeather} fg={fg} enriched={enriched} totP={totP}/>}
+        {tab==="briefing"  && <TabBriefing alf={alf} onAlf={function(){setAlf({s:"done",text:marcusBriefing()});}} eod={eod} onEod={function(){setEod(generateEOD(enriched,totCost,totMkt,totGain,totP,bench,fg));}} wx={wx} city={city} setCity={setCity} onWx={doWeather} fg={fg} enriched={enriched} totP={totP}/>}
         {tab==="portfolio" && <TabPortfolio enriched={enriched} totCost={totCost} totMkt={totMkt} totGain={totGain} totP={totP} leaps={LEAPS} status={port.s} live={port.live} onRefresh={doPortfolio} bench={bench}/>}
         {tab==="intel"     && <TabIntel enriched={enriched} status={port.s} totP={totP} fg={fg}/>}
         {tab==="soun"      && <TabSoun port={port}/>}
@@ -563,7 +597,7 @@ export default function App() {
 }
 
 // ── BRIEFING TAB ───────────────────────────────────────────────────────────────
-function TabBriefing({alf,onAlf,wx,city,setCity,onWx,fg,enriched,totP}) {
+function TabBriefing({alf,onAlf,wx,city,setCity,onWx,fg,enriched,totP,eod,onEod}) {
   var isMonday = new Date().getDay()===1;
   var report = weeklyReport(enriched||[], totP||0, fg);
   function wIcon(c) {
@@ -632,6 +666,20 @@ function TabBriefing({alf,onAlf,wx,city,setCity,onWx,fg,enriched,totP}) {
         <div style={{fontSize:"9px",color:CD,letterSpacing:"2px"}}>— MARCUS {isMonday?"▪ MONDAY REVIEW":""}</div>
       </Panel>
 
+      <Panel label={"◈ MARCUS — END OF DAY BRIEFING"} right={<button className="btn bsm" onClick={onEod}>GENERATE</button>}>
+        {!eod&&<div style={{fontSize:"10px",color:CD,lineHeight:1.7}}>Reads live portfolio prices. Refresh Portfolio tab first, then hit GENERATE for a real data briefing.</div>}
+        {eod&&(
+          <div className="fi">
+            {eod.split("\n").map(function(line,idx){
+              if(idx===0) return <div key={idx} style={{fontFamily:"Orbitron",fontSize:"9px",color:CA,letterSpacing:"1px",marginBottom:"10px"}}>{line}</div>;
+              if(line==="") return <div key={idx} style={{height:"5px"}}/>;
+              return <div key={idx} style={{fontSize:"11px",color:CB,lineHeight:1.8}}>{line}</div>;
+            })}
+            <div style={{marginTop:"10px",fontSize:"9px",color:CD,letterSpacing:"2px"}}>— MARCUS ▪ LIVE DATA</div>
+          </div>
+        )}
+      </Panel>
+
       <Panel label={"◈ SYSTEM STATUS"}>
         {[["MARCUS","ONLINE",CG],["PORTFOLIO","LIVE",CG],["WEATHER","LIVE",CG],["INTEL","LIVE",CG],["SOUN OPS","LIVE",CG],["PARLAYS","LIVE",CG],["EARNINGS","LIVE",CG],["BENCHMARKS","LIVE",CG],["JOURNAL","LIVE",CG],["PWA","READY",CG]].map(function(r){return (
           <div key={r[0]} style={{display:"flex",justifyContent:"space-between",padding:"5px 0",borderBottom:"1px solid #0c0a14"}}>
@@ -647,6 +695,10 @@ function TabBriefing({alf,onAlf,wx,city,setCity,onWx,fg,enriched,totP}) {
 // ── PORTFOLIO TAB ──────────────────────────────────────────────────────────────
 function TabPortfolio({enriched,totCost,totMkt,totGain,totP,leaps,status,live,onRefresh,bench}) {
   var up=totGain>=0;
+  var [popup,setPopup]=useState(null);
+  var [targetAmt,setTargetAmt]=useState("");
+  var [targetDays,setTargetDays]=useState("");
+  var [targetResult,setTargetResult]=useState(null);
   var bd=bench&&bench.data||{};
   var spyRet=bd.SPY?((parseFloat(bd.SPY.price)-542.30)/542.30*100):null;
   var qqqRet=bd.QQQ?((parseFloat(bd.QQQ.price)-462.18)/462.18*100):null;
@@ -709,7 +761,44 @@ function TabPortfolio({enriched,totCost,totMkt,totGain,totP,leaps,status,live,on
         );})}
       </Panel>
 
-      <Panel label={"◈ SOUN LEAPS — OPTIONS POSITIONS"}>
+            <Panel label={"◈ PORTFOLIO TARGET CALCULATOR"}>
+        <div style={{display:"flex",gap:"8px",marginBottom:"10px"}}>
+          <div style={{flex:1}}>
+            <div style={{fontSize:"9px",color:CD,marginBottom:"4px",letterSpacing:"1px"}}>GOAL AMOUNT ($)</div>
+            <input className="inp" value={targetAmt} onChange={function(e){setTargetAmt(e.target.value);setTargetResult(null);}} placeholder="e.g. 50000"/>
+          </div>
+          <div style={{flex:1}}>
+            <div style={{fontSize:"9px",color:CD,marginBottom:"4px",letterSpacing:"1px"}}>DAYS FROM NOW</div>
+            <input className="inp" value={targetDays} onChange={function(e){setTargetDays(e.target.value);setTargetResult(null);}} placeholder="e.g. 365"/>
+          </div>
+        </div>
+        <button className="btn" style={{width:"100%",marginBottom:"10px"}} onClick={function(){
+          var goal=parseFloat(targetAmt),days=parseInt(targetDays);
+          if(!goal||!days||!enriched.length) return;
+          var current=enriched.reduce(function(a,px){return a+(px.mkt||px.avgCost*px.shares);},0);
+          var needed=goal-current;
+          if(needed<=0){setTargetResult({msg:"Already at goal! Current: $"+current.toFixed(2),buys:[]});return;}
+          var ranked=enriched.filter(function(px){return px.chgP!=null;}).slice().sort(function(a,bx){return (bx.chgP||0)-(a.chgP||0);});
+          var buys=ranked.slice(0,4).map(function(px){
+            var dollar=(needed*0.25),shs=dollar/(parseFloat(px.price)||px.avgCost);
+            return {ticker:px.ticker,price:(parseFloat(px.price)||px.avgCost).toFixed(2),dollar:dollar.toFixed(2),shs:shs.toFixed(3)};
+          });
+          setTargetResult({msg:"Need $"+needed.toFixed(2)+" more over "+days+" days (~$"+(needed/days).toFixed(2)+"/day). Suggested buys:",buys:buys});
+        }}>CALCULATE TARGET</button>
+        {targetResult&&(
+          <div className="fi">
+            <div style={{fontSize:"10px",color:CA,marginBottom:"8px"}}>{targetResult.msg}</div>
+            {targetResult.buys&&targetResult.buys.map(function(bx){return(
+              <div key={bx.ticker} style={{display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:"1px solid #0c0a14"}}>
+                <span style={{fontFamily:"Orbitron",fontSize:"11px",color:CA}}>{bx.ticker}</span>
+                <span style={{fontSize:"10px",color:CB}}>{bx.shs} sh @ ${bx.price}</span>
+                <span style={{fontFamily:"Orbitron",fontSize:"10px",color:CG}}>${bx.dollar}</span>
+              </div>
+            );})}
+          </div>
+        )}
+      </Panel>
+<Panel label={"◈ SOUN LEAPS — OPTIONS POSITIONS"}>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
           {leaps.map(function(l,i){
             var pct=(l.sounNow/l.breakeven*100).toFixed(0);
@@ -771,6 +860,7 @@ function TabPortfolio({enriched,totCost,totMkt,totGain,totP,leaps,status,live,on
           })}
         </div>
       </Panel>
+      {popup&&<StockPopup ticker={popup.ticker} price={popup.price||(popup.mkt&&popup.shares?popup.mkt/popup.shares:popup.avgCost)} cost={popup.avgCost} shares={popup.shares} gainP={popup.gainP||0} chgP={popup.chgP||0} onClose={function(){setPopup(null);}}/>}
     </div>
   );
 }
@@ -1402,15 +1492,13 @@ function computePlayoffScore(team, streaks) {
 
 function buildScoutData(standings,streaks){
   return standings.map(function(t){
-    var sc=(t.simMakePct!=null)?t.simMakePct:computePlayoffScore(t,streaks);
-    var sd=streaks[t.t]||{};
-    var l10w=sd.l10w, l10l=sd.l10l;
+    var sc=(t.simMakePct!=null)?Math.min(95,Math.max(5,t.simMakePct)):computePlayoffScore(t,streaks);
+    var sd=streaks[t.t]||{},l10w=sd.l10w,l10l=sd.l10l;
     var gp=Math.max(1,t.w+t.l);
     return Object.assign({},t,{
       score:sc,
       l10:(l10w!=null)?(l10w+'-'+l10l):'--',
-      hot:(l10w!=null&&l10w>=7),
-      cold:(l10w!=null&&l10w<=3),
+      hot:(l10w!=null&&l10w>=7),cold:(l10w!=null&&l10w<=3),
       vegasWins:VEGAS_WINS?(VEGAS_WINS[t.t]||77):77,
       rdPerGame:(t.runDiff!=null)?(t.runDiff/gp).toFixed(1):'0.0',
       streakLabel:t.streakType==='wins'?('W'+t.streakNum):t.streakType==='losses'?('L'+t.streakNum):'--',
@@ -1696,8 +1784,8 @@ function TabParlays(){
 
           {!mlbLoading&&(function(){
             var ranked = scoutData;
-            var makeTeams=ranked.filter(function(t){var sm=t.simMakePct!=null?t.simMakePct:t.score;return sm>=50;}).sort(function(a,b){var sa=a.simMakePct!=null?a.simMakePct:a.score;var sb=b.simMakePct!=null?b.simMakePct:b.score;return sb-sa;});
-            var missTeams=ranked.filter(function(t){var sm=t.simMakePct!=null?t.simMakePct:t.score;return sm<50;}).sort(function(a,b){var sa=a.simMakePct!=null?a.simMakePct:a.score;var sb=b.simMakePct!=null?b.simMakePct:b.score;return sa-sb;});});
+            var makeTeams=ranked.filter(function(t){return t.score>=50;}).sort(function(a,b){return b.score-a.score;});
+            var missTeams=ranked.filter(function(t){return t.score<50;}).sort(function(a,b){return a.score-b.score;});.slice().sort(function(a,b){return a.simMakePct!=null?(a.simMakePct-b.simMakePct):(a.score-b.score);});
             var inParlay = function(tm){return PARLAY_DATA.some(function(p){return p.make.includes(tm)||p.miss.includes(tm);});};
             var parlayType = function(tm){
               if(PARLAY_DATA.some(function(p){return p.make.includes(tm);}))return "MAKE";
@@ -1754,7 +1842,55 @@ function TabParlays(){
 
                 <Panel label={"◈ MOST LIKELY TO MAKE PLAYOFFS — TOP "+makeTeams.length+" TEAMS"}>
                   <div style={{fontSize:"9px",color:CD,marginBottom:"8px"}}>Ranked #1 = most likely to make playoffs. Score 50-97%.</div>
-                  {makeTeams.map(function(t,i){var sm=t.simMakePct!=null?t.simMakePct:t.score;return renderTeam(t,i,"make",sm);};
+                  {makeTeams.map(function(t,i){return renderTeam(t,i,"make",t.simMakePct!=null?t.simMakePct:t.score);})}
+                </Panel>
+
+                <Panel label={"◈ MOST LIKELY TO MISS PLAYOFFS — BOTTOM "+missTeams.length+" TEAMS"}>
+                  <div style={{fontSize:"9px",color:CD,marginBottom:"8px"}}>Ranked #1 = most certain to miss playoffs. Score 3-49%.</div>
+                  {missTeams.map(function(t,i){return renderTeam(t,i,"miss",t.simMissPct!=null?t.simMissPct:100-t.score);})}
+                </Panel>
+
+                <Panel label={"◈ MARCUS — RECOMMENDED NEXT PARLAY LEGS"}>
+                  <div style={{fontSize:"9px",color:CD,marginBottom:"10px",lineHeight:1.7}}>
+                    Top 3 MAKE legs + top 3 MISS legs by composite score. These are the highest-conviction picks today.
+                  </div>
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px",marginBottom:"12px"}}>
+                    <div>
+                      <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CG,letterSpacing:"2px",marginBottom:"6px"}}>TOP MAKE LEGS</div>
+                      {makeTeams.slice(0,4).map(function(t){return(
+                        <div key={t.t+"m"} style={{display:"flex",justifyContent:"space-between",padding:"6px 8px",marginBottom:"3px",background:"rgba(24,201,58,.06)",border:"1px solid "+CG+"22"}}>
+                          <div>
+                            <span style={{fontFamily:"Orbitron",fontSize:"11px",color:CA,fontWeight:700}}>{t.t}</span>
+                            <span style={{fontSize:"9px",color:CD,marginLeft:"6px"}}>{t.w}-{t.l} ▪ {t.vegasWins}W O/U</span>
+                          </div>
+                          <span style={{fontFamily:"Orbitron",fontSize:"10px",color:CG}}>{t.score}%</span>
+                        </div>
+                      );})}
+                    </div>
+                    <div>
+                      <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CR,letterSpacing:"2px",marginBottom:"6px"}}>TOP MISS LEGS</div>
+                      {missTeams.slice(0,4).map(function(t){return(
+                        <div key={t.t+"ms"} style={{display:"flex",justifyContent:"space-between",padding:"6px 8px",marginBottom:"3px",background:"rgba(224,48,16,.06)",border:"1px solid "+CR+"22"}}>
+                          <div>
+                            <span style={{fontFamily:"Orbitron",fontSize:"11px",color:CA,fontWeight:700}}>{t.t}</span>
+                            <span style={{fontSize:"9px",color:CD,marginLeft:"6px"}}>{t.w}-{t.l} ▪ {t.vegasWins}W O/U</span>
+                          </div>
+                          <span style={{fontFamily:"Orbitron",fontSize:"10px",color:CR}}>{t.score}%</span>
+                        </div>
+                      );})}
+                    </div>
+                  </div>
+                  <div style={{padding:"10px",background:"#08080f",border:"1px solid "+CA+"33"}}>
+                    <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CA,letterSpacing:"2px",marginBottom:"6px"}}>MARCUS — CONSTRUCTION ADVICE</div>
+                    <div style={{fontSize:"10px",color:CB,lineHeight:1.8}}>
+                      Stack your highest-score MAKE legs with your lowest-score MISS legs. Legs above 80% are your anchors — build around them.
+                      Legs 60-79% are strong value adds. Avoid legs 50-60% — too close to call this early.
+                      Watch the run differential column: teams winning with poor RD are due for regression. Teams with strong RD but losing are due to bounce back.
+                    </div>
+                  </div>
+                </Panel>
+              </div>
+            );
           })()}
         </div>
       )}
@@ -1801,6 +1937,58 @@ function TabParlays(){
   );
 }
 
+
+function StockPopup({ticker, price, cost, shares, gainP, chgP, onClose}) {
+  var up = gainP>=0;
+  var todayUp = chgP>=0;
+  var mktVal = price*shares;
+  var costVal = cost*shares;
+  var totalGain = mktVal-costVal;
+  var rec = gainP > 15 ? "HOLD" : gainP < -20 ? "REVIEW" : gainP > 5 ? "HOLD" : "HOLD";
+  var reasoning = gainP > 20 ? "Strong total return. No action needed — let winners run unless position size exceeds 25% of portfolio." :
+    gainP < -15 ? "Position underwater. Evaluate if thesis is intact. Consider averaging down only if fundamentals unchanged." :
+    chgP < -5 ? "Sharp single-day decline. Check for news catalyst before acting. Likely noise at this timeframe." :
+    chgP > 5 ? "Strong day. Consider trimming a small portion to lock in gains if overweight." :
+    "Position within normal range. No immediate action required.";
+  var sizing = "At "+shares.toFixed(3)+" shares your exposure is $"+mktVal.toFixed(2)+". Standard position sizing for a speculative portfolio suggests no single name exceed 20% of total value.";
+  return (
+    <div style={{position:"fixed",top:0,left:0,right:0,bottom:0,background:"rgba(3,3,8,.92)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center"}} onClick={onClose}>
+      <div style={{background:BP,border:"2px solid "+CA+"66",padding:"24px",maxWidth:"480px",width:"90%",maxHeight:"80vh",overflow:"auto"}} onClick={function(e){e.stopPropagation();}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"16px"}}>
+          <div>
+            <div style={{fontFamily:"Orbitron",fontSize:"22px",fontWeight:900,color:CA}}>{ticker}</div>
+            <div style={{fontSize:"11px",color:CD,marginTop:"2px",letterSpacing:"1px"}}>STOCK ANALYSIS</div>
+          </div>
+          <button className="xbtn" onClick={onClose} style={{fontSize:"18px",padding:"4px 10px"}}>×</button>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"8px",marginBottom:"16px"}}>
+          {[["PRICE","$"+parseFloat(price).toFixed(2),CB],["TODAY",(todayUp?"+":"")+parseFloat(chgP).toFixed(2)+"%",todayUp?CG:CR],["TOTAL RETURN",(up?"+":"")+gainP.toFixed(2)+"%",up?CG:CR]].map(function(r){return(
+            <div key={r[0]} style={{background:BD,padding:"10px",textAlign:"center",border:"1px solid #1a1520"}}>
+              <div style={{fontSize:"8px",color:CD,marginBottom:"4px",letterSpacing:"1px"}}>{r[0]}</div>
+              <div style={{fontFamily:"Orbitron",fontSize:"13px",fontWeight:700,color:r[2]}}>{r[1]}</div>
+            </div>
+          );})}
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px",marginBottom:"16px"}}>
+          {[["SHARES",shares.toFixed(3)],["AVG COST","$"+cost.toFixed(2)],["MKT VALUE","$"+mktVal.toFixed(2)],["TOTAL P&L",(totalGain>=0?"+$":"-$")+Math.abs(totalGain).toFixed(2)]].map(function(r){return(
+            <div key={r[0]} style={{background:BD,padding:"8px",border:"1px solid #1a1520"}}>
+              <div style={{fontSize:"9px",color:CD}}>{r[0]}</div>
+              <div style={{fontFamily:"Orbitron",fontSize:"11px",color:CB,marginTop:"2px"}}>{r[1]}</div>
+            </div>
+          );})}
+        </div>
+        <div style={{padding:"12px",background:"rgba(240,163,10,.06)",border:"1px solid "+CA+"44",marginBottom:"12px"}}>
+          <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CA,letterSpacing:"2px",marginBottom:"6px"}}>MARCUS — {rec}</div>
+          <div style={{fontSize:"11px",color:CB,lineHeight:1.8}}>{reasoning}</div>
+        </div>
+        <div style={{padding:"10px",background:BD,border:"1px solid #1a1520"}}>
+          <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CD,letterSpacing:"1px",marginBottom:"4px"}}>POSITION SIZING</div>
+          <div style={{fontSize:"10px",color:CC,lineHeight:1.7}}>{sizing}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function Panel({label,children,right}) {
   return (
