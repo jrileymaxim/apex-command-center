@@ -471,7 +471,7 @@ export default function App() {
     {id:"intel",icon:"ð",l:"INTEL"},
     {id:"soun",icon:"ð¯",l:"SOUN OPS"},
     {id:"parlays",icon:"â¾",l:"PARLAYS"},
-    {id:"alerts",icon:"\uD83D\uDD14",l:"ALERTS"},
+    {id:"alerts",icon:"🔔",l:"ALERTS"},
     {id:"mission",icon:"ð ",l:"MISSION"},
   ];
 
