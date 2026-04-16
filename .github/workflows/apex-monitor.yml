@@ -1,0 +1,59 @@
+name: APEX Market Monitor
+
+on:
+  schedule:
+    - cron: '*/5 13-21 * * 1-5'
+    - cron: '0 9 * * 1-5'
+    - cron: '0 21 * * 1-5'
+  workflow_dispatch:
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SEC EDGAR Check
+        run: |
+          python3 << 'PYEOF'
+          import urllib.request, json, datetime
+          CIKS = {"AAL":"0000006201","SMCI":"0001375365","TSM":"0001046179","MU":"0000723254","NVDA":"0001045810","CRWV":"0001866175","DVN":"0000315189","ANET":"0001313925","SOUN":"0001653519","GLD":"0000769699"}
+          alerts = []
+          cutoff = (datetime.datetime.now()-datetime.timedelta(hours=8)).strftime('%Y-%m-%d')
+          for ticker, cik in CIKS.items():
+            try:
+              req = urllib.request.Request(f"https://data.sec.gov/submissions/CIK{cik}.json",headers={"User-Agent":"apex-monitor/1.0 monitor@apex.app"})
+              with urllib.request.urlopen(req,timeout=10) as r: d=json.load(r)
+              recent=d.get("filings",{}).get("recent",{})
+              forms=recent.get("form",[])
+              dates=recent.get("filingDate",[])
+              for i,f in enumerate(forms[:5]):
+                if i<len(dates) and dates[i]>=cutoff and f in ["8-K","4","SC 13D","SC 13G"]:
+                  alerts.append(f"{ticker} {f} filed {dates[i]}")
+            except Exception as e: print(f"Skip {ticker}: {e}")
+          if alerts:
+            msg="\n".join(alerts)
+            req2=urllib.request.Request("https://ntfy.sh/apex-jrileymaxim-alerts",data=msg.encode(),method="POST",headers={"Title":"APEX SEC ALERT","Priority":"urgent","Tags":"rotating_light,chart_with_upwards_trend"})
+            with urllib.request.urlopen(req2,timeout=10) as r: print(f"Sent {len(alerts)} alerts, status:{r.status}")
+          else: print("No new SEC filings")
+          PYEOF
+
+      - name: Price Movement Check
+        run: |
+          python3 << 'PYEOF'
+          import urllib.request, json
+          try:
+            url="https://query1.finance.yahoo.com/v7/finance/quote?symbols=AAL,SMCI,ANET,TSM,MU,NVDA,CRWV,DVN,GLD,SOUN"
+            req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0 (compatible)"})
+            with urllib.request.urlopen(req,timeout=10) as r: data=json.load(r)
+            alerts=[]
+            for q in data.get("quoteResponse",{}).get("result",[]):
+              sym=q.get("symbol","")
+              chg=q.get("regularMarketChangePercent",0)
+              price=q.get("regularMarketPrice",0)
+              if abs(chg)>=3: alerts.append(f"{sym} {chg:+.1f}% ${price:.2f}")
+            if alerts:
+              msg="PRICE MOVER\n"+"\n".join(alerts)
+              req2=urllib.request.Request("https://ntfy.sh/apex-jrileymaxim-alerts",data=msg.encode(),method="POST",headers={"Title":"APEX PRICE ALERT","Priority":"high","Tags":"chart_with_upwards_trend"})
+              with urllib.request.urlopen(req2,timeout=10) as r: print(f"Sent, status:{r.status}")
+            else: print("No movers >3%")
+          except Exception as e: print(f"Error: {e}")
+          PYEOF
