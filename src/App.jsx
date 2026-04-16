@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-// ── PORTFOLIO DATA ─────────────────────────────────────────────────────────────
+// ââ PORTFOLIO DATA âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 const POSITIONS = [
   {ticker:"AAL", shares:12.70, avgCost:11.30, name:"American Airlines"},
   {ticker:"SMCI",shares:13.71, avgCost:23.24, name:"Super Micro Computer"},
@@ -34,33 +34,33 @@ const FALLBACK = {
 };
 
 
-// ── PHASE 4 DATA ───────────────────────────────────────────────────────────────
+// ââ PHASE 4 DATA âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 const EARNINGS = [
   {ticker:"AAL", date:"2026-04-24", est:"Q1 2026", note:"Revenue ~$13.5B est"},
   {ticker:"SMCI",date:"2026-05-06", est:"Q3 FY26", note:"Server demand, margin watch"},
   {ticker:"ANET",date:"2026-05-06", est:"Q1 2026", note:"AI networking growth 20%+ est"},
-  {ticker:"TSM", date:"2026-04-17", est:"Q1 2026", note:"Already reported — strong AI demand"},
+  {ticker:"TSM", date:"2026-04-17", est:"Q1 2026", note:"Already reported â strong AI demand"},
   {ticker:"MU",  date:"2026-06-25", est:"Q3 FY26", note:"HBM3E for AI, guidance key"},
   {ticker:"NVDA",date:"2026-05-28", est:"Q1 FY27", note:"Blackwell ramp, $43B+ rev est"},
-  {ticker:"CRWV",date:"2026-05-12", est:"Q1 2026", note:"First earnings as public — revenue trajectory"},
+  {ticker:"CRWV",date:"2026-05-12", est:"Q1 2026", note:"First earnings as public â revenue trajectory"},
   {ticker:"DVN", date:"2026-05-05", est:"Q1 2026", note:"Oil price sensitivity, dividend watch"},
   {ticker:"MNTS",date:"2026-05-14", est:"Q1 2026", note:"Revenue growth + cash burn"},
-  {ticker:"VTI", date:null, est:"ETF", note:"No earnings — tracks total market"},
-  {ticker:"GLD", date:null, est:"ETF", note:"No earnings — tracks gold price"},
+  {ticker:"VTI", date:null, est:"ETF", note:"No earnings â tracks total market"},
+  {ticker:"GLD", date:null, est:"ETF", note:"No earnings â tracks gold price"},
 ];
 const BENCH_FALLBACK = {
   SPY:{price:"542.30",chg:"1.05"},
   QQQ:{price:"462.18",chg:"1.22"},
   DIA:{price:"402.44",chg:"0.88"},
 };
-// ── COLORS ─────────────────────────────────────────────────────────────────────
+// ââ COLORS âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 const CA="#f0a30a",CB="#ffffff",CC="#d4a84b",CD="#7a6030";
 const CG="#18c93a",CR="#e03010",CY="#e8b820";
 const BG="#030308",BP="#0a0a18",BD="#0d0d22";
 
-// ── PHASE 2 DATA ───────────────────────────────────────────────────────────────
+// ââ PHASE 2 DATA âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 
-// Signal engine — derives buy/hold/sell from price vs cost basis + day change
+// Signal engine â derives buy/hold/sell from price vs cost basis + day change
 function deriveSignal(p) {
   var gainP = p.gainP || 0;
   var chg   = p.chg   || 0;
@@ -78,26 +78,26 @@ const SOUN_DATA = {
   price: 7.04,
   sector: "AI Voice Technology",
   catalysts: [
-    {date:"Q2 2025",event:"SoundHound AI automotive partnership expansion — 100+ car brands"},
-    {date:"Q3 2025",event:"Restaurant industry rollout — 10,000+ locations active"},
+    {date:"Q2 2025",event:"SoundHound AI automotive partnership expansion â 100+ car brands"},
+    {date:"Q3 2025",event:"Restaurant industry rollout â 10,000+ locations active"},
     {date:"Q4 2025",event:"Amelia acquisition integration driving enterprise revenue"},
     {date:"Q1 2026",event:"AI agent platform launch targeting financial services sector"},
-    {date:"Apr 2026",event:"Earnings report upcoming — analyst consensus: revenue growth 70%+ YoY"},
+    {date:"Apr 2026",event:"Earnings report upcoming â analyst consensus: revenue growth 70%+ YoY"},
   ],
   sentiment: [
-    {label:"Reddit/StockTwits",score:72,color:CG,note:"Bullish — high retail interest"},
-    {label:"Analyst Consensus",score:58,color:CY,note:"Mixed — 3 Buy, 2 Hold, 1 Sell"},
-    {label:"News Tone",score:65,color:CG,note:"Positive — AI tailwinds narrative"},
-    {label:"Options Flow",score:70,color:CG,note:"Call-heavy — bullish positioning"},
+    {label:"Reddit/StockTwits",score:72,color:CG,note:"Bullish â high retail interest"},
+    {label:"Analyst Consensus",score:58,color:CY,note:"Mixed â 3 Buy, 2 Hold, 1 Sell"},
+    {label:"News Tone",score:65,color:CG,note:"Positive â AI tailwinds narrative"},
+    {label:"Options Flow",score:70,color:CG,note:"Call-heavy â bullish positioning"},
   ],
   risks: [
-    "Revenue growth not yet profitable — cash burn risk",
+    "Revenue growth not yet profitable â cash burn risk",
     "Highly competitive AI voice space (Google, Amazon, Apple)",
-    "Small-cap volatility — high beta stock",
+    "Small-cap volatility â high beta stock",
     "Breakeven requires +60% to +76% move from current price",
   ],
-  bull: "SOUN is positioned at the intersection of AI and voice commerce — two of the fastest growing verticals. Automotive and restaurant deployments provide recurring SaaS revenue, and the Amelia acquisition adds enterprise AI agent capability. If AI infrastructure spending accelerates in 2025-2026, SOUN's platform becomes mission-critical.",
-  bear: "The company remains unprofitable with significant cash burn. Voice AI is becoming commoditized by Big Tech. SOUN's $11-12 breakeven prices require a near-double from current levels — a high bar for a company still proving its business model.",
+  bull: "SOUN is positioned at the intersection of AI and voice commerce â two of the fastest growing verticals. Automotive and restaurant deployments provide recurring SaaS revenue, and the Amelia acquisition adds enterprise AI agent capability. If AI infrastructure spending accelerates in 2025-2026, SOUN's platform becomes mission-critical.",
+  bear: "The company remains unprofitable with significant cash burn. Voice AI is becoming commoditized by Big Tech. SOUN's $11-12 breakeven prices require a near-double from current levels â a high bar for a company still proving its business model.",
 };
 
 // Theta decay calculator
@@ -109,7 +109,7 @@ function thetaCalc(avgCost, contracts, daysToExpiry, iv) {
   return {dailyDecay: dailyDecay.toFixed(2), weeklyDecay: weeklyDecay.toFixed(2), premium: premium.toFixed(0)};
 }
 
-// Discovery picks — curated high-conviction AI/tech small caps
+// Discovery picks â curated high-conviction AI/tech small caps
 const DISCOVERY_PICKS = [
   {
     ticker:"BBAI",
@@ -134,7 +134,7 @@ const DISCOVERY_PICKS = [
 ];
 
 
-// ── UTILITIES ──────────────────────────────────────────────────────────────────
+// ââ UTILITIES ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function usd(n){ return "$"+Math.abs(Number(n)).toFixed(2); }
 
 function marcusBriefing() {
@@ -143,17 +143,17 @@ function marcusBriefing() {
   const date = now.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"});
   const h = now.getHours();
   const g = h<12?"The morning demands clarity":"The afternoon demands focus";
-  const closer = h>=20?"Rest when the work is done — but the work is not done.":"";
+  const closer = h>=20?"Rest when the work is done â but the work is not done.":"";
   const q = [
-    "The disciplined mind does not panic at volatility — it studies it. Markets reveal character.",
+    "The disciplined mind does not panic at volatility â it studies it. Markets reveal character.",
     "Wealth is not built in moments of excitement. It is built in moments of discipline.",
-    "The obstacle is the way. Volatility is not the enemy — indecision is.",
+    "The obstacle is the way. Volatility is not the enemy â indecision is.",
     "Review your stop-losses. Preserving capital is the first rule of compounding.",
     "Markets are indifferent to emotion. Your edge is preparation.",
-    "Eleven positions, two LEAPS, four parlays. Diversification is not weakness — it is strategy.",
+    "Eleven positions, two LEAPS, four parlays. Diversification is not weakness â it is strategy.",
     "The early review catches the edge. Your positions await analysis.",
   ];
-  return g+". Today is "+day+", "+date+". Eleven positions, two SOUN LEAPS, four MLB futures settling October 31st — all require your attention. "+q[now.getDate()%q.length]+(closer?" "+closer:"");
+  return g+". Today is "+day+", "+date+". Eleven positions, two SOUN LEAPS, four MLB futures settling October 31st â all require your attention. "+q[now.getDate()%q.length]+(closer?" "+closer:"");
 }
 
 function calcFG(data) {
@@ -194,13 +194,13 @@ async function fetchWeather(city) {
   var code = c.weathercode;
   var cond = code===0?"Clear Sky":code<=2?"Partly Cloudy":code===3?"Overcast":code<=48?"Foggy":code<=57?"Drizzle":code<=67?"Rain":code<=77?"Snow":code<=82?"Showers":"Thunderstorm";
   return {
-    temp:    Math.round(c.temperature_2m)+"°F",
-    feels:   Math.round(c.apparent_temperature)+"°F",
+    temp:    Math.round(c.temperature_2m)+"Â°F",
+    feels:   Math.round(c.apparent_temperature)+"Â°F",
     cond:    cond,
     humidity:c.relativehumidity_2m+"%",
     wind:    Math.round(c.windspeed_10m)+" mph",
-    high:    Math.round(wd.daily.temperature_2m_max[0])+"°F",
-    low:     Math.round(wd.daily.temperature_2m_min[0])+"°F",
+    high:    Math.round(wd.daily.temperature_2m_max[0])+"Â°F",
+    low:     Math.round(wd.daily.temperature_2m_min[0])+"Â°F",
     city:    loc.name,
   };
 }
@@ -229,10 +229,10 @@ function weeklyReport(enriched, totP, fg) {
   var ret = (totP||0)>=0?"+"+((totP||0).toFixed(2))+"%":((totP||0).toFixed(2))+"%";
   var topStr = top?top.ticker+" leads at +"+top.gainP.toFixed(1)+"%":"positions mixed";
   var worstStr = worst?worst.ticker+" trails at "+worst.gainP.toFixed(1)+"%":"no major losers";
-  return prefix+"Portfolio return: "+ret+". Sentiment: "+(fg&&fg.label||"Neutral")+". "+topStr+". "+worstStr+". "+(isMonday?"New week — set objectives and review stop-losses.":"Stay disciplined.");
+  return prefix+"Portfolio return: "+ret+". Sentiment: "+(fg&&fg.label||"Neutral")+". "+topStr+". "+worstStr+". "+(isMonday?"New week â set objectives and review stop-losses.":"Stay disciplined.");
 }
 
-// ── MONTE CARLO ENGINE ────────────────────────────────────────────────────────
+// ââ MONTE CARLO ENGINE ââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 var VEGAS_WINS={LAD:100,ATL:95,NYY:92,PHI:89,NYM:88,SD:87,HOU:86,MIN:86,CLE:85,ATH:85,SEA:84,BAL:83,TOR:82,BOS:80,TEX:79,MIL:79,STL:78,TB:78,AZ:77,CHC:76,CIN:76,SF:75,DET:74,PIT:73,KC:72,MIA:71,WSH:68,COL:65,CWS:64,LAA:64};
 var BOOK_ODDS={LAD:{m:-600,x:420},ATL:{m:-320,x:245},MIN:{m:-195,x:160},SD:{m:-270,x:215},NYY:{m:-175,x:145},CLE:{m:-155,x:130},PHI:{m:-145,x:120},TB:{m:-108,x:-115},BAL:{m:-125,x:105},ATH:{m:165,x:-200},TOR:{m:155,x:-185},HOU:{m:145,x:-175},SEA:{m:115,x:-140},TEX:{m:225,x:-280},NYM:{m:205,x:-255},AZ:{m:235,x:-295},MIL:{m:235,x:-295},PIT:{m:265,x:-335},CHC:{m:265,x:-335},STL:{m:285,x:-360},MIA:{m:305,x:-390},BOS:{m:305,x:-390},LAA:{m:285,x:-360},CIN:{m:205,x:-255},DET:{m:335,x:-430},WSH:{m:405,x:-525},KC:{m:455,x:-600},SF:{m:355,x:-455},COL:{m:660,x:-1000},CWS:{m:710,x:-1100}};
 function otp(o){return o<0?(-o)/(-o+100):100/(o+100);}
@@ -261,7 +261,7 @@ function runMC(stnd,strks){
   var out={};stnd.forEach(function(t){out[t.t]=ct[t.t]/N;});return out;
 }
 
-// ── STYLES ─────────────────────────────────────────────────────────────────────
+// ââ STYLES âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 // Technical indicator helpers
 function calcRSI(prices,period){
   period=period||14;
@@ -350,7 +350,7 @@ const CSS = `
 .xbtn:hover{color:#cc2200}
 `;
 
-// ── MAIN APP ───────────────────────────────────────────────────────────────────
+// ââ MAIN APP âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 export default function App() {
   const [tab,setTab]       = useState("briefing");
   const [alertOn,setAlert] = useState(false);
@@ -397,8 +397,8 @@ export default function App() {
         var _t = localStorage.getItem("apex-tasks");
         if (_t) setTasks(JSON.parse(_t));
         else setTasks([
-          {id:1,text:"Review MNTS — stop-loss evaluation",done:false},
-          {id:2,text:"Monitor DVN — analyst downgrade risk",done:false},
+          {id:1,text:"Review MNTS â stop-loss evaluation",done:false},
+          {id:2,text:"Monitor DVN â analyst downgrade risk",done:false},
           {id:3,text:"Check SOUN LEAPS breakeven gap",done:false},
         ]);
         var _w = localStorage.getItem("apex-wl");
@@ -488,13 +488,13 @@ export default function App() {
   var DS=now.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric",year:"numeric"}).toUpperCase();
 
   var TABS=[
-    {id:"briefing",icon:"⚡",l:"BRIEFING"},
-    {id:"portfolio",icon:"📈",l:"PORTFOLIO"},
-    {id:"intel",icon:"🔍",l:"INTEL"},
-    {id:"soun",icon:"🎯",l:"SOUN OPS"},
-    {id:"parlays",icon:"⚾",l:"PARLAYS"},
-    {id:"alerts",icon:"🔔",l:"ALERTS"},
-    {id:"mission",icon:"🛠",l:"MISSION"},
+    {id:"briefing",icon:"â¡",l:"BRIEFING"},
+    {id:"portfolio",icon:"ð",l:"PORTFOLIO"},
+    {id:"intel",icon:"ð",l:"INTEL"},
+    {id:"soun",icon:"ð¯",l:"SOUN OPS"},
+    {id:"parlays",icon:"â¾",l:"PARLAYS"},
+    {id:"alerts",icon:"ð",l:"ALERTS"},
+    {id:"mission",icon:"ð ",l:"MISSION"},
   ];
 
   return (
@@ -515,13 +515,13 @@ export default function App() {
           </svg>
           <div>
             <div style={{fontFamily:"Orbitron",fontSize:"11px",fontWeight:900,color:alertOn?"#ff4422":CA,letterSpacing:"5px"}}>APEX COMMAND CENTER</div>
-            <div style={{fontSize:"9px",letterSpacing:"2px",color:CD,marginTop:"2px"}}>{alertOn?"⚠ ALERT — POSITION MOVEMENT DETECTED":"PORTFOLIO INTELLIGENCE ▪ V2.0 ▪ PHASE 1"}</div>
+            <div style={{fontSize:"9px",letterSpacing:"2px",color:CD,marginTop:"2px"}}>{alertOn?"â  ALERT â POSITION MOVEMENT DETECTED":"PORTFOLIO INTELLIGENCE âª V2.0 âª PHASE 1"}</div>
           </div>
         </div>
         <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
-          <button className="btn bsm" onClick={function(){setAlert(function(v){return !v;});}} style={{color:alertOn?"#ff4422":CA,borderColor:alertOn?"#3d0000":"#2a1e08"}}>{alertOn?"◉ ALERT":"○ ALERT"}</button>
-          <button className="btn bsm" onClick={function(){setVoice(function(v){return !v;});}} style={{color:voice?"#1a7acc":CA,borderColor:voice?"#0a3050":"#2a1e08"}}>{voice?"🎙 ON":"🎙 OFF"}</button>
-          <button className="btn bsm" onClick={fireConfetti}>🎉</button>
+          <button className="btn bsm" onClick={function(){setAlert(function(v){return !v;});}} style={{color:alertOn?"#ff4422":CA,borderColor:alertOn?"#3d0000":"#2a1e08"}}>{alertOn?"â ALERT":"â ALERT"}</button>
+          <button className="btn bsm" onClick={function(){setVoice(function(v){return !v;});}} style={{color:voice?"#1a7acc":CA,borderColor:voice?"#0a3050":"#2a1e08"}}>{voice?"ð ON":"ð OFF"}</button>
+          <button className="btn bsm" onClick={fireConfetti}>ð</button>
           <div style={{textAlign:"right"}}>
             <div style={{fontFamily:"Orbitron",fontWeight:900,color:alertOn?"#ff4422":CA,fontSize:"clamp(16px,2.2vw,26px)",letterSpacing:"3px",lineHeight:1}}>{HH}<span className="bl">:</span>{MM}<span style={{fontSize:"0.55em",opacity:.45}}>:{SS}</span></div>
             <div style={{fontSize:"9px",letterSpacing:"2px",color:CD,marginTop:"3px"}}>{DS}</div>
@@ -554,7 +554,7 @@ export default function App() {
       {/* VOICE OVERLAY */}
       {voice&&<VoiceMode alf={alf} enriched={enriched} fg={fg} onClose={function(){setVoice(false);}}/>}
       <div style={{position:"relative",zIndex:10,flexShrink:0,display:"flex",justifyContent:"space-between",alignItems:"center",padding:"4px 16px",background:"#020208",borderTop:"1px solid #14100a"}}>
-        <div style={{fontSize:"9px",letterSpacing:"1.5px",color:CD}}>APEX V2.0 ▪ {POSITIONS.length} POSITIONS ▪ 2 LEAPS ▪ 4 PARLAYS ▪ PHASE 1</div>
+        <div style={{fontSize:"9px",letterSpacing:"1.5px",color:CD}}>APEX V2.0 âª {POSITIONS.length} POSITIONS âª 2 LEAPS âª 4 PARLAYS âª PHASE 1</div>
         <div style={{display:"flex",gap:"14px"}}>
           {[["MARCUS",CA],["NEXUS",CG],["APEX",CG]].map(function(x){return (
             <div key={x[0]} style={{display:"flex",alignItems:"center",gap:"4px",fontSize:"9px",color:CD}}>
@@ -568,32 +568,32 @@ export default function App() {
   );
 }
 
-// ── BRIEFING TAB ───────────────────────────────────────────────────────────────
+// ââ BRIEFING TAB âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function TabBriefing({alf,onAlf,wx,city,setCity,onWx,fg,enriched,totP,eod,onEod}) {
   var isMonday = new Date().getDay()===1;
   var report = weeklyReport(enriched||[], totP||0, fg);
   function wIcon(c) {
     var cl=(c||"").toLowerCase();
-    if(cl.includes("thunder"))return"⛈";
-    if(cl.includes("rain")||cl.includes("shower"))return"🌧";
-    if(cl.includes("snow"))return"❄";
-    if(cl.includes("fog"))return"🌫";
-    if(cl.includes("cloud")||cl.includes("overcast"))return"☁";
-    if(cl.includes("clear")||cl.includes("sun")||cl.includes("sky"))return"☀";
-    return"◈";
+    if(cl.includes("thunder"))return"â";
+    if(cl.includes("rain")||cl.includes("shower"))return"ð§";
+    if(cl.includes("snow"))return"â";
+    if(cl.includes("fog"))return"ð«";
+    if(cl.includes("cloud")||cl.includes("overcast"))return"â";
+    if(cl.includes("clear")||cl.includes("sun")||cl.includes("sky"))return"â";
+    return"â";
   }
   return (
     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
-      <Panel label={"◈ MARCUS — MORNING BRIEFING"} right={<button className="btn bsm" onClick={onAlf}>↻</button>}>
+      <Panel label={"â MARCUS â MORNING BRIEFING"} right={<button className="btn bsm" onClick={onAlf}>â»</button>}>
         {alf.s==="done"&&(
           <div className="fi">
             <p style={{fontSize:"12px",lineHeight:1.9,color:CB,fontStyle:"italic",marginBottom:"12px"}}>"{alf.text}"</p>
-            <div style={{fontSize:"9px",letterSpacing:"2px",color:CD}}>— MARCUS ▪ APEX</div>
+            <div style={{fontSize:"9px",letterSpacing:"2px",color:CD}}>â MARCUS âª APEX</div>
           </div>
         )}
       </Panel>
 
-      <Panel label={"◈ MARKET SENTIMENT"}>
+      <Panel label={"â MARKET SENTIMENT"}>
         {fg.s==="done"&&(
           <div className="fi" style={{display:"flex",flexDirection:"column",alignItems:"center",gap:"8px"}}>
             <Gauge score={fg.score} label={fg.label}/>
@@ -603,12 +603,12 @@ function TabBriefing({alf,onAlf,wx,city,setCity,onWx,fg,enriched,totP,eod,onEod}
         {fg.s!=="done"&&<div style={{fontSize:"10px",color:CD}}>Loads with portfolio data...</div>}
       </Panel>
 
-      <Panel label={"◈ ATMOSPHERIC CONDITIONS"}>
+      <Panel label={"â ATMOSPHERIC CONDITIONS"}>
         <div style={{display:"flex",gap:"6px",marginBottom:"10px"}}>
           <input className="inp" value={city} onChange={function(e){setCity(e.target.value);}} onKeyDown={function(e){if(e.key==="Enter")onWx();}} placeholder="TARGET CITY..."/>
           <button className="btn" onClick={onWx} style={{padding:"6px 10px"}}>SCAN</button>
         </div>
-        {wx.s==="idle"&&<div style={{fontSize:"10px",color:CD}}>▸ Enter city to scan conditions</div>}
+        {wx.s==="idle"&&<div style={{fontSize:"10px",color:CD}}>â¸ Enter city to scan conditions</div>}
         {wx.s==="loading"&&<Spinner label="SCANNING ATMOSPHERE"/>}
         {wx.s==="err"&&<ErrMsg text={wx.err||"SENSORS OFFLINE"}/>}
         {wx.s==="done"&&wx.data&&(
@@ -633,27 +633,25 @@ function TabBriefing({alf,onAlf,wx,city,setCity,onWx,fg,enriched,totP,eod,onEod}
         )}
       </Panel>
 
-      <Panel label={isMonday?"◈ MARCUS — WEEKLY REPORT":"◈ MARCUS — PORTFOLIO SNAPSHOT"}>
+      <Panel label={isMonday?"â MARCUS â WEEKLY REPORT":"â MARCUS â PORTFOLIO SNAPSHOT"}>
         <div style={{fontSize:"11px",color:CB,lineHeight:1.8,fontStyle:"italic",marginBottom:"8px"}}>"{report}"</div>
-        <div style={{fontSize:"9px",color:CD,letterSpacing:"2px"}}>— MARCUS {isMonday?"▪ MONDAY REVIEW":""}</div>
+        <div style={{fontSize:"9px",color:CD,letterSpacing:"2px"}}>â MARCUS {isMonday?"âª MONDAY REVIEW":""}</div>
       </Panel>
-      <Panel label={"◈ EOD BRIEFING"} right={<button className="btn bsm" onClick={onEod}>GENERATE</button>}>
-        {!eod&&<div style={{fontSize:"10px",color:CD}}>Reads live prices — Refresh Portfolio first, then GENERATE.</div>}
+      <Panel label={"â EOD BRIEFING"} right={<button className="btn bsm" onClick={onEod}>GENERATE</button>}>
+        {!eod&&<div style={{fontSize:"10px",color:CD}}>Reads live prices â Refresh Portfolio first, then GENERATE.</div>}
         {eod&&(
           <div className="fi">
             {eod.split("\n").map(function(line,li){
-              return li===0?
-                <div key={li} style={{fontFamily:"Orbitron",fontSize:"9px",color:CA,marginBottom:"8px"}}>{line}</div>:
-                line===""?
-                  <div key={li} style={{height:"4px"}}></div>:
-                  <div key={li} style={{fontSize:"11px",color:CB,lineHeight:1.8}}>{line}</div>;
+              if(li===0) return <div key={li} style={{fontFamily:"Orbitron",fontSize:"9px",color:CA,marginBottom:"8px"}}>{line}</div>;
+              if(line==="") return <div key={li} style={{height:"4px"}}></div>;
+              return <div key={li} style={{fontSize:"11px",color:CB,lineHeight:1.8}}>{line}</div>;
             })}
-            <div style={{marginTop:"8px",fontSize:"9px",color:CD}}>— MARCUS</div>
+            <div style={{marginTop:"8px",fontSize:"9px",color:CD}}>â MARCUS</div>
           </div>
         )}
       </Panel>
 
-      <Panel label={"◈ SYSTEM STATUS"}>
+      <Panel label={"â SYSTEM STATUS"}>
         {[["MARCUS","ONLINE",CG],["PORTFOLIO","LIVE",CG],["WEATHER","LIVE",CG],["INTEL","LIVE",CG],["SOUN OPS","LIVE",CG],["PARLAYS","LIVE",CG],["EARNINGS","LIVE",CG],["BENCHMARKS","LIVE",CG],["JOURNAL","LIVE",CG],["PWA","READY",CG]].map(function(r){return (
           <div key={r[0]} style={{display:"flex",justifyContent:"space-between",padding:"5px 0",borderBottom:"1px solid #0c0a14"}}>
             <span style={{fontSize:"10px",letterSpacing:"1px"}}>{r[0]}</span>
@@ -665,7 +663,7 @@ function TabBriefing({alf,onAlf,wx,city,setCity,onWx,fg,enriched,totP,eod,onEod}
   );
 }
 
-// ── PORTFOLIO TAB ──────────────────────────────────────────────────────────────
+// ââ PORTFOLIO TAB ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function TabPortfolio({enriched,totCost,totMkt,totGain,totP,leaps,status,live,onRefresh,bench}) {
   var up=totGain>=0;
   var [popup,setPopup]=useState(null);
@@ -688,7 +686,7 @@ function TabPortfolio({enriched,totCost,totMkt,totGain,totP,leaps,status,live,on
         );})}
       </div>
 
-      <Panel label={"◈ POSITIONS — "+POSITIONS.length+" HOLDINGS "+(live?"▪ LIVE":"▪ SESSION DATA 4/14")} right={<button className="btn bsm" onClick={onRefresh} disabled={status==="loading"}>↻ REFRESH</button>}>
+      <Panel label={"â POSITIONS â "+POSITIONS.length+" HOLDINGS "+(live?"âª LIVE":"âª SESSION DATA 4/14")} right={<button className="btn bsm" onClick={onRefresh} disabled={status==="loading"}>â» REFRESH</button>}>
         {status==="loading"&&<Spinner label="PULLING LIVE PRICES"/>}
         {status!=="loading"&&enriched.map(function(p,i){return (
           <div key={p.ticker} className="pr si" style={{animationDelay:i*30+"ms"}}>
@@ -733,7 +731,7 @@ function TabPortfolio({enriched,totCost,totMkt,totGain,totP,leaps,status,live,on
         );})}
       </Panel>
 
-            <Panel label={"◈ TARGET CALCULATOR"}>
+            <Panel label={"â TARGET CALCULATOR"}>
         <div style={{display:"flex",gap:"8px",marginBottom:"8px"}}>
           <input className="inp" style={{flex:1}} value={tgt.amt} onChange={function(e){setTgt({amt:e.target.value,days:tgt.days});setTgtResult(null);}} placeholder="Goal ($)"/>
           <input className="inp" style={{flex:1}} value={tgt.days} onChange={function(e){setTgt({amt:tgt.amt,days:e.target.value});setTgtResult(null);}} placeholder="Days"/>
@@ -750,7 +748,7 @@ function TabPortfolio({enriched,totCost,totMkt,totGain,totP,leaps,status,live,on
         }}>CALCULATE</button>
         {tgtResult&&<div style={{fontSize:"10px",color:CA,lineHeight:1.7}}>{tgtResult}</div>}
       </Panel>
-<Panel label={"◈ SOUN LEAPS — OPTIONS POSITIONS"}>
+<Panel label={"â SOUN LEAPS â OPTIONS POSITIONS"}>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
           {leaps.map(function(l,i){
             var pct=(l.sounNow/l.breakeven*100).toFixed(0);
@@ -773,10 +771,10 @@ function TabPortfolio({enriched,totCost,totMkt,totGain,totP,leaps,status,live,on
             );
           })}
         </div>
-        <div style={{marginTop:"8px",fontSize:"9px",color:CD,letterSpacing:"1px"}}>▸ Full Greeks, theta clock & probability → SOUN OPS tab</div>
+        <div style={{marginTop:"8px",fontSize:"9px",color:CD,letterSpacing:"1px"}}>â¸ Full Greeks, theta clock & probability â SOUN OPS tab</div>
       </Panel>
 
-      <Panel label={"◈ EARNINGS CALENDAR — NEXT 60 DAYS"}>
+      <Panel label={"â EARNINGS CALENDAR â NEXT 60 DAYS"}>
         {upcoming.length===0&&<div style={{fontSize:"10px",color:CD}}>No earnings in next 60 days.</div>}
         {upcoming.map(function(e){var daysAway=Math.ceil((new Date(e.date)-now2)/(1000*60*60*24));var color=daysAway<=7?CR:daysAway<=21?CY:CG;return(
           <div key={e.ticker} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"7px 0",borderBottom:"1px solid #0c0a14"}}>
@@ -798,7 +796,7 @@ function TabPortfolio({enriched,totCost,totMkt,totGain,totP,leaps,status,live,on
         );})}
       </Panel>
 
-      <Panel label={"◈ PERFORMANCE VS BENCHMARKS"}>
+      <Panel label={"â PERFORMANCE VS BENCHMARKS"}>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:"6px"}}>
           {[["MY PORTFOLIO",totP,true],["S&P 500 (SPY)",spyRet,false],["NASDAQ (QQQ)",qqqRet,false],["DOW (DIA)",diaRet,false]].map(function(r){
             var val=r[1];var col=val===null?CD:val>=0?CG:CR;var str=val===null?"--":(val>=0?"+":"")+val.toFixed(2)+"%";
@@ -833,7 +831,7 @@ function generateEOD(enriched,totCost,totMkt,totGain,totP,bench,fg){
   var aiDn=enriched.filter(function(p){return ai.indexOf(p.ticker)>-1&&p.chgP<0;}).length;
   var bd=bench&&bench.data||{};
   var out=[];
-  out.push("APEX EOD — "+ds+" at "+ts);
+  out.push("APEX EOD â "+ds+" at "+ts);
   out.push("");
   out.push("Portfolio: $"+totMkt.toFixed(2)+" / $"+totCost.toFixed(2)+" cost. Return: "+(totGain>=0?"+":"")+totP.toFixed(2)+"% ($"+(totGain>=0?"+":"")+totGain.toFixed(2)+").");
   out.push(upCt+" up, "+dnCt+" down. Day P&L: "+(dayDollar>=0?"+":"")+dayDollar.toFixed(2)+".");
@@ -875,12 +873,12 @@ function TabAlerts({filings,loading,onScan}){
   var fl={"8-K":"MATERIAL EVENT","4":"INSIDER TRADE","10-Q":"QUARTERLY","10-K":"ANNUAL","SC 13D":"ACTIVIST","SC 13G":"LARGE HOLDER"};
   return(
     <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-      <Panel label={"◈ EDGAR SCANNER"}>
-        <button className="btn" style={{width:"100%",marginBottom:"10px"}} onClick={onScan}>{loading?"SCANNING...":"↻ SCAN SEC EDGAR — ALL POSITIONS"}</button>
+      <Panel label={"â EDGAR SCANNER"}>
+        <button className="btn" style={{width:"100%",marginBottom:"10px"}} onClick={onScan}>{loading?"SCANNING...":"â» SCAN SEC EDGAR â ALL POSITIONS"}</button>
         <div style={{fontSize:"9px",color:CD,lineHeight:1.7}}>Scans for 8-K material events, Form 4 insider trades, SC 13D activist filings. GitHub Actions monitor also runs every 5 min and sends ntfy push to your phone.</div>
       </Panel>
       {urgent.length>0&&(
-        <Panel label={"◈ URGENT ("+urgent.length+")"}>
+        <Panel label={"â URGENT ("+urgent.length+")"}>
           {urgent.map(function(f,fi){
             return(
               <div key={fi} style={{padding:"8px",marginBottom:"4px",background:"rgba(224,48,16,.06)",border:"1px solid "+CR+"44"}}>
@@ -895,7 +893,7 @@ function TabAlerts({filings,loading,onScan}){
           })}
         </Panel>
       )}
-      <Panel label={"◈ FILINGS — LAST 7 DAYS"+(filings.length>0?" ("+filings.length+")":"")}>
+      <Panel label={"â FILINGS â LAST 7 DAYS"+(filings.length>0?" ("+filings.length+")":"")}>
         {loading&&<Spinner label="SCANNING..."/>}
         {!loading&&filings.length===0&&<div style={{fontSize:"10px",color:CD}}>Hit SCAN to fetch filings.</div>}
         {!loading&&normal.map(function(f,fi){
@@ -917,7 +915,7 @@ function TabAlerts({filings,loading,onScan}){
   );
 }
 
-// ── MISSION TAB ────────────────────────────────────────────────────────────────
+// ââ MISSION TAB ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function TabMission({tasks,newTask,setNewTask,onAdd,onToggle,onDel,wl,newWl,setNewWl,onAddWl,onDelWl,journal,setJournal,enriched}) {
   var done=tasks.filter(function(t){return t.done;}).length;
   var [newEntry,setNewEntry]=useState({ticker:"",action:"BUY",price:"",notes:""});
@@ -926,7 +924,7 @@ function TabMission({tasks,newTask,setNewTask,onAdd,onToggle,onDel,wl,newWl,setN
   function addJournalEntry(){if(!newEntry.ticker.trim()||!newEntry.notes.trim())return;setJournal(function(p){return [{id:Date.now(),date:new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}),ticker:newEntry.ticker.toUpperCase(),action:newEntry.action,price:newEntry.price,notes:newEntry.notes}].concat(p);});setNewEntry({ticker:"",action:"BUY",price:"",notes:""}); }
   return (
     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
-      <Panel label={"◈ MISSION OBJECTIVES"}>
+      <Panel label={"â MISSION OBJECTIVES"}>
         <div style={{display:"flex",gap:"6px",marginBottom:"10px"}}>
           <input className="inp" value={newTask} onChange={function(e){setNewTask(e.target.value);}} onKeyDown={function(e){if(e.key==="Enter")onAdd();}} placeholder="ADD OBJECTIVE..."/>
           <button className="btn" onClick={onAdd} style={{padding:"6px 10px"}}>+</button>
@@ -934,49 +932,49 @@ function TabMission({tasks,newTask,setNewTask,onAdd,onToggle,onDel,wl,newWl,setN
         <div style={{maxHeight:"260px",overflow:"auto"}}>
           {tasks.map(function(t){return (
             <div key={t.id} style={{display:"flex",alignItems:"flex-start",gap:"8px",padding:"7px 0",borderBottom:"1px solid #0c0a14",opacity:t.done?.3:1,transition:"opacity .3s"}}>
-              <button onClick={function(){onToggle(t.id);}} style={{marginTop:"2px",width:"14px",height:"14px",border:"1px solid "+(t.done?CA:"#2e2210"),background:t.done?CA:"transparent",color:BG,fontSize:"9px",cursor:"pointer",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center"}}>{t.done?"✓":""}</button>
+              <button onClick={function(){onToggle(t.id);}} style={{marginTop:"2px",width:"14px",height:"14px",border:"1px solid "+(t.done?CA:"#2e2210"),background:t.done?CA:"transparent",color:BG,fontSize:"9px",cursor:"pointer",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center"}}>{t.done?"â":""}</button>
               <span style={{flex:1,fontSize:"11px",color:t.done?CD:CB,textDecoration:t.done?"line-through":"none",lineHeight:1.5}}>{t.text}</span>
-              <button className="xbtn" onClick={function(){onDel(t.id);}}>×</button>
+              <button className="xbtn" onClick={function(){onDel(t.id);}}>Ã</button>
             </div>
           );})}
         </div>
-        <div style={{marginTop:"10px",fontFamily:"Orbitron",fontSize:"9px",letterSpacing:"2px",color:CD}}>{tasks.length-done} ACTIVE ▪ {done} COMPLETE ▪ SAVED ✓</div>
+        <div style={{marginTop:"10px",fontFamily:"Orbitron",fontSize:"9px",letterSpacing:"2px",color:CD}}>{tasks.length-done} ACTIVE âª {done} COMPLETE âª SAVED â</div>
       </Panel>
 
       <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-        <Panel label={"◈ CUSTOM WATCHLIST"}>
+        <Panel label={"â CUSTOM WATCHLIST"}>
           <div style={{display:"flex",gap:"6px",marginBottom:"10px"}}>
             <input className="inp" value={newWl} onChange={function(e){setNewWl(e.target.value);}} onKeyDown={function(e){if(e.key==="Enter")onAddWl();}} placeholder="ADD TICKER..."/>
             <button className="btn" onClick={onAddWl} style={{padding:"6px 10px"}}>+</button>
           </div>
-          {!wl.length&&<div style={{fontSize:"10px",color:CD}}>▸ Add tickers to monitor</div>}
+          {!wl.length&&<div style={{fontSize:"10px",color:CD}}>â¸ Add tickers to monitor</div>}
           <div style={{display:"flex",flexWrap:"wrap",gap:"6px"}}>
             {wl.map(function(w){return (
               <div key={w.id} style={{display:"flex",alignItems:"center",gap:"4px",padding:"4px 8px",background:BD,border:"1px solid #1a1520"}}>
                 <span style={{fontFamily:"Orbitron",fontSize:"10px",color:CA,letterSpacing:"2px"}}>{w.t}</span>
-                <button className="xbtn" onClick={function(){onDelWl(w.id);}}>×</button>
+                <button className="xbtn" onClick={function(){onDelWl(w.id);}}>Ã</button>
               </div>
             );})}
           </div>
         </Panel>
 
-        <Panel label={"◈ PARLAYS SUMMARY"}>
+        <Panel label={"â PARLAYS SUMMARY"}>
           {PARLAYS.map(function(p,i){return (
             <div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"7px 0",borderBottom:"1px solid #0c0a14"}}>
               <div>
                 <div style={{fontFamily:"Orbitron",fontSize:"11px",color:CA,letterSpacing:"1px"}}>{p.odds}</div>
-                <div style={{fontSize:"10px",color:CD,marginTop:"2px"}}>{p.legs} LEGS ▪ ${p.stake} STAKE</div>
+                <div style={{fontSize:"10px",color:CD,marginTop:"2px"}}>{p.legs} LEGS âª ${p.stake} STAKE</div>
               </div>
               <div style={{textAlign:"right"}}>
                 <div style={{fontSize:"9px",color:CG}}>PAYS ${p.payout.toLocaleString()}</div>
               </div>
             </div>
           );})}
-          <div style={{marginTop:"8px",fontSize:"9px",color:CD,letterSpacing:"1px"}}>AT RISK: $112 ▪ MAX PAYOUT: $13,008.93 ▪ SETTLES OCT 31</div>
+          <div style={{marginTop:"8px",fontSize:"9px",color:CD,letterSpacing:"1px"}}>AT RISK: $112 âª MAX PAYOUT: $13,008.93 âª SETTLES OCT 31</div>
         </Panel>
       </div>
 
-      <Panel label={"◈ TRADE JOURNAL — "+((journal&&journal.length)||0)+" ENTRIES"} right={<button className="btn bsm" onClick={function(){setShowJournal(function(v){return !v;});}}>{showJournal?"HIDE":"SHOW"}</button>}>
+      <Panel label={"â TRADE JOURNAL â "+((journal&&journal.length)||0)+" ENTRIES"} right={<button className="btn bsm" onClick={function(){setShowJournal(function(v){return !v;});}}>{showJournal?"HIDE":"SHOW"}</button>}>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 2fr",gap:"6px",marginBottom:"8px"}}>
           <input className="inp" value={newEntry.ticker} onChange={function(ev){setNewEntry(function(p){return Object.assign({},p,{ticker:ev.target.value});});}} placeholder="TICKER"/>
           <select value={newEntry.action} onChange={function(ev){setNewEntry(function(p){return Object.assign({},p,{action:ev.target.value});});}} style={{background:"#080812",border:"1px solid #1a1520",color:CA,fontFamily:"monospace",fontSize:"11px",padding:"6px",outline:"none"}}>{["BUY","SELL","HOLD","WATCH","ADD","TRIM"].map(function(a){return <option key={a}>{a}</option>;})}</select>
@@ -990,7 +988,7 @@ function TabMission({tasks,newTask,setNewTask,onAdd,onToggle,onDel,wl,newWl,setN
   );
 }
 
-// ── COMING SOON ────────────────────────────────────────────────────────────────
+// ââ COMING SOON ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function TabSoon({icon,label,items,phase}) {
   return (
     <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",height:"80%",gap:"20px",padding:"20px"}}>
@@ -1002,7 +1000,7 @@ function TabSoon({icon,label,items,phase}) {
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px",maxWidth:"480px",width:"100%"}}>
         {items.map(function(it){return (
           <div key={it} style={{padding:"7px 10px",background:BP,border:"1px solid #141020",fontSize:"9px",color:CD,letterSpacing:"1px"}}>
-            <span style={{color:CA}}>▸ </span>{it}
+            <span style={{color:CA}}>â¸ </span>{it}
           </div>
         );})}
       </div>
@@ -1010,7 +1008,7 @@ function TabSoon({icon,label,items,phase}) {
   );
 }
 
-// ── INTELLIGENCE TAB ──────────────────────────────────────────────────────────
+// ââ INTELLIGENCE TAB ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function TabIntel({enriched,status,totP,fg}){
   var [debateMode,setDebateMode]=useState(false);
   var [debateTicker,setDebateTicker]=useState("");
@@ -1032,7 +1030,7 @@ function TabIntel({enriched,status,totP,fg}){
 
   return(
     <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-      <Panel label={"◈ POSITION SIGNALS + RSI"}>
+      <Panel label={"â POSITION SIGNALS + RSI"}>
         {status==="loading"&&<Spinner label="LOADING..."/>}
         {status!=="loading"&&signals.map(function(s,si){
           var rsiColor=s.rsi<30?CG:s.rsi>70?CR:CD;
@@ -1051,14 +1049,14 @@ function TabIntel({enriched,status,totP,fg}){
         })}
         <div style={{marginTop:"8px",fontSize:"9px",color:CD}}>RSI below 30 = oversold (buy signal). Above 70 = overbought (sell signal). Tap any ticker for Bull vs Bear debate.</div>
       </Panel>
-      <Panel label={"◈ CONVICTION SUMMARY"}>
+      <Panel label={"â CONVICTION SUMMARY"}>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"8px"}}>
           {[["BUY",buys,CG],["HOLD",holds,CY],["SELL",sells,CR]].map(function(row,ri){
             return(
               <div key={ri} style={{background:row[2]+"11",border:"1px solid "+row[2]+"33",padding:"10px",textAlign:"center"}}>
                 <div style={{fontFamily:"Orbitron",fontSize:"22px",fontWeight:900,color:row[2]}}>{row[1].length}</div>
                 <div style={{fontFamily:"Orbitron",fontSize:"9px",color:row[2],letterSpacing:"1px",marginTop:"2px"}}>{row[0]}</div>
-                <div style={{fontSize:"9px",color:CD,marginTop:"4px"}}>{row[1].slice(0,3).map(function(s){return s.ticker;}).join(", ")||"—"}</div>
+                <div style={{fontSize:"9px",color:CD,marginTop:"4px"}}>{row[1].slice(0,3).map(function(s){return s.ticker;}).join(", ")||"â"}</div>
               </div>
             );
           })}
@@ -1093,7 +1091,7 @@ function TabIntel({enriched,status,totP,fg}){
       </div>
 
       {/* Signals List */}
-      <Panel label={"◈ POSITION SIGNALS — AI DERIVED"}>
+      <Panel label={"â POSITION SIGNALS â AI DERIVED"}>
         <div style={{fontSize:"9px",color:CD,marginBottom:"10px",letterSpacing:"1px"}}>Based on cost basis vs current price + day momentum. Not financial advice.</div>
         {status==="loading"&&<Spinner label="COMPUTING SIGNALS"/>}
         {signals.map(function(p){
@@ -1120,7 +1118,7 @@ function TabIntel({enriched,status,totP,fg}){
       </Panel>
 
       {/* Discovery Picks */}
-      <Panel label={"◈ MORNING DISCOVERY — HIGH CONVICTION PICKS"}>
+      <Panel label={"â MORNING DISCOVERY â HIGH CONVICTION PICKS"}>
         <div style={{fontSize:"9px",color:CD,marginBottom:"10px",letterSpacing:"1px"}}>AI-researched speculative picks. Not financial advice. Do your own due diligence.</div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
           {DISCOVERY_PICKS.map(function(pick){return (
@@ -1130,27 +1128,27 @@ function TabIntel({enriched,status,totP,fg}){
                 <span style={{fontFamily:"Orbitron",fontSize:"13px",fontWeight:800,color:CA,letterSpacing:"2px"}}>{pick.ticker}</span>
                 <span style={{fontFamily:"Orbitron",fontSize:"9px",padding:"2px 5px",background:CG+"22",color:CG,border:"1px solid "+CG+"33"}}>{pick.conviction}</span>
               </div>
-              <div style={{fontSize:"9px",color:CD,letterSpacing:"2px",marginBottom:"6px"}}>{pick.sector} ▪ {pick.timeframe}</div>
-              <div style={{fontSize:"12px",color:CB,lineHeight:1.6,marginBottom:"6px"}}>{pick.price} — {pick.thesis}</div>
-              <div style={{fontSize:"10px",color:CR,lineHeight:1.5}}>⚠ {pick.risk}</div>
+              <div style={{fontSize:"9px",color:CD,letterSpacing:"2px",marginBottom:"6px"}}>{pick.sector} âª {pick.timeframe}</div>
+              <div style={{fontSize:"12px",color:CB,lineHeight:1.6,marginBottom:"6px"}}>{pick.price} â {pick.thesis}</div>
+              <div style={{fontSize:"10px",color:CR,lineHeight:1.5}}>â  {pick.risk}</div>
             </div>
           );})}
         </div>
       </Panel>
 
       {/* Bull vs Bear Debate */}
-      <Panel label={"◈ AI BULL vs BEAR DEBATE"}>
+      <Panel label={"â AI BULL vs BEAR DEBATE"}>
         <div style={{display:"flex",gap:"6px",marginBottom:"12px",alignItems:"center"}}>
           <span style={{fontSize:"9px",color:CD,letterSpacing:"1px"}}>TICKER:</span>
           <select value={debateTicker} onChange={function(e){setDebateTicker(e.target.value);}} style={{background:"#080812",border:"1px solid #1a1520",color:CA,fontFamily:"'Share Tech Mono',monospace",fontSize:"11px",padding:"4px 8px",outline:"none"}}>
             {POSITIONS.map(function(p){return <option key={p.ticker} value={p.ticker}>{p.ticker}</option>;})}
           </select>
           <button className="btn bsm" onClick={function(){setDebateMode(function(v){return !v;});}}>
-            {debateMode?"CLOSE DEBATE":"▸ RUN DEBATE"}
+            {debateMode?"CLOSE DEBATE":"â¸ RUN DEBATE"}
           </button>
         </div>
         {debateMode&&<DebateView ticker={debateTicker} enriched={enriched}/>}
-        {!debateMode&&<div style={{fontSize:"10px",color:CD}}>▸ Select a ticker and run the AI debate to see bull vs bear case</div>}
+        {!debateMode&&<div style={{fontSize:"10px",color:CD}}>â¸ Select a ticker and run the AI debate to see bull vs bear case</div>}
       </Panel>
     </div>
     </div>
@@ -1164,32 +1162,32 @@ function DebateView({ticker,enriched,onClose}) {
     ticker+" is positioned in a high-growth sector with strong institutional backing.",
     "Current price offers attractive entry relative to sector peers and historical valuations.",
     "Day momentum of "+(p.chg>=0?"+":"")+p.chg+"% suggests near-term buying pressure.",
-    "Portfolio cost basis of "+usd(p.avgCost)+" vs current "+usd(p.cur)+" shows "+(p.gainP>=0?"a gain":"manageable loss")+" — thesis intact.",
+    "Portfolio cost basis of "+usd(p.avgCost)+" vs current "+usd(p.cur)+" shows "+(p.gainP>=0?"a gain":"manageable loss")+" â thesis intact.",
   ];
   var bearPoints = [
-    "Macro headwinds — Fed policy and tariff uncertainty create sector-wide pressure.",
+    "Macro headwinds â Fed policy and tariff uncertainty create sector-wide pressure.",
     "Position size in portfolio warrants stop-loss review at current levels.",
     "High volatility environment means any gap-down could accelerate selling.",
-    p.gainP<0?"Current loss of "+p.gainP.toFixed(1)+"% suggests thesis under pressure — review catalyst timeline.":"Taking profits on "+p.gainP.toFixed(1)+"% gain may be tactically sound given macro risks.",
+    p.gainP<0?"Current loss of "+p.gainP.toFixed(1)+"% suggests thesis under pressure â review catalyst timeline.":"Taking profits on "+p.gainP.toFixed(1)+"% gain may be tactically sound given macro risks.",
   ];
   return (
     <div className="fi" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
       <div style={{background:"#001408",border:"1px solid "+CG+"33",padding:"10px"}}>
-        <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CG,letterSpacing:"2px",marginBottom:"8px"}}>🐂 BULL CASE</div>
-        {bullPoints.map(function(pt,i){return <div key={i} style={{fontSize:"11px",color:CB,lineHeight:1.65,marginBottom:"5px"}}>▸ {pt}</div>;})}
+        <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CG,letterSpacing:"2px",marginBottom:"8px"}}>ð BULL CASE</div>
+        {bullPoints.map(function(pt,i){return <div key={i} style={{fontSize:"11px",color:CB,lineHeight:1.65,marginBottom:"5px"}}>â¸ {pt}</div>;})}
       </div>
       <div style={{background:"#140000",border:"1px solid "+CR+"33",padding:"10px"}}>
-        <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CR,letterSpacing:"2px",marginBottom:"8px"}}>🐻 BEAR CASE</div>
-        {bearPoints.map(function(pt,i){return <div key={i} style={{fontSize:"11px",color:CB,lineHeight:1.65,marginBottom:"5px"}}>▸ {pt}</div>;})}
+        <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CR,letterSpacing:"2px",marginBottom:"8px"}}>ð» BEAR CASE</div>
+        {bearPoints.map(function(pt,i){return <div key={i} style={{fontSize:"11px",color:CB,lineHeight:1.65,marginBottom:"5px"}}>â¸ {pt}</div>;})}
       </div>
       <div style={{gridColumn:"1/-1",padding:"8px",background:sig.color+"11",border:"1px solid "+sig.color+"33",textAlign:"center"}}>
-        <span style={{fontFamily:"Orbitron",fontSize:"10px",color:sig.color,letterSpacing:"2px"}}>MARCUS VERDICT: {sig.sig} ▪ CONVICTION {sig.score}/10</span>
+        <span style={{fontFamily:"Orbitron",fontSize:"10px",color:sig.color,letterSpacing:"2px"}}>MARCUS VERDICT: {sig.sig} âª CONVICTION {sig.score}/10</span>
       </div>
     </div>
   );
 }
 
-// ── SOUN OPS TAB ───────────────────────────────────────────────────────────────
+// ââ SOUN OPS TAB âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function TabSoun({port}) {
   var [activeSection,setActiveSection] = useState("leaps");
   var sounPrice = 7.04;
@@ -1225,11 +1223,11 @@ function TabSoun({port}) {
       <div style={{background:BP,border:"1px solid "+CA+"33",padding:"12px 14px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
         <div>
           <div style={{fontFamily:"Orbitron",fontSize:"16px",fontWeight:900,color:CA,letterSpacing:"4px"}}>SOUN</div>
-          <div style={{fontSize:"10px",color:CC,marginTop:"2px",letterSpacing:"1px"}}>SOUNDHOUND AI ▪ {SOUN_DATA.sector}</div>
+          <div style={{fontSize:"10px",color:CC,marginTop:"2px",letterSpacing:"1px"}}>SOUNDHOUND AI âª {SOUN_DATA.sector}</div>
         </div>
         <div style={{textAlign:"right"}}>
           <div style={{fontFamily:"Orbitron",fontSize:"22px",fontWeight:900,color:CB}}>${sounPrice.toFixed(2)}</div>
-          <div style={{fontSize:"10px",color:CD,marginTop:"2px"}}>BREAKEVEN GAP: +{((l1.breakeven-sounPrice)/sounPrice*100).toFixed(1)}% — +{((l2.breakeven-sounPrice)/sounPrice*100).toFixed(1)}%</div>
+          <div style={{fontSize:"10px",color:CD,marginTop:"2px"}}>BREAKEVEN GAP: +{((l1.breakeven-sounPrice)/sounPrice*100).toFixed(1)}% â +{((l2.breakeven-sounPrice)/sounPrice*100).toFixed(1)}%</div>
         </div>
       </div>
 
@@ -1276,8 +1274,8 @@ function TabSoun({port}) {
       {/* Theta Decay Section */}
       {activeSection==="theta"&&(
         <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
-          <Panel label={"◈ THETA DECAY CLOCK — DAILY PREMIUM BLEED"}>
-            <div style={{fontSize:"10px",color:CD,marginBottom:"12px",letterSpacing:"1px"}}>Every day that passes, your options lose value from time decay. This is theta — your cost of holding.</div>
+          <Panel label={"â THETA DECAY CLOCK â DAILY PREMIUM BLEED"}>
+            <div style={{fontSize:"10px",color:CD,marginBottom:"12px",letterSpacing:"1px"}}>Every day that passes, your options lose value from time decay. This is theta â your cost of holding.</div>
             {[{l:l1,theta:theta1,days:days1,label:"1/15/27 LEAPS"},{l:l2,theta:theta2,days:days2,label:"1/21/28 LEAPS"}].map(function(item,i){return (
               <div key={i} style={{background:BD,border:"1px solid #1a1520",padding:"12px",marginBottom:"8px"}}>
                 <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CA,marginBottom:"8px"}}>{item.label}</div>
@@ -1290,7 +1288,7 @@ function TabSoun({port}) {
                   );})}
                 </div>
                 <div style={{fontSize:"10px",color:CD,lineHeight:1.6}}>
-                  At current decay rate, you lose approximately <span style={{color:CY}}>${(item.theta.dailyDecay*30).toFixed(0)}/month</span> on this position while waiting for SOUN to move. The 2028 LEAPS bleeds slower per day — better for long-duration holds.
+                  At current decay rate, you lose approximately <span style={{color:CY}}>${(item.theta.dailyDecay*30).toFixed(0)}/month</span> on this position while waiting for SOUN to move. The 2028 LEAPS bleeds slower per day â better for long-duration holds.
                 </div>
               </div>
             );})}
@@ -1300,7 +1298,7 @@ function TabSoun({port}) {
 
       {/* Sentiment Section */}
       {activeSection==="sentiment"&&(
-        <Panel label={"◈ SOUN SENTIMENT ANALYSIS"}>
+        <Panel label={"â SOUN SENTIMENT ANALYSIS"}>
           <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
             {SOUN_DATA.sentiment.map(function(s){return (
               <div key={s.label} style={{background:BD,border:"1px solid #1a1520",padding:"10px"}}>
@@ -1315,11 +1313,11 @@ function TabSoun({port}) {
               </div>
             );})}
             <div style={{padding:"10px",background:"#001808",border:"1px solid "+CG+"22"}}>
-              <div style={{fontFamily:"Orbitron",fontSize:"10px",color:CG,letterSpacing:"2px",marginBottom:"6px"}}>🐂 BULL THESIS</div>
+              <div style={{fontFamily:"Orbitron",fontSize:"10px",color:CG,letterSpacing:"2px",marginBottom:"6px"}}>ð BULL THESIS</div>
               <div style={{fontSize:"11px",color:CB,lineHeight:1.7}}>{SOUN_DATA.bull}</div>
             </div>
             <div style={{padding:"10px",background:"#180000",border:"1px solid "+CR+"22"}}>
-              <div style={{fontFamily:"Orbitron",fontSize:"10px",color:CR,letterSpacing:"2px",marginBottom:"6px"}}>🐻 BEAR THESIS</div>
+              <div style={{fontFamily:"Orbitron",fontSize:"10px",color:CR,letterSpacing:"2px",marginBottom:"6px"}}>ð» BEAR THESIS</div>
               <div style={{fontSize:"11px",color:CB,lineHeight:1.7}}>{SOUN_DATA.bear}</div>
             </div>
           </div>
@@ -1328,7 +1326,7 @@ function TabSoun({port}) {
 
       {/* Catalysts Section */}
       {activeSection==="catalysts"&&(
-        <Panel label={"◈ SOUN CATALYST CALENDAR"}>
+        <Panel label={"â SOUN CATALYST CALENDAR"}>
           <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
             {SOUN_DATA.catalysts.map(function(c,i){return (
               <div key={i} style={{display:"flex",gap:"10px",padding:"10px",background:BD,border:"1px solid #1a1520"}}>
@@ -1342,11 +1340,11 @@ function TabSoun({port}) {
 
       {/* Risks Section */}
       {activeSection==="risks"&&(
-        <Panel label={"◈ SOUN RISK ASSESSMENT"}>
+        <Panel label={"â SOUN RISK ASSESSMENT"}>
           <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
             {SOUN_DATA.risks.map(function(r,i){return (
               <div key={i} style={{display:"flex",gap:"10px",padding:"10px",background:"#140000",border:"1px solid "+CR+"22"}}>
-                <span style={{color:CR,fontSize:"12px",flexShrink:0}}>⚠</span>
+                <span style={{color:CR,fontSize:"12px",flexShrink:0}}>â </span>
                 <div style={{fontSize:"11px",color:CB,lineHeight:1.6}}>{r}</div>
               </div>
             );})}
@@ -1361,7 +1359,7 @@ function TabSoun({port}) {
   );
 }
 
-// ── VOICE MODE ─────────────────────────────────────────────────────────────────
+// ââ VOICE MODE âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function VoiceMode({alf,enriched,fg,onClose}) {
   var [status,setStatus]   = useState("idle"); // idle | listening | speaking | response
   var [transcript,setTranscript] = useState("");
@@ -1375,11 +1373,11 @@ function VoiceMode({alf,enriched,fg,onClose}) {
     if (q.includes("portfolio")||q.includes("holdings")||q.includes("stocks")) {
       var winners = enriched.filter(function(p){return p.gainP&&p.gainP>0;});
       var losers  = enriched.filter(function(p){return p.gainP&&p.gainP<0;});
-      resp = "Your portfolio currently holds "+POSITIONS.length+" positions. "+winners.length+" are in positive territory, led by SMCI at "+enriched.find(function(p){return p.ticker==="SMCI";}).gainP.toFixed(1)+"% total return. "+losers.length+" positions are underwater — notably DVN and MNTS. Overall, "+fg.label.toLowerCase()+" sentiment prevails with an average day change of "+fg.avg+"%.";
+      resp = "Your portfolio currently holds "+POSITIONS.length+" positions. "+winners.length+" are in positive territory, led by SMCI at "+enriched.find(function(p){return p.ticker==="SMCI";}).gainP.toFixed(1)+"% total return. "+losers.length+" positions are underwater â notably DVN and MNTS. Overall, "+fg.label.toLowerCase()+" sentiment prevails with an average day change of "+fg.avg+"%.";
     } else if (q.includes("soun")||q.includes("leaps")||q.includes("options")) {
-      resp = "Your SOUN LEAPS positions are both structured around the ten dollar strike. The nearer contract expires January 2027, requiring SOUN to reach eleven dollars and twenty-four cents — a sixty percent move from the current price of seven dollars and four cents. The longer contract expires January 2028, giving you nearly four years of runway. I would characterize the thesis as speculative but not unreasonable given the AI voice tailwinds.";
+      resp = "Your SOUN LEAPS positions are both structured around the ten dollar strike. The nearer contract expires January 2027, requiring SOUN to reach eleven dollars and twenty-four cents â a sixty percent move from the current price of seven dollars and four cents. The longer contract expires January 2028, giving you nearly four years of runway. I would characterize the thesis as speculative but not unreasonable given the AI voice tailwinds.";
     } else if (q.includes("parlay")||q.includes("mlb")||q.includes("baseball")||q.includes("bet")) {
-      resp = "You have four MLB futures parlays open, sir, with a total of one hundred and twelve dollars at risk and a maximum potential payout of thirteen thousand dollars. All four settle October 31st, 2026. The Yankees, Mariners, and Braves making the playoffs are your critical legs — appearing across all four parlays. I suggest monitoring their standings daily as the season progresses.";
+      resp = "You have four MLB futures parlays open, sir, with a total of one hundred and twelve dollars at risk and a maximum potential payout of thirteen thousand dollars. All four settle October 31st, 2026. The Yankees, Mariners, and Braves making the playoffs are your critical legs â appearing across all four parlays. I suggest monitoring their standings daily as the season progresses.";
     } else if (q.includes("alert")||q.includes("danger")||q.includes("worry")) {
       var big = enriched.filter(function(p){return p.gainP&&Math.abs(p.gainP)>15;});
       if (big.length) {
@@ -1427,7 +1425,7 @@ function VoiceMode({alf,enriched,fg,onClose}) {
       setTranscript(t);
       marcusRespond(t);
     };
-    rec.onerror = function() { setStatus("idle"); setResponse("I apologize, sir — the microphone appears to be unavailable."); setStatus("response"); };
+    rec.onerror = function() { setStatus("idle"); setResponse("I apologize, sir â the microphone appears to be unavailable."); setStatus("response"); };
     rec.start();
     setStatus("listening");
     setTranscript("");
@@ -1441,12 +1439,12 @@ function VoiceMode({alf,enriched,fg,onClose}) {
 
   return (
     <div style={{position:"fixed",inset:0,zIndex:500,background:"rgba(0,0,0,.9)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"20px",padding:"24px"}}>
-      <div style={{fontFamily:"Orbitron",fontSize:"14px",color:CA,letterSpacing:"5px"}}>MARCUS — VOICE INTERFACE</div>
+      <div style={{fontFamily:"Orbitron",fontSize:"14px",color:CA,letterSpacing:"5px"}}>MARCUS â VOICE INTERFACE</div>
 
       {/* Mic button */}
       <button onClick={status==="idle"||status==="response"?startListening:stopSpeaking}
         style={{width:"80px",height:"80px",borderRadius:"50%",border:"2px solid "+(status==="listening"?"#ff4422":status==="speaking"?CG:CA),background:status==="listening"?"rgba(204,34,0,.15)":status==="speaking"?"rgba(15,168,48,.1)":"rgba(240,163,10,.05)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"32px",transition:"all .3s",boxShadow:"0 0 "+(status==="idle"?"8px":"24px")+" "+(status==="listening"?"#cc220044":status==="speaking"?CG+"44":CA+"44")}}>
-        {status==="listening"?"🔴":status==="speaking"?"🔊":"🎙"}
+        {status==="listening"?"ð´":status==="speaking"?"ð":"ð"}
       </button>
 
       <div style={{fontFamily:"Orbitron",fontSize:"9px",letterSpacing:"3px",color:status==="listening"?CR:status==="speaking"?CG:CD}}>
@@ -1459,7 +1457,7 @@ function VoiceMode({alf,enriched,fg,onClose}) {
       </div>}
 
       {response&&<div style={{background:BP,border:"1px solid "+CA+"33",padding:"12px 16px",maxWidth:"320px",width:"100%"}}>
-        <div style={{fontSize:"9px",color:CD,letterSpacing:"2px",marginBottom:"6px"}}>— MARCUS ▪ APEX</div>
+        <div style={{fontSize:"9px",color:CD,letterSpacing:"2px",marginBottom:"6px"}}>â MARCUS âª APEX</div>
         <div style={{fontSize:"11px",color:CB,lineHeight:1.8,fontStyle:"italic"}}>"{response}"</div>
       </div>}
 
@@ -1473,7 +1471,7 @@ function VoiceMode({alf,enriched,fg,onClose}) {
 }
 
 
-// ── PARLAYS TAB ────────────────────────────────────────────────────────────────
+// ââ PARLAYS TAB ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 
 const PARLAY_DATA = [
   {id:1,odds:"+35464",stake:15,payout:5334.69,legs:19,placed:"4/13/2026",settles:"10/31/2026",make:["NYY","SEA","BAL","PHI","ATL","SD","LAD","MIN"],miss:["MIA","LAA","HOU","CIN","SF","CWS","WSH","COL","BOS","CHC","MIL"]},
@@ -1485,9 +1483,9 @@ const PARLAY_DATA = [
 
 
 
-// ── ENHANCED SCOUT ENGINE ─────────────────────────────────────────────────────
+// ââ ENHANCED SCOUT ENGINE âââââââââââââââââââââââââââââââââââââââââââââââââââââ
 
-// 2026 Vegas preseason win totals (O/U lines — best early-season predictor)
+// 2026 Vegas preseason win totals (O/U lines â best early-season predictor)
 var VEGAS_WINS = {
   LAD:100,ATL:95,NYY:92,PHI:89,NYM:88,SD:87,HOU:86,MIN:86,
   CLE:85,ATH:85,SEA:84,BAL:83,TOR:82,BOS:80,TEX:79,MIL:79,
@@ -1563,7 +1561,7 @@ async function fetchStreaks() {
   } catch(ex) { return {}; }
 }
 
-// Composite playoff probability — weighted for early season
+// Composite playoff probability â weighted for early season
 function computePlayoffScore(team, streaks) {
   var gp = team.w + team.l;
   var vegasWins = VEGAS_WINS[team.t] || 77;
@@ -1572,7 +1570,7 @@ function computePlayoffScore(team, streaks) {
   // Scale 60-102 win range to 0-100
   var vegasScore = ((vegasWins - 62) / (102 - 62)) * 100;
 
-  // 2. PYTHAGOREAN EXPECTED WINS (25% weight — better than actual W-L)
+  // 2. PYTHAGOREAN EXPECTED WINS (25% weight â better than actual W-L)
   // xWins projected over 162 games
   var xWins = team.xWins || Math.round((team.w/(gp||1)) * 162);
   var pythScore = ((xWins - 62) / (102 - 62)) * 100;
@@ -1666,9 +1664,9 @@ function getLegSt(team,type,mlbData){
   var s=MLB.find(function(x){return x.t===team;});
   if(!s)return{color:CD,icon:"?",conf:50,label:"UNKNOWN"};
   var tracking=type==="make"?s.status==="make":s.status==="miss";
-  if(tracking&&s.conf>=75)return{color:CG,icon:"✓",conf:s.conf,label:"ON TRACK",w:s.w,l:s.l};
+  if(tracking&&s.conf>=75)return{color:CG,icon:"â",conf:s.conf,label:"ON TRACK",w:s.w,l:s.l};
   if(tracking&&s.conf>=55)return{color:CY,icon:"~",conf:s.conf,label:"LIKELY",w:s.w,l:s.l};
-  if(!tracking&&s.conf>=75)return{color:CR,icon:"✗",conf:s.conf,label:"AT RISK",w:s.w,l:s.l};
+  if(!tracking&&s.conf>=75)return{color:CR,icon:"â",conf:s.conf,label:"AT RISK",w:s.w,l:s.l};
   return{color:CY,icon:"~",conf:s.conf,label:"WATCH",w:s.w,l:s.l};
 }
 
@@ -1753,11 +1751,11 @@ function TabParlays(){
       </div>
 
       {mlbLoading&&<div style={{background:"#08080f",border:"1px solid "+CA+"33",padding:"8px 12px",fontSize:"9px",color:CY,fontFamily:"Orbitron",letterSpacing:"2px",display:"flex",alignItems:"center",gap:"8px"}}><div className="spinA" style={{width:"8px",height:"8px",border:"1px solid #4a3408",borderTopColor:CA,borderRadius:"50%"}}/> FETCHING LIVE MLB STANDINGS...</div>}
-      {!mlbLoading&&<div style={{background:"#08080f",border:"1px solid "+CG+"33",padding:"6px 12px",fontSize:"9px",color:CG,fontFamily:"Orbitron",letterSpacing:"1px"}}>◈ LIVE STANDINGS — UPDATED NOW ▪ MLB STATS API</div>}
+      {!mlbLoading&&<div style={{background:"#08080f",border:"1px solid "+CG+"33",padding:"6px 12px",fontSize:"9px",color:CG,fontFamily:"Orbitron",letterSpacing:"1px"}}>â LIVE STANDINGS â UPDATED NOW âª MLB STATS API</div>}
 
       {/* Universal legs */}
       <div style={{background:"#08080f",border:"1px solid "+CA+"44",padding:"10px 12px"}}>
-        <div style={{fontSize:"9px",color:CA,fontFamily:"Orbitron",letterSpacing:"2px",marginBottom:"8px"}}>⚡ UNIVERSAL LEGS — IN ALL 4 PARLAYS</div>
+        <div style={{fontSize:"9px",color:CA,fontFamily:"Orbitron",letterSpacing:"2px",marginBottom:"8px"}}>â¡ UNIVERSAL LEGS â IN ALL 4 PARLAYS</div>
         <div style={{display:"flex",gap:"6px",flexWrap:"wrap"}}>
           {uMake.map(function(t){var st=getLegSt(t,"make",mlbData);return(<div key={t} style={{padding:"5px 10px",background:st.color+"15",border:"1px solid "+st.color+"44",fontFamily:"Orbitron",fontSize:"10px",color:st.color}}>{st.icon} {t} MAKE</div>);})}
           {uMiss.map(function(t){var st=getLegSt(t,"miss",mlbData);return(<div key={t} style={{padding:"5px 10px",background:st.color+"15",border:"1px solid "+st.color+"44",fontFamily:"Orbitron",fontSize:"10px",color:st.color}}>{st.icon} {t} MISS</div>);})}
@@ -1771,7 +1769,7 @@ function TabParlays(){
           return(
             <button key={i} onClick={function(){setAp(i);}} style={{flex:1,background:"transparent",border:"1px solid "+(ap===i?CA:"#2a1e08"),padding:"8px 4px",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:"2px",transition:"all .2s"}}>
               <span style={{fontFamily:"Orbitron",fontSize:"10px",color:ap===i?CA:CC,fontWeight:700}}>{pd.odds}</span>
-              <span style={{fontSize:"9px",color:CD}}>${pd.stake}→${pd.payout.toLocaleString()}</span>
+              <span style={{fontSize:"9px",color:CD}}>${pd.stake}â${pd.payout.toLocaleString()}</span>
               <span style={{fontSize:"9px",color:pr>5?CG:CY,fontFamily:"Orbitron"}}>{pr.toFixed(3)}%</span>
             </button>
           );
@@ -1787,7 +1785,7 @@ function TabParlays(){
 
       {/* OVERVIEW */}
       {view==="overview"&&(
-        <Panel label={"◈ "+p.odds+" — OVERVIEW & PROBABILITY"}>
+        <Panel label={"â "+p.odds+" â OVERVIEW & PROBABILITY"}>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px",marginBottom:"12px"}}>
             {[["STAKE","$"+p.stake,CC],["PAYOUT","$"+p.payout.toLocaleString(),CG],["LEGS",p.legs,CA],["MAKE LEGS",p.make.length,CG],["MISS LEGS",p.miss.length,CR],["PLACED",p.placed,CC],["SETTLES",p.settles,CY],["STATUS","OPEN",CG]].map(function(r){return(
               <div key={r[0]} style={{background:BD,padding:"7px 10px",border:"1px solid #1a1520"}}>
@@ -1804,15 +1802,15 @@ function TabParlays(){
             </div>
             <div style={{fontSize:"9px",color:CD}}>Calculated from {p.legs} individual leg confidence scores</div>
           </div>
-          <div style={{fontSize:"9px",color:CD,lineHeight:1.7}}>⚠ Parlays 2 & 4 have conflicting CIN legs — an intentional hedge ensuring at least one parlay survives either outcome.</div>
+          <div style={{fontSize:"9px",color:CD,lineHeight:1.7}}>â  Parlays 2 & 4 have conflicting CIN legs â an intentional hedge ensuring at least one parlay survives either outcome.</div>
         </Panel>
       )}
 
       {/* LEG STATUS */}
       {view==="legs"&&(
-        <Panel label={"◈ "+p.odds+" — ALL "+p.legs+" LEGS"}>
+        <Panel label={"â "+p.odds+" â ALL "+p.legs+" LEGS"}>
           <div style={{marginBottom:"12px"}}>
-            <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CG,letterSpacing:"2px",marginBottom:"8px"}}>✓ MAKE PLAYOFFS ({p.make.length})</div>
+            <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CG,letterSpacing:"2px",marginBottom:"8px"}}>â MAKE PLAYOFFS ({p.make.length})</div>
             <div style={{display:"flex",flexWrap:"wrap",gap:"5px"}}>
               {p.make.map(function(t){
                 var st=getLegSt(t,"make",mlbData);
@@ -1822,7 +1820,7 @@ function TabParlays(){
                       <span style={{fontFamily:"Orbitron",fontSize:"11px",color:st.color,fontWeight:700}}>{t}</span>
                       <span style={{fontSize:"11px",color:st.color}}>{st.icon}</span>
                     </div>
-                    <div style={{fontSize:"9px",color:CD,marginTop:"2px"}}>{st.w}-{st.l} ▪ {st.conf}%</div>
+                    <div style={{fontSize:"9px",color:CD,marginTop:"2px"}}>{st.w}-{st.l} âª {st.conf}%</div>
                     <div style={{fontSize:"9px",color:st.color}}>{st.label}</div>
                   </div>
                 );
@@ -1830,7 +1828,7 @@ function TabParlays(){
             </div>
           </div>
           <div>
-            <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CR,letterSpacing:"2px",marginBottom:"8px"}}>✗ MISS PLAYOFFS ({p.miss.length})</div>
+            <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CR,letterSpacing:"2px",marginBottom:"8px"}}>â MISS PLAYOFFS ({p.miss.length})</div>
             <div style={{display:"flex",flexWrap:"wrap",gap:"5px"}}>
               {p.miss.map(function(t){
                 var st=getLegSt(t,"miss",mlbData);
@@ -1840,7 +1838,7 @@ function TabParlays(){
                       <span style={{fontFamily:"Orbitron",fontSize:"11px",color:st.color,fontWeight:700}}>{t}</span>
                       <span style={{fontSize:"11px",color:st.color}}>{st.icon}</span>
                     </div>
-                    <div style={{fontSize:"9px",color:CD,marginTop:"2px"}}>{st.w}-{st.l} ▪ {st.conf}%</div>
+                    <div style={{fontSize:"9px",color:CD,marginTop:"2px"}}>{st.w}-{st.l} âª {st.conf}%</div>
                     <div style={{fontSize:"9px",color:st.color}}>{st.label}</div>
                   </div>
                 );
@@ -1852,7 +1850,7 @@ function TabParlays(){
 
       {/* STANDINGS */}
       {view==="standings"&&(
-        <Panel label={"◈ 2026 MLB STANDINGS — PLAYOFF PROJECTION"}>
+        <Panel label={"â 2026 MLB STANDINGS â PLAYOFF PROJECTION"}>
           <div style={{fontSize:"9px",color:CD,marginBottom:"10px"}}>Teams in your parlays are highlighted. Confidence = estimated playoff probability.</div>
           {["AL East","AL Central","AL West","NL East","NL Central","NL West"].map(function(div){
             var teams=mlbData.filter(function(t){return t.div===div;}).sort(function(a,b){return b.w-a.w;});
@@ -1950,22 +1948,22 @@ function TabParlays(){
                   <span style={{color:CA,fontFamily:"Orbitron"}}>HOW SCORES WORK: </span>
                   Vegas O/U (40%) + Pythagorean expected wins (25%) + Run differential/game (15%) + Division standing (10%) + Last-10 streak (10%).
                   Early season = Vegas projection weighted heavily since W-L is too small a sample.
-                  <span style={{color:CG}}> 🔥 = 7+ wins last 10. </span>
-                  <span style={{color:CR}}> ❄ = 3 or fewer last 10. </span>
+                  <span style={{color:CG}}> ð¥ = 7+ wins last 10. </span>
+                  <span style={{color:CR}}> â = 3 or fewer last 10. </span>
                   <span style={{color:CA}}> GOLD border = your parlay leg.</span>
                 </div>
 
-                <Panel label={"◈ MOST LIKELY TO MAKE PLAYOFFS — TOP "+makeTeams.length+" TEAMS"}>
+                <Panel label={"â MOST LIKELY TO MAKE PLAYOFFS â TOP "+makeTeams.length+" TEAMS"}>
                   <div style={{fontSize:"9px",color:CD,marginBottom:"8px"}}>Ranked #1 = most likely to make playoffs. Score 50-97%.</div>
                   {makeTeams.map(function(t,i){return renderTeam(t,i,"make",t.simMakePct!=null?t.simMakePct:t.score);})}
                 </Panel>
 
-                <Panel label={"◈ MOST LIKELY TO MISS PLAYOFFS — BOTTOM "+missTeams.length+" TEAMS"}>
+                <Panel label={"â MOST LIKELY TO MISS PLAYOFFS â BOTTOM "+missTeams.length+" TEAMS"}>
                   <div style={{fontSize:"9px",color:CD,marginBottom:"8px"}}>Ranked #1 = most certain to miss playoffs. Score 3-49%.</div>
                   {missTeams.map(function(t,i){return renderTeam(t,i,"miss",t.simMissPct!=null?t.simMissPct:100-t.score);})}
                 </Panel>
 
-                <Panel label={"◈ MARCUS — RECOMMENDED NEXT PARLAY LEGS"}>
+                <Panel label={"â MARCUS â RECOMMENDED NEXT PARLAY LEGS"}>
                   <div style={{fontSize:"9px",color:CD,marginBottom:"10px",lineHeight:1.7}}>
                     Top 3 MAKE legs + top 3 MISS legs by composite score. These are the highest-conviction picks today.
                   </div>
@@ -1976,7 +1974,7 @@ function TabParlays(){
                         <div key={t.t+"m"} style={{display:"flex",justifyContent:"space-between",padding:"6px 8px",marginBottom:"3px",background:"rgba(24,201,58,.06)",border:"1px solid "+CG+"22"}}>
                           <div>
                             <span style={{fontFamily:"Orbitron",fontSize:"11px",color:CA,fontWeight:700}}>{t.t}</span>
-                            <span style={{fontSize:"9px",color:CD,marginLeft:"6px"}}>{t.w}-{t.l} ▪ {t.vegasWins}W O/U</span>
+                            <span style={{fontSize:"9px",color:CD,marginLeft:"6px"}}>{t.w}-{t.l} âª {t.vegasWins}W O/U</span>
                           </div>
                           <span style={{fontFamily:"Orbitron",fontSize:"10px",color:CG}}>{t.score}%</span>
                         </div>
@@ -1988,7 +1986,7 @@ function TabParlays(){
                         <div key={t.t+"ms"} style={{display:"flex",justifyContent:"space-between",padding:"6px 8px",marginBottom:"3px",background:"rgba(224,48,16,.06)",border:"1px solid "+CR+"22"}}>
                           <div>
                             <span style={{fontFamily:"Orbitron",fontSize:"11px",color:CA,fontWeight:700}}>{t.t}</span>
-                            <span style={{fontSize:"9px",color:CD,marginLeft:"6px"}}>{t.w}-{t.l} ▪ {t.vegasWins}W O/U</span>
+                            <span style={{fontSize:"9px",color:CD,marginLeft:"6px"}}>{t.w}-{t.l} âª {t.vegasWins}W O/U</span>
                           </div>
                           <span style={{fontFamily:"Orbitron",fontSize:"10px",color:CR}}>{t.score}%</span>
                         </div>
@@ -1996,10 +1994,10 @@ function TabParlays(){
                     </div>
                   </div>
                   <div style={{padding:"10px",background:"#08080f",border:"1px solid "+CA+"33"}}>
-                    <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CA,letterSpacing:"2px",marginBottom:"6px"}}>MARCUS — CONSTRUCTION ADVICE</div>
+                    <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CA,letterSpacing:"2px",marginBottom:"6px"}}>MARCUS â CONSTRUCTION ADVICE</div>
                     <div style={{fontSize:"10px",color:CB,lineHeight:1.8}}>
-                      Stack your highest-score MAKE legs with your lowest-score MISS legs. Legs above 80% are your anchors — build around them.
-                      Legs 60-79% are strong value adds. Avoid legs 50-60% — too close to call this early.
+                      Stack your highest-score MAKE legs with your lowest-score MISS legs. Legs above 80% are your anchors â build around them.
+                      Legs 60-79% are strong value adds. Avoid legs 50-60% â too close to call this early.
                       Watch the run differential column: teams winning with poor RD are due for regression. Teams with strong RD but losing are due to bounce back.
                     </div>
                   </div>
@@ -2012,7 +2010,7 @@ function TabParlays(){
 
       {/* CALCULATOR */}
       {view==="calc"&&(
-        <Panel label={"◈ CASH OUT CALCULATOR — ALL 4 PARLAYS"}>
+        <Panel label={"â CASH OUT CALCULATOR â ALL 4 PARLAYS"}>
           <div style={{fontSize:"9px",color:CD,marginBottom:"12px"}}>Season is ~3% complete. Cash out values are estimates based on current win probability.</div>
           {PARLAY_DATA.map(function(pd){
             var pr=calcProb(pd);
@@ -2037,14 +2035,14 @@ function TabParlays(){
                   <span style={{fontFamily:"Orbitron",fontSize:"13px",color:CA,fontWeight:800}}>${estCo}</span>
                 </div>
                 <div style={{fontSize:"9px",color:CD,marginTop:"5px"}}>
-                  Verdict: <span style={{color:pr>2?CY:CR}}>{pr>2?"HOLD — season too early to cash out":"MONITOR — assess leg risk mid-season"}</span>
+                  Verdict: <span style={{color:pr>2?CY:CR}}>{pr>2?"HOLD â season too early to cash out":"MONITOR â assess leg risk mid-season"}</span>
                 </div>
               </div>
             );
           })}
           <div style={{padding:"10px",background:"#08080f",border:"1px solid "+CA+"33"}}>
-            <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CA,letterSpacing:"2px",marginBottom:"6px"}}>MARCUS — PARLAY ASSESSMENT</div>
-            <div style={{fontSize:"10px",color:CB,lineHeight:1.8}}>$112 at risk against a $13,009 maximum return. The CIN hedge across parlays 2 and 4 is rational construction. Your five universal legs — Yankees, Mariners, Braves making playoffs; Angels and Astros missing — are the critical path. Monitor those above all others. It is early. Patience is the correct posture.</div>
+            <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CA,letterSpacing:"2px",marginBottom:"6px"}}>MARCUS â PARLAY ASSESSMENT</div>
+            <div style={{fontSize:"10px",color:CB,lineHeight:1.8}}>$112 at risk against a $13,009 maximum return. The CIN hedge across parlays 2 and 4 is rational construction. Your five universal legs â Yankees, Mariners, Braves making playoffs; Angels and Astros missing â are the critical path. Monitor those above all others. It is early. Patience is the correct posture.</div>
           </div>
         </Panel>
       )}
@@ -2054,6 +2052,45 @@ function TabParlays(){
 
 
 function StockChart({ticker,price,chg}){
+  var [pts,setPts]=useState([]);
+  useEffect(function(){
+    // Synthetic sparkline from current price + chg for now
+    var base=parseFloat(price||100);
+    var chgPct=parseFloat(chg||0)/100;
+    var arr=[];
+    for(var j=29;j>=0;j--){
+      var noise=(Math.sin(j*1.7+base)*0.01);
+      var trend=chgPct/30*(29-j);
+      arr.push(parseFloat((base*(1-chgPct+trend+noise)).toFixed(2)));
+    }
+    setPts(arr);
+  },[ticker,price,chg]);
+
+  var up=parseFloat(chg||0)>=0;
+  var col=up?"#18c93a":"#e03010";
+
+  if(pts.length<2) return <div style={{height:"60px",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"9px",color:"#7a6030"}}>LOADING CHART...</div>;
+
+  var mn=Math.min.apply(null,pts),mx=Math.max.apply(null,pts),rng=mx-mn||0.01;
+  var W=300,H=55;
+  var coords=pts.map(function(v,idx){
+    var x=(idx/(pts.length-1))*W;
+    var y=H-((v-mn)/rng)*(H-5);
+    return [x.toFixed(1),y.toFixed(1)];
+  });
+  var lineD="M "+coords.map(function(p){return p[0]+","+p[1];}).join(" L ");
+  var areaD=lineD+" L "+W+","+(H+2)+" L 0,"+(H+2)+" Z";
+
+  return(
+    <div style={{marginTop:"8px",position:"relative"}}>
+      <svg width="100%" height="60" viewBox="0 0 300 60" preserveAspectRatio="none" style={{display:"block"}}>
+        <path d={areaD} fill={col+"33"} stroke="none"/>
+        <path d={lineD} fill="none" stroke={col} strokeWidth="1.5"/>
+      </svg>
+      <div style={{position:"absolute",bottom:"2px",right:"4px",fontFamily:"Orbitron",fontSize:"8px",color:col}}>{up?"+":""}{parseFloat(chg||0).toFixed(2)}%</div>
+    </div>
+  );
+}){
   var ref=useState(null);
   var chartRef=ref[0], setChartRef=ref[1];
   var [history,setHistory]=useState([]);
@@ -2124,7 +2161,7 @@ function StockChart({ticker,price,chg}){
 function StockPopup({ticker,price,cost,shares,gainP,chgP,onClose}){
   var up=gainP>=0,tUp=chgP>=0;
   var mv=parseFloat(price)*shares,cv=parseFloat(cost)*shares,tg=mv-cv;
-  var rec=gainP>20?"HOLD — STRONG":gainP<-20?"REVIEW":chgP<-5?"WATCH":chgP>5?"TRIM":"HOLD";
+  var rec=gainP>20?"HOLD â STRONG":gainP<-20?"REVIEW":chgP<-5?"WATCH":chgP>5?"TRIM":"HOLD";
   var note=gainP>20?"Strong return. Let it run.":gainP<-20?"Underwater. Re-evaluate thesis.":chgP<-5?"Sharp drop. Check news first.":chgP>5?"Strong day. Consider trimming.":"Normal range. No action needed.";
   return(
     <div style={{position:"fixed",top:0,left:0,right:0,bottom:0,background:"rgba(3,3,8,.93)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center"}} onClick={onClose}>
@@ -2149,7 +2186,7 @@ function StockPopup({ticker,price,cost,shares,gainP,chgP,onClose}){
           <div style={{background:BD,padding:"8px"}}><div style={{fontSize:"9px",color:CD}}>P&L</div><div style={{fontFamily:"Orbitron",fontSize:"11px",color:up?CG:CR}}>{tg>=0?"+$":"-$"}{Math.abs(tg).toFixed(2)}</div></div>
         </div>
         <div style={{padding:"12px",background:"rgba(240,163,10,.06)",border:"1px solid "+CA+"33"}}>
-          <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CA,letterSpacing:"2px",marginBottom:"6px"}}>MARCUS — {rec}</div>
+          <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CA,letterSpacing:"2px",marginBottom:"6px"}}>MARCUS â {rec}</div>
           <div style={{fontSize:"10px",color:CC,lineHeight:1.8}}>{note}</div>
         </div>
       </div>
@@ -2216,5 +2253,5 @@ function Spinner({label}) {
 }
 
 function ErrMsg({text}) {
-  return <div style={{color:CR,fontSize:"10px",letterSpacing:"1px"}}>⚠ {text}</div>;
+  return <div style={{color:CR,fontSize:"10px",letterSpacing:"1px"}}>â  {text}</div>;
 }
