@@ -1,35 +1,6 @@
-            var renderTeam = function(t, idx, side) {
-              var makePct = t.simMakePct!=null ? t.simMakePct : t.score;
-              var ds = side==="miss" ? (100-makePct) : makePct;
-              var col=ds>=80?CG:ds>=65?CY:ds>=50?CB:ds>=35?CY:CR;
-              var inP=inParlay(t.t),pType=parlayType(t.t);
-              var pMatch=pType==="MAKE"?makePct>=50:pType==="MISS"?makePct<50:null;
-              var rdCol=parseFloat(t.rdPerGame)>1?CG:parseFloat(t.rdPerGame)<-1?CR:CD;
-              var lbl=side==="miss"?(ds+"% MISS"):(ds+"% MAKE");
-              return (
-                <div key={t.t} style={{padding:"8px 10px",marginBottom:"4px",background:inP?"rgba(240,163,10,.05)":BD,border:"1px solid "+(inP?CA+"55":"#1a1520")}}>
-                  <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
-                    <span style={{fontFamily:"Orbitron",fontSize:"9px",color:CD,minWidth:"16px"}}>{idx+1}</span>
-                    <span style={{fontFamily:"Orbitron",fontSize:"12px",fontWeight:800,color:inP?CA:CB,minWidth:"38px"}}>{t.t}</span>
-                    <div style={{flex:1,height:"5px",background:"#0c0a14",borderRadius:"3px"}}>
-                      <div style={{height:"100%",width:ds+"%",background:col,borderRadius:"3px"}}/>
-                    </div>
-                    <span style={{fontFamily:"Orbitron",fontSize:"11px",fontWeight:700,color:col,minWidth:"78px",textAlign:"right"}}>{lbl}</span>
-                  </div>
-                  <div style={{display:"flex",gap:"8px",marginTop:"4px",flexWrap:"wrap"}}>
-                    <span style={{fontSize:"9px",color:CD}}>REC: <span style={{color:CB}}>{t.w}-{t.l}</span></span>
-                    <span style={{fontSize:"9px",color:CD}}>VEGAS: <span style={{color:CC}}>{t.vegasWins}W</span></span>
-                    <span style={{fontSize:"9px",color:rdCol}}>RD/G: {parseFloat(t.rdPerGame)>0?"+":""}{t.rdPerGame}</span>
-                    <span style={{fontSize:"9px",color:t.hot?CG:t.cold?CR:CD}}>L10: {t.l10}{t.hot?" HOT":t.cold?" COLD":""}</span>
-                    <span style={{fontSize:"9px",color:t.streakLabel&&t.streakLabel[0]==="W"?CG:CR}}>STK: {t.streakLabel}</span>
-                    <span style={{fontSize:"9px",color:CD}}>H: {t.homeRec} A: {t.awayRec}</span>
-                    {inP&&<span style={{fontFamily:"Orbitron",fontSize:"8px",padding:"1px 6px",background:pMatch?CG+"22":CR+"22",color:pMatch?CG:CR,border:"1px solid "+(pMatch?CG:CR)+"44"}}>{pType} {pMatch?"ON TRACK":"AT RISK"}</span>}
-                  </div>
-                </div>
-              );
-            }; from "react";
+import { useState, useEffect } from "react";
 
-// Ã¢ÂÂÃ¢ÂÂ PORTFOLIO DATA Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ── PORTFOLIO DATA ─────────────────────────────────────────────────────────────
 const POSITIONS = [
   {ticker:"AAL", shares:12.70, avgCost:11.30, name:"American Airlines"},
   {ticker:"SMCI",shares:13.71, avgCost:23.24, name:"Super Micro Computer"},
@@ -63,33 +34,33 @@ const FALLBACK = {
 };
 
 
-// Ã¢ÂÂÃ¢ÂÂ PHASE 4 DATA Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ── PHASE 4 DATA ───────────────────────────────────────────────────────────────
 const EARNINGS = [
   {ticker:"AAL", date:"2026-04-24", est:"Q1 2026", note:"Revenue ~$13.5B est"},
   {ticker:"SMCI",date:"2026-05-06", est:"Q3 FY26", note:"Server demand, margin watch"},
   {ticker:"ANET",date:"2026-05-06", est:"Q1 2026", note:"AI networking growth 20%+ est"},
-  {ticker:"TSM", date:"2026-04-17", est:"Q1 2026", note:"Already reported Ã¢ÂÂ strong AI demand"},
+  {ticker:"TSM", date:"2026-04-17", est:"Q1 2026", note:"Already reported — strong AI demand"},
   {ticker:"MU",  date:"2026-06-25", est:"Q3 FY26", note:"HBM3E for AI, guidance key"},
   {ticker:"NVDA",date:"2026-05-28", est:"Q1 FY27", note:"Blackwell ramp, $43B+ rev est"},
-  {ticker:"CRWV",date:"2026-05-12", est:"Q1 2026", note:"First earnings as public Ã¢ÂÂ revenue trajectory"},
+  {ticker:"CRWV",date:"2026-05-12", est:"Q1 2026", note:"First earnings as public — revenue trajectory"},
   {ticker:"DVN", date:"2026-05-05", est:"Q1 2026", note:"Oil price sensitivity, dividend watch"},
   {ticker:"MNTS",date:"2026-05-14", est:"Q1 2026", note:"Revenue growth + cash burn"},
-  {ticker:"VTI", date:null, est:"ETF", note:"No earnings Ã¢ÂÂ tracks total market"},
-  {ticker:"GLD", date:null, est:"ETF", note:"No earnings Ã¢ÂÂ tracks gold price"},
+  {ticker:"VTI", date:null, est:"ETF", note:"No earnings — tracks total market"},
+  {ticker:"GLD", date:null, est:"ETF", note:"No earnings — tracks gold price"},
 ];
 const BENCH_FALLBACK = {
   SPY:{price:"542.30",chg:"1.05"},
   QQQ:{price:"462.18",chg:"1.22"},
   DIA:{price:"402.44",chg:"0.88"},
 };
-// Ã¢ÂÂÃ¢ÂÂ COLORS Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ── COLORS ─────────────────────────────────────────────────────────────────────
 const CA="#f0a30a",CB="#ffffff",CC="#d4a84b",CD="#7a6030";
 const CG="#18c93a",CR="#e03010",CY="#e8b820";
 const BG="#030308",BP="#0a0a18",BD="#0d0d22";
 
-// Ã¢ÂÂÃ¢ÂÂ PHASE 2 DATA Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ── PHASE 2 DATA ───────────────────────────────────────────────────────────────
 
-// Signal engine Ã¢ÂÂ derives buy/hold/sell from price vs cost basis + day change
+// Signal engine — derives buy/hold/sell from price vs cost basis + day change
 function deriveSignal(p) {
   var gainP = p.gainP || 0;
   var chg   = p.chg   || 0;
@@ -107,26 +78,26 @@ const SOUN_DATA = {
   price: 7.04,
   sector: "AI Voice Technology",
   catalysts: [
-    {date:"Q2 2025",event:"SoundHound AI automotive partnership expansion Ã¢ÂÂ 100+ car brands"},
-    {date:"Q3 2025",event:"Restaurant industry rollout Ã¢ÂÂ 10,000+ locations active"},
+    {date:"Q2 2025",event:"SoundHound AI automotive partnership expansion — 100+ car brands"},
+    {date:"Q3 2025",event:"Restaurant industry rollout — 10,000+ locations active"},
     {date:"Q4 2025",event:"Amelia acquisition integration driving enterprise revenue"},
     {date:"Q1 2026",event:"AI agent platform launch targeting financial services sector"},
-    {date:"Apr 2026",event:"Earnings report upcoming Ã¢ÂÂ analyst consensus: revenue growth 70%+ YoY"},
+    {date:"Apr 2026",event:"Earnings report upcoming — analyst consensus: revenue growth 70%+ YoY"},
   ],
   sentiment: [
-    {label:"Reddit/StockTwits",score:72,color:CG,note:"Bullish Ã¢ÂÂ high retail interest"},
-    {label:"Analyst Consensus",score:58,color:CY,note:"Mixed Ã¢ÂÂ 3 Buy, 2 Hold, 1 Sell"},
-    {label:"News Tone",score:65,color:CG,note:"Positive Ã¢ÂÂ AI tailwinds narrative"},
-    {label:"Options Flow",score:70,color:CG,note:"Call-heavy Ã¢ÂÂ bullish positioning"},
+    {label:"Reddit/StockTwits",score:72,color:CG,note:"Bullish — high retail interest"},
+    {label:"Analyst Consensus",score:58,color:CY,note:"Mixed — 3 Buy, 2 Hold, 1 Sell"},
+    {label:"News Tone",score:65,color:CG,note:"Positive — AI tailwinds narrative"},
+    {label:"Options Flow",score:70,color:CG,note:"Call-heavy — bullish positioning"},
   ],
   risks: [
-    "Revenue growth not yet profitable Ã¢ÂÂ cash burn risk",
+    "Revenue growth not yet profitable — cash burn risk",
     "Highly competitive AI voice space (Google, Amazon, Apple)",
-    "Small-cap volatility Ã¢ÂÂ high beta stock",
+    "Small-cap volatility — high beta stock",
     "Breakeven requires +60% to +76% move from current price",
   ],
-  bull: "SOUN is positioned at the intersection of AI and voice commerce Ã¢ÂÂ two of the fastest growing verticals. Automotive and restaurant deployments provide recurring SaaS revenue, and the Amelia acquisition adds enterprise AI agent capability. If AI infrastructure spending accelerates in 2025-2026, SOUN's platform becomes mission-critical.",
-  bear: "The company remains unprofitable with significant cash burn. Voice AI is becoming commoditized by Big Tech. SOUN's $11-12 breakeven prices require a near-double from current levels Ã¢ÂÂ a high bar for a company still proving its business model.",
+  bull: "SOUN is positioned at the intersection of AI and voice commerce — two of the fastest growing verticals. Automotive and restaurant deployments provide recurring SaaS revenue, and the Amelia acquisition adds enterprise AI agent capability. If AI infrastructure spending accelerates in 2025-2026, SOUN's platform becomes mission-critical.",
+  bear: "The company remains unprofitable with significant cash burn. Voice AI is becoming commoditized by Big Tech. SOUN's $11-12 breakeven prices require a near-double from current levels — a high bar for a company still proving its business model.",
 };
 
 // Theta decay calculator
@@ -138,7 +109,7 @@ function thetaCalc(avgCost, contracts, daysToExpiry, iv) {
   return {dailyDecay: dailyDecay.toFixed(2), weeklyDecay: weeklyDecay.toFixed(2), premium: premium.toFixed(0)};
 }
 
-// Discovery picks Ã¢ÂÂ curated high-conviction AI/tech small caps
+// Discovery picks — curated high-conviction AI/tech small caps
 const DISCOVERY_PICKS = [
   {
     ticker:"BBAI",
@@ -163,7 +134,7 @@ const DISCOVERY_PICKS = [
 ];
 
 
-// Ã¢ÂÂÃ¢ÂÂ UTILITIES Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ── UTILITIES ──────────────────────────────────────────────────────────────────
 function usd(n){ return "$"+Math.abs(Number(n)).toFixed(2); }
 
 function marcusBriefing() {
@@ -172,17 +143,17 @@ function marcusBriefing() {
   const date = now.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"});
   const h = now.getHours();
   const g = h<12?"The morning demands clarity":"The afternoon demands focus";
-  const closer = h>=20?"Rest when the work is done Ã¢ÂÂ but the work is not done.":"";
+  const closer = h>=20?"Rest when the work is done — but the work is not done.":"";
   const q = [
-    "The disciplined mind does not panic at volatility Ã¢ÂÂ it studies it. Markets reveal character.",
+    "The disciplined mind does not panic at volatility — it studies it. Markets reveal character.",
     "Wealth is not built in moments of excitement. It is built in moments of discipline.",
-    "The obstacle is the way. Volatility is not the enemy Ã¢ÂÂ indecision is.",
+    "The obstacle is the way. Volatility is not the enemy — indecision is.",
     "Review your stop-losses. Preserving capital is the first rule of compounding.",
     "Markets are indifferent to emotion. Your edge is preparation.",
-    "Eleven positions, two LEAPS, four parlays. Diversification is not weakness Ã¢ÂÂ it is strategy.",
+    "Eleven positions, two LEAPS, four parlays. Diversification is not weakness — it is strategy.",
     "The early review catches the edge. Your positions await analysis.",
   ];
-  return g+". Today is "+day+", "+date+". Eleven positions, two SOUN LEAPS, four MLB futures settling October 31st Ã¢ÂÂ all require your attention. "+q[now.getDate()%q.length]+(closer?" "+closer:"");
+  return g+". Today is "+day+", "+date+". Eleven positions, two SOUN LEAPS, four MLB futures settling October 31st — all require your attention. "+q[now.getDate()%q.length]+(closer?" "+closer:"");
 }
 
 function calcFG(data) {
@@ -196,33 +167,19 @@ function calcFG(data) {
 }
 
 async function fetchPrices() {
-  const syms = POSITIONS.map(function(p){return p.ticker;}).join(",");
-  // Use our own Vercel Edge Function — no CORS issues, no proxy needed
+  var syms = POSITIONS.map(function(p){return p.ticker;}).join(",");
   try {
-    const r = await fetch("/api/prices?symbols="+syms);
-    if (!r.ok) throw new Error("status "+r.status);
-    const data = await r.json();
-    const results = data.quoteResponse?.result || [];
-    if (results.length > 0) return results;
-    throw new Error("empty result");
+    var r = await fetch("/api/prices?symbols="+syms);
+    if(!r.ok) throw new Error("status "+r.status);
+    var data = await r.json();
+    var results = (data.quoteResponse&&data.quoteResponse.result)||[];
+    if(results.length>0) return results;
+    throw new Error("empty");
   } catch(e) {
-    console.warn("fetchPrices /api/prices failed:", e.message);
-    // Fallback: try direct Yahoo Finance (works in some environments)
-    try {
-      const r2 = await fetch("https://query2.finance.yahoo.com/v8/finance/chart/"+syms.split(",")[0]+"?interval=1d&range=1d", {headers:{"User-Agent":"Mozilla/5.0"}});
-      const d2 = await r2.json();
-      const meta = d2.chart?.result?.[0]?.meta;
-      if (meta) {
-        return POSITIONS.map(function(p) {
-          var fb = FALLBACK[p.ticker]||{};
-          return {symbol:p.ticker, regularMarketPrice:parseFloat(fb.price||p.avgCost), regularMarketChangePercent:parseFloat(fb.chg||0)};
-        });
-      }
-    } catch(e2) {}
-    // Final fallback: return FALLBACK data
-    return POSITIONS.map(function(p) {
+    console.warn("fetchPrices failed:",e.message);
+    return POSITIONS.map(function(p){
       var fb = FALLBACK[p.ticker]||{};
-      return {symbol:p.ticker, regularMarketPrice:parseFloat(fb.price||p.avgCost), regularMarketChangePercent:parseFloat(fb.chg||0)};
+      return {symbol:p.ticker,regularMarketPrice:parseFloat(fb.price||p.avgCost),regularMarketChangePercent:parseFloat(fb.chg||0)};
     });
   }
 }
@@ -239,13 +196,13 @@ async function fetchWeather(city) {
   var code = c.weathercode;
   var cond = code===0?"Clear Sky":code<=2?"Partly Cloudy":code===3?"Overcast":code<=48?"Foggy":code<=57?"Drizzle":code<=67?"Rain":code<=77?"Snow":code<=82?"Showers":"Thunderstorm";
   return {
-    temp:    Math.round(c.temperature_2m)+"ÃÂ°F",
-    feels:   Math.round(c.apparent_temperature)+"ÃÂ°F",
+    temp:    Math.round(c.temperature_2m)+"°F",
+    feels:   Math.round(c.apparent_temperature)+"°F",
     cond:    cond,
     humidity:c.relativehumidity_2m+"%",
     wind:    Math.round(c.windspeed_10m)+" mph",
-    high:    Math.round(wd.daily.temperature_2m_max[0])+"ÃÂ°F",
-    low:     Math.round(wd.daily.temperature_2m_min[0])+"ÃÂ°F",
+    high:    Math.round(wd.daily.temperature_2m_max[0])+"°F",
+    low:     Math.round(wd.daily.temperature_2m_min[0])+"°F",
     city:    loc.name,
   };
 }
@@ -253,18 +210,17 @@ async function fetchWeather(city) {
 
 async function fetchBenchmarks() {
   try {
-    const r = await fetch("/api/prices?symbols=SPY,QQQ,DIA");
+    var r = await fetch("/api/prices?symbols=SPY,QQQ,DIA");
     if(!r.ok) throw new Error("status "+r.status);
-    const data = await r.json();
-    const results = data.quoteResponse?.result || [];
-    const out = {};
+    var data = await r.json();
+    var results = (data.quoteResponse&&data.quoteResponse.result)||[];
+    var out = {};
     results.forEach(function(q){
-      out[q.symbol] = {price:q.regularMarketPrice.toFixed(2), chg:q.regularMarketChangePercent.toFixed(2)};
+      out[q.symbol]={price:q.regularMarketPrice.toFixed(2),chg:q.regularMarketChangePercent.toFixed(2)};
     });
     return out;
   } catch(e) {
-    console.warn("fetchBenchmarks failed:", e.message);
-    return {SPY:{price:"--",chg:"0"}, QQQ:{price:"--",chg:"0"}, DIA:{price:"--",chg:"0"}};
+    return {SPY:{price:"--",chg:"0"},QQQ:{price:"--",chg:"0"},DIA:{price:"--",chg:"0"}};
   }
 }
 
@@ -277,74 +233,71 @@ function weeklyReport(enriched, totP, fg) {
   var ret = (totP||0)>=0?"+"+((totP||0).toFixed(2))+"%":((totP||0).toFixed(2))+"%";
   var topStr = top?top.ticker+" leads at +"+top.gainP.toFixed(1)+"%":"positions mixed";
   var worstStr = worst?worst.ticker+" trails at "+worst.gainP.toFixed(1)+"%":"no major losers";
-  return prefix+"Portfolio return: "+ret+". Sentiment: "+(fg&&fg.label||"Neutral")+". "+topStr+". "+worstStr+". "+(isMonday?"New week Ã¢ÂÂ set objectives and review stop-losses.":"Stay disciplined.");
+  return prefix+"Portfolio return: "+ret+". Sentiment: "+(fg&&fg.label||"Neutral")+". "+topStr+". "+worstStr+". "+(isMonday?"New week — set objectives and review stop-losses.":"Stay disciplined.");
 }
 
-function generateEOD(enriched,totCost,totMkt,totGain,totP,bench,fg){
-  if(!enriched||!enriched.length) return "Load portfolio first.";
-  var now=new Date();
-  var ds=now.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"});
-  var ts=now.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit",hour12:true});
-  var withDay=enriched.filter(function(p){return p.chgP!=null;});
-  var byDay=withDay.slice().sort(function(a,b){return b.chgP-a.chgP;});
-  var top=byDay[0],bot=byDay[byDay.length-1];
-  var upCt=withDay.filter(function(p){return p.chgP>0;}).length;
-  var dnCt=withDay.filter(function(p){return p.chgP<0;}).length;
-  var dayDollar=withDay.reduce(function(acc,p){return acc+(p.mkt!=null&&p.chgP!=null?(p.mkt-p.mkt/(1+p.chgP/100)):0);},0);
-  var ai=["NVDA","TSM","CRWV","SMCI","ANET","MU"];
-  var aiUp=enriched.filter(function(p){return ai.indexOf(p.ticker)>-1&&p.chgP>0;}).length;
-  var aiDn=enriched.filter(function(p){return ai.indexOf(p.ticker)>-1&&p.chgP<0;}).length;
-  var bd=bench&&bench.data||{};
-  var lines=[
-    "APEX EOD Ã¢ÂÂ "+ds+" at "+ts,
-    "",
-    "Portfolio: $"+totMkt.toFixed(2)+" / $"+totCost.toFixed(2)+" cost. Total return: "+(totGain>=0?"+":"")+totP.toFixed(2)+"% ($"+(totGain>=0?"+":"")+totGain.toFixed(2)+").",
-    upCt+" up, "+dnCt+" down today. Est. day P&L: "+(dayDollar>=0?"+":"")+dayDollar.toFixed(2)+".",
-    "",
-    top?"Best: "+top.ticker+" "+(top.chgP>0?"+":"")+top.chgP.toFixed(2)+"% at $"+top.price+".":"",
-    bot&&bot.chgP<0?"Worst: "+bot.ticker+" "+bot.chgP.toFixed(2)+"% at $"+bot.price+".":"",
-    "",
-    "AI cluster: "+aiUp+" up, "+aiDn+" down.",
-    bd.SPY?"SPY: "+bd.SPY.chg+"%  QQQ: "+(bd.QQQ?bd.QQQ.chg+"%":"--"):"",
-    "",
-    "Sentiment: "+(fg&&fg.label||"Neutral")+". Stay disciplined.",
-  ];
-  return lines.filter(function(l,idx){return idx===0||l.length>0;}).join("\n");
-}
-
-
-// Ã¢ÂÂÃ¢ÂÂ MONTE CARLO ENGINE Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ── MONTE CARLO ENGINE ────────────────────────────────────────────────────────
 var VEGAS_WINS={LAD:100,ATL:95,NYY:92,PHI:89,NYM:88,SD:87,HOU:86,MIN:86,CLE:85,ATH:85,SEA:84,BAL:83,TOR:82,BOS:80,TEX:79,MIL:79,STL:78,TB:78,AZ:77,CHC:76,CIN:76,SF:75,DET:74,PIT:73,KC:72,MIA:71,WSH:68,COL:65,CWS:64,LAA:64};
 var BOOK_ODDS={LAD:{m:-600,x:420},ATL:{m:-320,x:245},MIN:{m:-195,x:160},SD:{m:-270,x:215},NYY:{m:-175,x:145},CLE:{m:-155,x:130},PHI:{m:-145,x:120},TB:{m:-108,x:-115},BAL:{m:-125,x:105},ATH:{m:165,x:-200},TOR:{m:155,x:-185},HOU:{m:145,x:-175},SEA:{m:115,x:-140},TEX:{m:225,x:-280},NYM:{m:205,x:-255},AZ:{m:235,x:-295},MIL:{m:235,x:-295},PIT:{m:265,x:-335},CHC:{m:265,x:-335},STL:{m:285,x:-360},MIA:{m:305,x:-390},BOS:{m:305,x:-390},LAA:{m:285,x:-360},CIN:{m:205,x:-255},DET:{m:335,x:-430},WSH:{m:405,x:-525},KC:{m:455,x:-600},SF:{m:355,x:-455},COL:{m:660,x:-1000},CWS:{m:710,x:-1100}};
 function otp(o){return o<0?(-o)/(-o+100):100/(o+100);}
 function rn(){var u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
 function runMC(stnd,strks){
-  var N=30000,ct={};
+  var N=40000,ct={};
   stnd.forEach(function(t){ct[t.t]=0;});
   var pr={};
   stnd.forEach(function(t){
-    var gp=Math.max(1,t.w+t.l);
-    var vp=(VEGAS_WINS[t.t]||77)/162,ap=t.w/gp;
-    var sd=strks[t.t]||{},lp=(sd.last10>0)?(sd.l10w/sd.last10):ap;
-    var rd=(t.runDiff!=null&&gp>0)?Math.max(-0.02,Math.min(0.02,(t.runDiff/gp)*0.006)):0;
-    pr[t.t]={p:Math.min(0.60,Math.max(0.40,0.70*vp+0.20*ap+0.10*lp+rd)),rem:162-gp,w:t.w,div:t.div};
+    var gp=t.w+t.l,vp=(VEGAS_WINS[t.t]||77)/162;
+    var xp=t.xWins?t.xWins/162:(gp>0?t.w/gp:0.5);
+    var ap=gp>0?t.w/gp:0.5;
+    var sd=strks[t.t]||{},lp=sd.last10>0?sd.l10w/sd.last10:ap;
+    var rd=gp>0?Math.max(-0.05,Math.min(0.05,t.runDiff/gp*0.015)):0;
+    pr[t.t]={p:Math.min(0.70,Math.max(0.30,0.42*vp+0.33*xp+0.15*lp+0.10*ap+rd)),rem:162-gp,w:t.w,div:t.div};
   });
-  function rn(){var u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
   for(var i=0;i<N;i++){
     var fw={};
     stnd.forEach(function(t){var p=pr[t.t];fw[t.t]=Math.max(0,Math.min(162,p.w+Math.round(p.rem*p.p+Math.sqrt(p.rem*p.p*(1-p.p))*rn())));});
     var al={},nl={};
-    stnd.forEach(function(t){var dv=t.div;if(dv.indexOf('AL')===0){if(!al[dv])al[dv]=[];al[dv].push({t:t.t,w:fw[t.t]});}else{if(!nl[dv])nl[dv]=[];nl[dv].push({t:t.t,w:fw[t.t]});}});
-    function pf(dv){var wn={},all=[];Object.keys(dv).forEach(function(d){var s=dv[d].slice().sort(function(a,b){return b.w-a.w;});wn[s[0].t]=true;dv[d].forEach(function(t){all.push(t);});});all.filter(function(t){return !wn[t.t];}).sort(function(a,b){return b.w-a.w;}).slice(0,3).forEach(function(t){wn[t.t]=true;});return wn;}
-    var po=Object.assign({},pf(al),pf(nl));
+    stnd.forEach(function(t){var d=t.div;if(d.indexOf('AL')===0){if(!al[d])al[d]=[];al[d].push({t:t.t,w:fw[t.t]});}else{if(!nl[d])nl[d]=[];nl[d].push({t:t.t,w:fw[t.t]});}});
+    function lp2(dv){var wn={},all=[];Object.keys(dv).forEach(function(d){var s=dv[d].slice().sort(function(a,b){return b.w-a.w;});wn[s[0].t]=true;dv[d].forEach(function(t){all.push(t);});});all.filter(function(t){return !wn[t.t];}).sort(function(a,b){return b.w-a.w;}).slice(0,3).forEach(function(t){wn[t.t]=true;});return wn;}
+    var po=Object.assign({},lp2(al),lp2(nl));
     stnd.forEach(function(t){if(po[t.t])ct[t.t]++;});
   }
-  var out={};
-  stnd.forEach(function(t){out[t.t]=Math.min(0.95,Math.max(0.05,ct[t.t]/N));});
-  return out;
+  var out={};stnd.forEach(function(t){out[t.t]=ct[t.t]/N;});return out;
 }
 
-// Ã¢ÂÂÃ¢ÂÂ STYLES Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ── STYLES ─────────────────────────────────────────────────────────────────────
+function generateEOD(enriched,totCost,totMkt,totGain,totP,bench,fg){
+  if(!enriched||!enriched.length) return "Load portfolio data first.";
+  var now=new Date();
+  var ds=now.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"});
+  var ts=now.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit",hour12:true});
+  var wd=enriched.filter(function(p){return p.chgP!=null;});
+  var byDay=wd.slice().sort(function(a,b){return b.chgP-a.chgP;});
+  var topPos=byDay[0], botPos=byDay[byDay.length-1];
+  var upCt=wd.filter(function(p){return p.chgP>0;}).length;
+  var dnCt=wd.filter(function(p){return p.chgP<0;}).length;
+  var dayDollar=wd.reduce(function(acc,p){return acc+(p.mkt!=null&&p.chgP!=null?(p.mkt-p.mkt/(1+p.chgP/100)):0);},0);
+  var ai=["NVDA","TSM","CRWV","SMCI","ANET","MU"];
+  var aiUp=enriched.filter(function(p){return ai.indexOf(p.ticker)>-1&&p.chgP>0;}).length;
+  var aiDn=enriched.filter(function(p){return ai.indexOf(p.ticker)>-1&&p.chgP<0;}).length;
+  var bd=bench&&bench.data||{};
+  var lines=[
+    "APEX EOD — "+ds+" at "+ts,
+    "",
+    "Portfolio: $"+totMkt.toFixed(2)+" / $"+totCost.toFixed(2)+" cost. Return: "+(totGain>=0?"+":"")+totP.toFixed(2)+"% ($"+(totGain>=0?"+":"")+totGain.toFixed(2)+").",
+    upCt+" up, "+dnCt+" down today. Est. day P&L: "+(dayDollar>=0?"+":"")+dayDollar.toFixed(2)+".",
+    "",
+    topPos?"Best today: "+topPos.ticker+" "+(topPos.chgP>0?"+":"")+topPos.chgP.toFixed(2)+"% at $"+topPos.price+".":"",
+    botPos&&botPos.chgP<0?"Worst today: "+botPos.ticker+" "+botPos.chgP.toFixed(2)+"% at $"+botPos.price+".":"",
+    "",
+    "AI cluster (NVDA/TSM/CRWV/SMCI/ANET/MU): "+aiUp+" up, "+aiDn+" down.",
+    bd.SPY?"Market: SPY "+bd.SPY.chg+"% QQQ "+(bd.QQQ?bd.QQQ.chg+"%":"--"):"",
+    "",
+    "Sentiment: "+(fg&&fg.label||"Neutral")+". Stay disciplined.",
+  ];
+  return lines.filter(function(l,li){return li===0||l.length>0;}).join("\n");
+}
+
 const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -371,6 +324,8 @@ const CSS = `
 .ti{font-size:14px;filter:grayscale(1) brightness(.4);transition:filter .2s}
 .tab.on .ti{filter:none}
 .bdg{position:absolute;top:4px;right:8px;width:6px;height:6px;border-radius:50%;background:#cc2200;box-shadow:0 0 4px #cc2200}
+.xbtn{background:transparent;color:#7a6030;border:1px solid #7a603044;padding:2px 10px;cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:16px;line-height:1;}
+.xbtn:hover{color:#ffffff;border-color:#ffffff44;}
 .btn{background:transparent;border:1px solid #2a1e08;color:#f0a30a;font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:2px;padding:6px 14px;cursor:pointer;text-transform:uppercase;transition:all .2s;white-space:nowrap}
 .btn:hover{border-color:#f0a30a;box-shadow:0 0 8px rgba(240,163,10,.2);color:#fde68a}
 .btn:disabled{opacity:.3;cursor:default}
@@ -384,7 +339,7 @@ const CSS = `
 .xbtn:hover{color:#cc2200}
 `;
 
-// Ã¢ÂÂÃ¢ÂÂ MAIN APP Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ── MAIN APP ───────────────────────────────────────────────────────────────────
 export default function App() {
   const [tab,setTab]       = useState("briefing");
   const [alertOn,setAlert] = useState(false);
@@ -431,8 +386,8 @@ export default function App() {
         var _t = localStorage.getItem("apex-tasks");
         if (_t) setTasks(JSON.parse(_t));
         else setTasks([
-          {id:1,text:"Review MNTS Ã¢ÂÂ stop-loss evaluation",done:false},
-          {id:2,text:"Monitor DVN Ã¢ÂÂ analyst downgrade risk",done:false},
+          {id:1,text:"Review MNTS — stop-loss evaluation",done:false},
+          {id:2,text:"Monitor DVN — analyst downgrade risk",done:false},
           {id:3,text:"Check SOUN LEAPS breakeven gap",done:false},
         ]);
         var _w = localStorage.getItem("apex-wl");
@@ -522,12 +477,13 @@ export default function App() {
   var DS=now.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric",year:"numeric"}).toUpperCase();
 
   var TABS=[
-    {id:"briefing",icon:"Ã¢ÂÂ¡",l:"BRIEFING"},
-    {id:"portfolio",icon:"Ã°ÂÂÂ",l:"PORTFOLIO"},
-    {id:"intel",icon:"Ã°ÂÂÂ",l:"INTEL"},
-    {id:"soun",icon:"Ã°ÂÂÂ¯",l:"SOUN OPS"},
-    {id:"parlays",icon:"Ã¢ÂÂ¾",l:"PARLAYS"},
-    {id:"mission",icon:"Ã°ÂÂÂ ",l:"MISSION"},
+    {id:"briefing",icon:"⚡",l:"BRIEFING"},
+    {id:"portfolio",icon:"📈",l:"PORTFOLIO"},
+    {id:"intel",icon:"🔍",l:"INTEL"},
+    {id:"soun",icon:"🎯",l:"SOUN OPS"},
+    {id:"parlays",icon:"⚾",l:"PARLAYS"},
+    {id:"alerts",icon:"🔔",l:"ALERTS"},
+    {id:"mission",icon:"🛠",l:"MISSION"},
   ];
 
   return (
@@ -548,13 +504,13 @@ export default function App() {
           </svg>
           <div>
             <div style={{fontFamily:"Orbitron",fontSize:"11px",fontWeight:900,color:alertOn?"#ff4422":CA,letterSpacing:"5px"}}>APEX COMMAND CENTER</div>
-            <div style={{fontSize:"9px",letterSpacing:"2px",color:CD,marginTop:"2px"}}>{alertOn?"Ã¢ÂÂ  ALERT Ã¢ÂÂ POSITION MOVEMENT DETECTED":"PORTFOLIO INTELLIGENCE Ã¢ÂÂª V2.0 Ã¢ÂÂª PHASE 1"}</div>
+            <div style={{fontSize:"9px",letterSpacing:"2px",color:CD,marginTop:"2px"}}>{alertOn?"⚠ ALERT — POSITION MOVEMENT DETECTED":"PORTFOLIO INTELLIGENCE ▪ V2.0 ▪ PHASE 1"}</div>
           </div>
         </div>
         <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
-          <button className="btn bsm" onClick={function(){setAlert(function(v){return !v;});}} style={{color:alertOn?"#ff4422":CA,borderColor:alertOn?"#3d0000":"#2a1e08"}}>{alertOn?"Ã¢ÂÂ ALERT":"Ã¢ÂÂ ALERT"}</button>
-          <button className="btn bsm" onClick={function(){setVoice(function(v){return !v;});}} style={{color:voice?"#1a7acc":CA,borderColor:voice?"#0a3050":"#2a1e08"}}>{voice?"Ã°ÂÂÂ ON":"Ã°ÂÂÂ OFF"}</button>
-          <button className="btn bsm" onClick={fireConfetti}>Ã°ÂÂÂ</button>
+          <button className="btn bsm" onClick={function(){setAlert(function(v){return !v;});}} style={{color:alertOn?"#ff4422":CA,borderColor:alertOn?"#3d0000":"#2a1e08"}}>{alertOn?"◉ ALERT":"○ ALERT"}</button>
+          <button className="btn bsm" onClick={function(){setVoice(function(v){return !v;});}} style={{color:voice?"#1a7acc":CA,borderColor:voice?"#0a3050":"#2a1e08"}}>{voice?"🎙 ON":"🎙 OFF"}</button>
+          <button className="btn bsm" onClick={fireConfetti}>🎉</button>
           <div style={{textAlign:"right"}}>
             <div style={{fontFamily:"Orbitron",fontWeight:900,color:alertOn?"#ff4422":CA,fontSize:"clamp(16px,2.2vw,26px)",letterSpacing:"3px",lineHeight:1}}>{HH}<span className="bl">:</span>{MM}<span style={{fontSize:"0.55em",opacity:.45}}>:{SS}</span></div>
             <div style={{fontSize:"9px",letterSpacing:"2px",color:CD,marginTop:"3px"}}>{DS}</div>
@@ -580,13 +536,14 @@ export default function App() {
         {tab==="intel"     && <TabIntel enriched={enriched} status={port.s} totP={totP} fg={fg}/>}
         {tab==="soun"      && <TabSoun port={port}/>}
         {tab==="parlays"   && <TabParlays/>}
+        {tab==="alerts"    && <TabAlerts filings={edgarFilings} loading={edgarLoading} enabled={alertsEnabled} onEnable={async function(){if("Notification" in window){var p=await Notification.requestPermission();setAlertsEnabled(p==="granted");}}} onScan={async function(){setEdgarLoading(true);var f=await fetchEdgarFilings();setEdgarFilings(f);setEdgarLoading(false);if(alertsEnabled)f.filter(function(x){return x.urgent;}).slice(0,3).forEach(function(x){new Notification("APEX — "+x.ticker+" "+x.form,{body:x.date});});}}/>}
         {tab==="mission"   && <TabMission tasks={tasks} newTask={newTask} setNewTask={setNewTask} onAdd={addTask} onToggle={togTask} onDel={delTask} wl={wl} newWl={newWl} setNewWl={setNewWl} onAddWl={addWl} onDelWl={delWl} journal={journal} setJournal={setJournal}/>}
       </div>
 
       {/* VOICE OVERLAY */}
       {voice&&<VoiceMode alf={alf} enriched={enriched} fg={fg} onClose={function(){setVoice(false);}}/>}
       <div style={{position:"relative",zIndex:10,flexShrink:0,display:"flex",justifyContent:"space-between",alignItems:"center",padding:"4px 16px",background:"#020208",borderTop:"1px solid #14100a"}}>
-        <div style={{fontSize:"9px",letterSpacing:"1.5px",color:CD}}>APEX V2.0 Ã¢ÂÂª {POSITIONS.length} POSITIONS Ã¢ÂÂª 2 LEAPS Ã¢ÂÂª 4 PARLAYS Ã¢ÂÂª PHASE 1</div>
+        <div style={{fontSize:"9px",letterSpacing:"1.5px",color:CD}}>APEX V2.0 ▪ {POSITIONS.length} POSITIONS ▪ 2 LEAPS ▪ 4 PARLAYS ▪ PHASE 1</div>
         <div style={{display:"flex",gap:"14px"}}>
           {[["MARCUS",CA],["NEXUS",CG],["APEX",CG]].map(function(x){return (
             <div key={x[0]} style={{display:"flex",alignItems:"center",gap:"4px",fontSize:"9px",color:CD}}>
@@ -600,32 +557,32 @@ export default function App() {
   );
 }
 
-// Ã¢ÂÂÃ¢ÂÂ BRIEFING TAB Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ── BRIEFING TAB ───────────────────────────────────────────────────────────────
 function TabBriefing({alf,onAlf,wx,city,setCity,onWx,fg,enriched,totP,eod,onEod}) {
   var isMonday = new Date().getDay()===1;
   var report = weeklyReport(enriched||[], totP||0, fg);
   function wIcon(c) {
     var cl=(c||"").toLowerCase();
-    if(cl.includes("thunder"))return"Ã¢ÂÂ";
-    if(cl.includes("rain")||cl.includes("shower"))return"Ã°ÂÂÂ§";
-    if(cl.includes("snow"))return"Ã¢ÂÂ";
-    if(cl.includes("fog"))return"Ã°ÂÂÂ«";
-    if(cl.includes("cloud")||cl.includes("overcast"))return"Ã¢ÂÂ";
-    if(cl.includes("clear")||cl.includes("sun")||cl.includes("sky"))return"Ã¢ÂÂ";
-    return"Ã¢ÂÂ";
+    if(cl.includes("thunder"))return"⛈";
+    if(cl.includes("rain")||cl.includes("shower"))return"🌧";
+    if(cl.includes("snow"))return"❄";
+    if(cl.includes("fog"))return"🌫";
+    if(cl.includes("cloud")||cl.includes("overcast"))return"☁";
+    if(cl.includes("clear")||cl.includes("sun")||cl.includes("sky"))return"☀";
+    return"◈";
   }
   return (
     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
-      <Panel label={"Ã¢ÂÂ MARCUS Ã¢ÂÂ MORNING BRIEFING"} right={<button className="btn bsm" onClick={onAlf}>Ã¢ÂÂ»</button>}>
+      <Panel label={"◈ MARCUS — MORNING BRIEFING"} right={<button className="btn bsm" onClick={onAlf}>↻</button>}>
         {alf.s==="done"&&(
           <div className="fi">
             <p style={{fontSize:"12px",lineHeight:1.9,color:CB,fontStyle:"italic",marginBottom:"12px"}}>"{alf.text}"</p>
-            <div style={{fontSize:"9px",letterSpacing:"2px",color:CD}}>Ã¢ÂÂ MARCUS Ã¢ÂÂª APEX</div>
+            <div style={{fontSize:"9px",letterSpacing:"2px",color:CD}}>— MARCUS ▪ APEX</div>
           </div>
         )}
       </Panel>
 
-      <Panel label={"Ã¢ÂÂ MARKET SENTIMENT"}>
+      <Panel label={"◈ MARKET SENTIMENT"}>
         {fg.s==="done"&&(
           <div className="fi" style={{display:"flex",flexDirection:"column",alignItems:"center",gap:"8px"}}>
             <Gauge score={fg.score} label={fg.label}/>
@@ -635,12 +592,12 @@ function TabBriefing({alf,onAlf,wx,city,setCity,onWx,fg,enriched,totP,eod,onEod}
         {fg.s!=="done"&&<div style={{fontSize:"10px",color:CD}}>Loads with portfolio data...</div>}
       </Panel>
 
-      <Panel label={"Ã¢ÂÂ ATMOSPHERIC CONDITIONS"}>
+      <Panel label={"◈ ATMOSPHERIC CONDITIONS"}>
         <div style={{display:"flex",gap:"6px",marginBottom:"10px"}}>
           <input className="inp" value={city} onChange={function(e){setCity(e.target.value);}} onKeyDown={function(e){if(e.key==="Enter")onWx();}} placeholder="TARGET CITY..."/>
           <button className="btn" onClick={onWx} style={{padding:"6px 10px"}}>SCAN</button>
         </div>
-        {wx.s==="idle"&&<div style={{fontSize:"10px",color:CD}}>Ã¢ÂÂ¸ Enter city to scan conditions</div>}
+        {wx.s==="idle"&&<div style={{fontSize:"10px",color:CD}}>▸ Enter city to scan conditions</div>}
         {wx.s==="loading"&&<Spinner label="SCANNING ATMOSPHERE"/>}
         {wx.s==="err"&&<ErrMsg text={wx.err||"SENSORS OFFLINE"}/>}
         {wx.s==="done"&&wx.data&&(
@@ -665,26 +622,26 @@ function TabBriefing({alf,onAlf,wx,city,setCity,onWx,fg,enriched,totP,eod,onEod}
         )}
       </Panel>
 
-      <Panel label={isMonday?"Ã¢ÂÂ MARCUS Ã¢ÂÂ WEEKLY REPORT":"Ã¢ÂÂ MARCUS Ã¢ÂÂ PORTFOLIO SNAPSHOT"}>
+      <Panel label={isMonday?"◈ MARCUS — WEEKLY REPORT":"◈ MARCUS — PORTFOLIO SNAPSHOT"}>
         <div style={{fontSize:"11px",color:CB,lineHeight:1.8,fontStyle:"italic",marginBottom:"8px"}}>"{report}"</div>
-        <div style={{fontSize:"9px",color:CD,letterSpacing:"2px"}}>Ã¢ÂÂ MARCUS {isMonday?"Ã¢ÂÂª MONDAY REVIEW":""}</div>
+        <div style={{fontSize:"9px",color:CD,letterSpacing:"2px"}}>— MARCUS {isMonday?"▪ MONDAY REVIEW":""}</div>
       </Panel>
 
-      <Panel label={"Ã¢ÂÂ MARCUS Ã¢ÂÂ END OF DAY BRIEFING"} right={<button className="btn bsm" onClick={onEod}>GENERATE</button>}>
-        {!eod&&<div style={{fontSize:"10px",color:CD,lineHeight:1.7}}>Reads live portfolio prices. Refresh Portfolio tab first, then hit GENERATE for a real data briefing.</div>}
+      <Panel label={"◈ MARCUS — END OF DAY BRIEFING"} right={<button className="btn bsm" onClick={onEod}>GENERATE</button>}>
+        {!eod&&<div style={{fontSize:"10px",color:CD,lineHeight:1.8}}>Reads your live portfolio prices — real data, no web search. Refresh Portfolio first then hit GENERATE.</div>}
         {eod&&(
           <div className="fi">
-            {eod.split("\n").map(function(line,lineIdx){
-              if(lineIdx===0) return <div key={lineIdx} style={{fontFamily:"Orbitron",fontSize:"9px",color:CA,letterSpacing:"1px",marginBottom:"10px"}}>{line}</div>;
-              if(line==="") return <div key={lineIdx} style={{height:"5px"}}/>;
-              return <div key={lineIdx} style={{fontSize:"11px",color:CB,lineHeight:1.8}}>{line}</div>;
+            {eod.split("\n").map(function(line,li){
+              if(li===0) return <div key={li} style={{fontFamily:"Orbitron",fontSize:"9px",color:CA,letterSpacing:"1px",marginBottom:"10px"}}>{line}</div>;
+              if(line==="") return <div key={li} style={{height:"5px"}}/>;
+              return <div key={li} style={{fontSize:"11px",color:CB,lineHeight:1.8}}>{line}</div>;
             })}
-            <div style={{marginTop:"10px",fontSize:"9px",color:CD,letterSpacing:"2px"}}>Ã¢ÂÂ MARCUS Ã¢ÂÂª LIVE DATA</div>
+            <div style={{marginTop:"10px",fontSize:"9px",color:CD,letterSpacing:"2px"}}>— MARCUS ▪ LIVE DATA</div>
           </div>
         )}
       </Panel>
 
-      <Panel label={"Ã¢ÂÂ SYSTEM STATUS"}>
+      <Panel label={"◈ SYSTEM STATUS"}>
         {[["MARCUS","ONLINE",CG],["PORTFOLIO","LIVE",CG],["WEATHER","LIVE",CG],["INTEL","LIVE",CG],["SOUN OPS","LIVE",CG],["PARLAYS","LIVE",CG],["EARNINGS","LIVE",CG],["BENCHMARKS","LIVE",CG],["JOURNAL","LIVE",CG],["PWA","READY",CG]].map(function(r){return (
           <div key={r[0]} style={{display:"flex",justifyContent:"space-between",padding:"5px 0",borderBottom:"1px solid #0c0a14"}}>
             <span style={{fontSize:"10px",letterSpacing:"1px"}}>{r[0]}</span>
@@ -696,13 +653,13 @@ function TabBriefing({alf,onAlf,wx,city,setCity,onWx,fg,enriched,totP,eod,onEod}
   );
 }
 
-// Ã¢ÂÂÃ¢ÂÂ PORTFOLIO TAB Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ── PORTFOLIO TAB ──────────────────────────────────────────────────────────────
 function TabPortfolio({enriched,totCost,totMkt,totGain,totP,leaps,status,live,onRefresh,bench}) {
   var up=totGain>=0;
   var [popup,setPopup]=useState(null);
-  var [targetAmt,setTargetAmt]=useState("");
-  var [targetDays,setTargetDays]=useState("");
-  var [targetResult,setTargetResult]=useState(null);
+  var [tgtAmt,setTgtAmt]=useState("");
+  var [tgtDays,setTgtDays]=useState("");
+  var [tgtResult,setTgtResult]=useState(null);
   var bd=bench&&bench.data||{};
   var spyRet=bd.SPY?((parseFloat(bd.SPY.price)-542.30)/542.30*100):null;
   var qqqRet=bd.QQQ?((parseFloat(bd.QQQ.price)-462.18)/462.18*100):null;
@@ -720,7 +677,7 @@ function TabPortfolio({enriched,totCost,totMkt,totGain,totP,leaps,status,live,on
         );})}
       </div>
 
-      <Panel label={"Ã¢ÂÂ POSITIONS Ã¢ÂÂ "+POSITIONS.length+" HOLDINGS "+(live?"Ã¢ÂÂª LIVE":"Ã¢ÂÂª SESSION DATA 4/14")} right={<button className="btn bsm" onClick={onRefresh} disabled={status==="loading"}>Ã¢ÂÂ» REFRESH</button>}>
+      <Panel label={"◈ POSITIONS — "+POSITIONS.length+" HOLDINGS "+(live?"▪ LIVE":"▪ SESSION DATA 4/14")} right={<button className="btn bsm" onClick={onRefresh} disabled={status==="loading"}>↻ REFRESH</button>}>
         {status==="loading"&&<Spinner label="PULLING LIVE PRICES"/>}
         {status!=="loading"&&enriched.map(function(p,i){return (
           <div key={p.ticker} className="pr si" style={{animationDelay:i*30+"ms"}}>
@@ -765,44 +722,40 @@ function TabPortfolio({enriched,totCost,totMkt,totGain,totP,leaps,status,live,on
         );})}
       </Panel>
 
-            <Panel label={"Ã¢ÂÂ PORTFOLIO TARGET CALCULATOR"}>
+            <Panel label={"◈ PORTFOLIO TARGET CALCULATOR"}>
         <div style={{display:"flex",gap:"8px",marginBottom:"10px"}}>
           <div style={{flex:1}}>
-            <div style={{fontSize:"9px",color:CD,marginBottom:"4px",letterSpacing:"1px"}}>GOAL AMOUNT ($)</div>
-            <input className="inp" value={targetAmt} onChange={function(e){setTargetAmt(e.target.value);setTargetResult(null);}} placeholder="e.g. 50000"/>
+            <div style={{fontSize:"9px",color:CD,marginBottom:"4px",letterSpacing:"1px"}}>GOAL ($)</div>
+            <input className="inp" value={tgtAmt} onChange={function(e){setTgtAmt(e.target.value);setTgtResult(null);}} placeholder="50000"/>
           </div>
           <div style={{flex:1}}>
-            <div style={{fontSize:"9px",color:CD,marginBottom:"4px",letterSpacing:"1px"}}>DAYS FROM NOW</div>
-            <input className="inp" value={targetDays} onChange={function(e){setTargetDays(e.target.value);setTargetResult(null);}} placeholder="e.g. 365"/>
+            <div style={{fontSize:"9px",color:CD,marginBottom:"4px",letterSpacing:"1px"}}>DAYS</div>
+            <input className="inp" value={tgtDays} onChange={function(e){setTgtDays(e.target.value);setTgtResult(null);}} placeholder="365"/>
           </div>
         </div>
         <button className="btn" style={{width:"100%",marginBottom:"10px"}} onClick={function(){
-          var goal=parseFloat(targetAmt),days=parseInt(targetDays);
-          if(!goal||!days||!enriched.length) return;
-          var current=enriched.reduce(function(a,px){return a+(px.mkt||px.avgCost*px.shares);},0);
-          var needed=goal-current;
-          if(needed<=0){setTargetResult({msg:"Already at goal! Current: $"+current.toFixed(2),buys:[]});return;}
+          var goal=parseFloat(tgtAmt),days=parseInt(tgtDays);
+          if(!goal||!days) return;
+          var cur=enriched.reduce(function(a,px){return a+(px.mkt||px.avgCost*px.shares);},0);
+          var need=goal-cur;
+          if(need<=0){setTgtResult({msg:"Already at goal! Current: $"+cur.toFixed(2),buys:[]});return;}
           var ranked=enriched.filter(function(px){return px.chgP!=null;}).slice().sort(function(a,bx){return (bx.chgP||0)-(a.chgP||0);});
           var buys=ranked.slice(0,4).map(function(px){
-            var dollar=(needed*0.25),shs=dollar/(parseFloat(px.price)||px.avgCost);
-            return {ticker:px.ticker,price:(parseFloat(px.price)||px.avgCost).toFixed(2),dollar:dollar.toFixed(2),shs:shs.toFixed(3)};
+            var dollar=need*0.25, shs=dollar/(parseFloat(px.price)||px.avgCost);
+            return {t:px.ticker,p:(parseFloat(px.price)||px.avgCost).toFixed(2),d:dollar.toFixed(2),s:shs.toFixed(3)};
           });
-          setTargetResult({msg:"Need $"+needed.toFixed(2)+" more over "+days+" days (~$"+(needed/days).toFixed(2)+"/day). Suggested buys:",buys:buys});
-        }}>CALCULATE TARGET</button>
-        {targetResult&&(
+          setTgtResult({msg:"Need $"+need.toFixed(2)+" over "+days+" days (~$"+(need/days).toFixed(2)+"/day):",buys:buys});
+        }}>CALCULATE</button>
+        {tgtResult&&(
           <div className="fi">
-            <div style={{fontSize:"10px",color:CA,marginBottom:"8px"}}>{targetResult.msg}</div>
-            {targetResult.buys&&targetResult.buys.map(function(bx){return(
-              <div key={bx.ticker} style={{display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:"1px solid #0c0a14"}}>
-                <span style={{fontFamily:"Orbitron",fontSize:"11px",color:CA}}>{bx.ticker}</span>
-                <span style={{fontSize:"10px",color:CB}}>{bx.shs} sh @ ${bx.price}</span>
-                <span style={{fontFamily:"Orbitron",fontSize:"10px",color:CG}}>${bx.dollar}</span>
-              </div>
-            );})}
+            <div style={{fontSize:"10px",color:CA,marginBottom:"8px"}}>{tgtResult.msg}</div>
+            {tgtResult.buys.map(function(bx,bi){
+              return(<div key={bi} style={{display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:"1px solid #0c0a14"}}><span style={{fontFamily:"Orbitron",fontSize:"11px",color:CA}}>{bx.t}</span><span style={{fontSize:"10px",color:CB}}>{bx.s} sh @ ${bx.p}</span><span style={{fontFamily:"Orbitron",fontSize:"10px",color:CG}}>${bx.d}</span></div>);
+            })}
           </div>
         )}
       </Panel>
-<Panel label={"Ã¢ÂÂ SOUN LEAPS Ã¢ÂÂ OPTIONS POSITIONS"}>
+<Panel label={"◈ SOUN LEAPS — OPTIONS POSITIONS"}>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
           {leaps.map(function(l,i){
             var pct=(l.sounNow/l.breakeven*100).toFixed(0);
@@ -825,10 +778,10 @@ function TabPortfolio({enriched,totCost,totMkt,totGain,totP,leaps,status,live,on
             );
           })}
         </div>
-        <div style={{marginTop:"8px",fontSize:"9px",color:CD,letterSpacing:"1px"}}>Ã¢ÂÂ¸ Full Greeks, theta clock & probability Ã¢ÂÂ SOUN OPS tab</div>
+        <div style={{marginTop:"8px",fontSize:"9px",color:CD,letterSpacing:"1px"}}>▸ Full Greeks, theta clock & probability → SOUN OPS tab</div>
       </Panel>
 
-      <Panel label={"Ã¢ÂÂ EARNINGS CALENDAR Ã¢ÂÂ NEXT 60 DAYS"}>
+      <Panel label={"◈ EARNINGS CALENDAR — NEXT 60 DAYS"}>
         {upcoming.length===0&&<div style={{fontSize:"10px",color:CD}}>No earnings in next 60 days.</div>}
         {upcoming.map(function(e){var daysAway=Math.ceil((new Date(e.date)-now2)/(1000*60*60*24));var color=daysAway<=7?CR:daysAway<=21?CY:CG;return(
           <div key={e.ticker} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"7px 0",borderBottom:"1px solid #0c0a14"}}>
@@ -850,7 +803,7 @@ function TabPortfolio({enriched,totCost,totMkt,totGain,totP,leaps,status,live,on
         );})}
       </Panel>
 
-      <Panel label={"Ã¢ÂÂ PERFORMANCE VS BENCHMARKS"}>
+      <Panel label={"◈ PERFORMANCE VS BENCHMARKS"}>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:"6px"}}>
           {[["MY PORTFOLIO",totP,true],["S&P 500 (SPY)",spyRet,false],["NASDAQ (QQQ)",qqqRet,false],["DOW (DIA)",diaRet,false]].map(function(r){
             var val=r[1];var col=val===null?CD:val>=0?CG:CR;var str=val===null?"--":(val>=0?"+":"")+val.toFixed(2)+"%";
@@ -869,7 +822,91 @@ function TabPortfolio({enriched,totCost,totMkt,totGain,totP,leaps,status,live,on
   );
 }
 
-// Ã¢ÂÂÃ¢ÂÂ MISSION TAB Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+async function fetchEdgarFilings() {
+  var CIKS = {"AAL":"0000006201","SMCI":"0001375365","ANET":"0001313925","TSM":"0001046179","MU":"0000723254","NVDA":"0001045810","CRWV":"0001866175","DVN":"0000315189","MNTS":"0001801236","SOUN":"0001653519"};
+  var cutoff = new Date(Date.now()-7*24*60*60*1000).toISOString().slice(0,10);
+  var all = [];
+  await Promise.all(Object.entries(CIKS).map(async function(entry){
+    var ticker=entry[0], cik=entry[1];
+    try {
+      var r = await fetch("https://data.sec.gov/submissions/CIK"+cik+".json",{headers:{"User-Agent":"apex/1.0 monitor@apex.app"}});
+      var d = await r.json();
+      var recent = d.filings&&d.filings.recent||{};
+      var forms=recent.form||[], dates=recent.filingDate||[], docs=recent.primaryDocument||[];
+      for(var i=0;i<Math.min(forms.length,10);i++){
+        if(dates[i]>=cutoff && ["8-K","4","SC 13D","SC 13G","10-Q","10-K"].indexOf(forms[i])>-1){
+          all.push({ticker:ticker,form:forms[i],date:dates[i],doc:docs[i]||"",urgent:forms[i]==="8-K"||forms[i]==="4",url:"https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK="+cik+"&type="+forms[i]+"&dateb=&owner=include&count=5"});
+        }
+      }
+    } catch(e) {}
+  }));
+  return all.sort(function(a,b){return b.date.localeCompare(a.date);});
+}
+
+function TabAlerts({filings,loading,enabled,onEnable,onScan}){
+  var urgent=filings.filter(function(f){return f.urgent;});
+  var normal=filings.filter(function(f){return !f.urgent;});
+  var formColor=function(form){return form==="8-K"||form==="4"?CR:form==="SC 13D"?CY:CG;};
+  var formLabel=function(form){var m={"8-K":"MATERIAL EVENT","4":"INSIDER TRADE","10-Q":"QUARTERLY","10-K":"ANNUAL","SC 13D":"ACTIVIST","SC 13G":"LARGE HOLDER"};return m[form]||form;};
+  return(
+    <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+      <Panel label={"◈ EDGAR + ALERTS CONTROL"}>
+        <div style={{display:"flex",gap:"8px",marginBottom:"10px"}}>
+          <button className="btn" style={{flex:1}} onClick={onScan}>{loading?"SCANNING...":"↻ SCAN SEC EDGAR"}</button>
+          <button className="btn" style={{flex:1,color:enabled?CG:CA,borderColor:enabled?CG:CA}} onClick={onEnable}>{enabled?"🔔 ALERTS ON":"🔕 ENABLE ALERTS"}</button>
+        </div>
+        <div style={{fontSize:"9px",color:CD,lineHeight:1.7}}>Scans SEC EDGAR for 8-K material events, Form 4 insider trades, SC 13D activist filings, and earnings reports for all your positions. Browser push notifications fire on urgent filings. 24/7 GitHub Actions monitor also runs every 5 min and sends ntfy alerts to your phone.</div>
+      </Panel>
+      {urgent.length>0&&(
+        <Panel label={"◈ URGENT — "+urgent.length+" FILING"+(urgent.length!==1?"S":"")}>
+          {urgent.map(function(f,fi){
+            return(
+              <div key={fi} style={{padding:"10px",marginBottom:"6px",background:"rgba(224,48,16,.06)",border:"1px solid "+CR+"44"}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"4px"}}>
+                  <div style={{display:"flex",gap:"8px",alignItems:"center"}}>
+                    <span style={{fontFamily:"Orbitron",fontSize:"12px",fontWeight:800,color:CA}}>{f.ticker}</span>
+                    <span style={{fontFamily:"Orbitron",fontSize:"8px",padding:"2px 6px",background:formColor(f.form)+"22",color:formColor(f.form),border:"1px solid "+formColor(f.form)+"44"}}>{formLabel(f.form)}</span>
+                    <span style={{fontFamily:"Orbitron",fontSize:"8px",color:CR}}>⚠ URGENT</span>
+                  </div>
+                  <span style={{fontSize:"9px",color:CD}}>{f.date}</span>
+                </div>
+                <a href={f.url} target="_blank" rel="noreferrer" style={{fontSize:"9px",color:CA,textDecoration:"none",letterSpacing:"1px"}}>▸ VIEW ON SEC.GOV →</a>
+              </div>
+            );
+          })}
+        </Panel>
+      )}
+      <Panel label={"◈ SEC EDGAR — LAST 7 DAYS"+(filings.length>0?" ("+filings.length+")":"")}>
+        {loading&&<Spinner label="SCANNING EDGAR..."/>}
+        {!loading&&filings.length===0&&<div style={{fontSize:"10px",color:CD}}>Hit SCAN to fetch latest filings for all positions.</div>}
+        {!loading&&normal.map(function(f,fi){
+          return(
+            <div key={fi} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"7px 0",borderBottom:"1px solid #0c0a14"}}>
+              <div style={{display:"flex",gap:"8px",alignItems:"center"}}>
+                <span style={{fontFamily:"Orbitron",fontSize:"11px",fontWeight:700,color:CA,minWidth:"42px"}}>{f.ticker}</span>
+                <span style={{fontFamily:"Orbitron",fontSize:"8px",padding:"1px 5px",background:formColor(f.form)+"22",color:formColor(f.form),border:"1px solid "+formColor(f.form)+"33"}}>{formLabel(f.form)}</span>
+              </div>
+              <div style={{display:"flex",gap:"10px",alignItems:"center"}}>
+                <span style={{fontSize:"9px",color:CD}}>{f.date}</span>
+                <a href={f.url} target="_blank" rel="noreferrer" style={{fontSize:"9px",color:CC,textDecoration:"none"}}>VIEW →</a>
+              </div>
+            </div>
+          );
+        })}
+      </Panel>
+      <Panel label={"◈ UNUSUAL WHALES — OPTIONS FLOW"}>
+        <div style={{fontSize:"10px",color:CD,lineHeight:1.7,marginBottom:"10px"}}>Options flow shows when large money buys calls/puts before a move. Full per-ticker flow requires an Unusual Whales API key (~$50/month).</div>
+        <div style={{padding:"10px",background:BD,border:"1px solid #1a1520"}}>
+          <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CA,letterSpacing:"2px",marginBottom:"6px"}}>ADD API KEY TO UNLOCK</div>
+          <input className="inp" style={{width:"100%",marginBottom:"8px"}} placeholder="UNUSUAL WHALES API KEY..."/>
+          <button className="btn" style={{width:"100%"}}>CONNECT FLOW</button>
+        </div>
+      </Panel>
+    </div>
+  );
+}
+
+// ── MISSION TAB ────────────────────────────────────────────────────────────────
 function TabMission({tasks,newTask,setNewTask,onAdd,onToggle,onDel,wl,newWl,setNewWl,onAddWl,onDelWl,journal,setJournal}) {
   var done=tasks.filter(function(t){return t.done;}).length;
   var [newEntry,setNewEntry]=useState({ticker:"",action:"BUY",price:"",notes:""});
@@ -877,7 +914,7 @@ function TabMission({tasks,newTask,setNewTask,onAdd,onToggle,onDel,wl,newWl,setN
   function addJournalEntry(){if(!newEntry.ticker.trim()||!newEntry.notes.trim())return;setJournal(function(p){return [{id:Date.now(),date:new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}),ticker:newEntry.ticker.toUpperCase(),action:newEntry.action,price:newEntry.price,notes:newEntry.notes}].concat(p);});setNewEntry({ticker:"",action:"BUY",price:"",notes:""}); }
   return (
     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
-      <Panel label={"Ã¢ÂÂ MISSION OBJECTIVES"}>
+      <Panel label={"◈ MISSION OBJECTIVES"}>
         <div style={{display:"flex",gap:"6px",marginBottom:"10px"}}>
           <input className="inp" value={newTask} onChange={function(e){setNewTask(e.target.value);}} onKeyDown={function(e){if(e.key==="Enter")onAdd();}} placeholder="ADD OBJECTIVE..."/>
           <button className="btn" onClick={onAdd} style={{padding:"6px 10px"}}>+</button>
@@ -885,49 +922,49 @@ function TabMission({tasks,newTask,setNewTask,onAdd,onToggle,onDel,wl,newWl,setN
         <div style={{maxHeight:"260px",overflow:"auto"}}>
           {tasks.map(function(t){return (
             <div key={t.id} style={{display:"flex",alignItems:"flex-start",gap:"8px",padding:"7px 0",borderBottom:"1px solid #0c0a14",opacity:t.done?.3:1,transition:"opacity .3s"}}>
-              <button onClick={function(){onToggle(t.id);}} style={{marginTop:"2px",width:"14px",height:"14px",border:"1px solid "+(t.done?CA:"#2e2210"),background:t.done?CA:"transparent",color:BG,fontSize:"9px",cursor:"pointer",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center"}}>{t.done?"Ã¢ÂÂ":""}</button>
+              <button onClick={function(){onToggle(t.id);}} style={{marginTop:"2px",width:"14px",height:"14px",border:"1px solid "+(t.done?CA:"#2e2210"),background:t.done?CA:"transparent",color:BG,fontSize:"9px",cursor:"pointer",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center"}}>{t.done?"✓":""}</button>
               <span style={{flex:1,fontSize:"11px",color:t.done?CD:CB,textDecoration:t.done?"line-through":"none",lineHeight:1.5}}>{t.text}</span>
-              <button className="xbtn" onClick={function(){onDel(t.id);}}>ÃÂ</button>
+              <button className="xbtn" onClick={function(){onDel(t.id);}}>×</button>
             </div>
           );})}
         </div>
-        <div style={{marginTop:"10px",fontFamily:"Orbitron",fontSize:"9px",letterSpacing:"2px",color:CD}}>{tasks.length-done} ACTIVE Ã¢ÂÂª {done} COMPLETE Ã¢ÂÂª SAVED Ã¢ÂÂ</div>
+        <div style={{marginTop:"10px",fontFamily:"Orbitron",fontSize:"9px",letterSpacing:"2px",color:CD}}>{tasks.length-done} ACTIVE ▪ {done} COMPLETE ▪ SAVED ✓</div>
       </Panel>
 
       <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-        <Panel label={"Ã¢ÂÂ CUSTOM WATCHLIST"}>
+        <Panel label={"◈ CUSTOM WATCHLIST"}>
           <div style={{display:"flex",gap:"6px",marginBottom:"10px"}}>
             <input className="inp" value={newWl} onChange={function(e){setNewWl(e.target.value);}} onKeyDown={function(e){if(e.key==="Enter")onAddWl();}} placeholder="ADD TICKER..."/>
             <button className="btn" onClick={onAddWl} style={{padding:"6px 10px"}}>+</button>
           </div>
-          {!wl.length&&<div style={{fontSize:"10px",color:CD}}>Ã¢ÂÂ¸ Add tickers to monitor</div>}
+          {!wl.length&&<div style={{fontSize:"10px",color:CD}}>▸ Add tickers to monitor</div>}
           <div style={{display:"flex",flexWrap:"wrap",gap:"6px"}}>
             {wl.map(function(w){return (
               <div key={w.id} style={{display:"flex",alignItems:"center",gap:"4px",padding:"4px 8px",background:BD,border:"1px solid #1a1520"}}>
                 <span style={{fontFamily:"Orbitron",fontSize:"10px",color:CA,letterSpacing:"2px"}}>{w.t}</span>
-                <button className="xbtn" onClick={function(){onDelWl(w.id);}}>ÃÂ</button>
+                <button className="xbtn" onClick={function(){onDelWl(w.id);}}>×</button>
               </div>
             );})}
           </div>
         </Panel>
 
-        <Panel label={"Ã¢ÂÂ PARLAYS SUMMARY"}>
+        <Panel label={"◈ PARLAYS SUMMARY"}>
           {PARLAYS.map(function(p,i){return (
             <div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"7px 0",borderBottom:"1px solid #0c0a14"}}>
               <div>
                 <div style={{fontFamily:"Orbitron",fontSize:"11px",color:CA,letterSpacing:"1px"}}>{p.odds}</div>
-                <div style={{fontSize:"10px",color:CD,marginTop:"2px"}}>{p.legs} LEGS Ã¢ÂÂª ${p.stake} STAKE</div>
+                <div style={{fontSize:"10px",color:CD,marginTop:"2px"}}>{p.legs} LEGS ▪ ${p.stake} STAKE</div>
               </div>
               <div style={{textAlign:"right"}}>
                 <div style={{fontSize:"9px",color:CG}}>PAYS ${p.payout.toLocaleString()}</div>
               </div>
             </div>
           );})}
-          <div style={{marginTop:"8px",fontSize:"9px",color:CD,letterSpacing:"1px"}}>AT RISK: $112 Ã¢ÂÂª MAX PAYOUT: $13,008.93 Ã¢ÂÂª SETTLES OCT 31</div>
+          <div style={{marginTop:"8px",fontSize:"9px",color:CD,letterSpacing:"1px"}}>AT RISK: $112 ▪ MAX PAYOUT: $13,008.93 ▪ SETTLES OCT 31</div>
         </Panel>
       </div>
 
-      <Panel label={"Ã¢ÂÂ TRADE JOURNAL Ã¢ÂÂ "+((journal&&journal.length)||0)+" ENTRIES"} right={<button className="btn bsm" onClick={function(){setShowJournal(function(v){return !v;});}}>{showJournal?"HIDE":"SHOW"}</button>}>
+      <Panel label={"◈ TRADE JOURNAL — "+((journal&&journal.length)||0)+" ENTRIES"} right={<button className="btn bsm" onClick={function(){setShowJournal(function(v){return !v;});}}>{showJournal?"HIDE":"SHOW"}</button>}>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 2fr",gap:"6px",marginBottom:"8px"}}>
           <input className="inp" value={newEntry.ticker} onChange={function(ev){setNewEntry(function(p){return Object.assign({},p,{ticker:ev.target.value});});}} placeholder="TICKER"/>
           <select value={newEntry.action} onChange={function(ev){setNewEntry(function(p){return Object.assign({},p,{action:ev.target.value});});}} style={{background:"#080812",border:"1px solid #1a1520",color:CA,fontFamily:"monospace",fontSize:"11px",padding:"6px",outline:"none"}}>{["BUY","SELL","HOLD","WATCH","ADD","TRIM"].map(function(a){return <option key={a}>{a}</option>;})}</select>
@@ -941,7 +978,7 @@ function TabMission({tasks,newTask,setNewTask,onAdd,onToggle,onDel,wl,newWl,setN
   );
 }
 
-// Ã¢ÂÂÃ¢ÂÂ COMING SOON Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ── COMING SOON ────────────────────────────────────────────────────────────────
 function TabSoon({icon,label,items,phase}) {
   return (
     <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",height:"80%",gap:"20px",padding:"20px"}}>
@@ -953,7 +990,7 @@ function TabSoon({icon,label,items,phase}) {
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px",maxWidth:"480px",width:"100%"}}>
         {items.map(function(it){return (
           <div key={it} style={{padding:"7px 10px",background:BP,border:"1px solid #141020",fontSize:"9px",color:CD,letterSpacing:"1px"}}>
-            <span style={{color:CA}}>Ã¢ÂÂ¸ </span>{it}
+            <span style={{color:CA}}>▸ </span>{it}
           </div>
         );})}
       </div>
@@ -961,7 +998,7 @@ function TabSoon({icon,label,items,phase}) {
   );
 }
 
-// Ã¢ÂÂÃ¢ÂÂ INTELLIGENCE TAB Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ── INTELLIGENCE TAB ──────────────────────────────────────────────────────────
 function TabIntel({enriched,status}) {
   var [debateMode,setDebateMode] = useState(false);
   var [debateTicker,setDebateTicker] = useState("NVDA");
@@ -988,7 +1025,7 @@ function TabIntel({enriched,status}) {
       </div>
 
       {/* Signals List */}
-      <Panel label={"Ã¢ÂÂ POSITION SIGNALS Ã¢ÂÂ AI DERIVED"}>
+      <Panel label={"◈ POSITION SIGNALS — AI DERIVED"}>
         <div style={{fontSize:"9px",color:CD,marginBottom:"10px",letterSpacing:"1px"}}>Based on cost basis vs current price + day momentum. Not financial advice.</div>
         {status==="loading"&&<Spinner label="COMPUTING SIGNALS"/>}
         {signals.map(function(p){
@@ -1015,7 +1052,7 @@ function TabIntel({enriched,status}) {
       </Panel>
 
       {/* Discovery Picks */}
-      <Panel label={"Ã¢ÂÂ MORNING DISCOVERY Ã¢ÂÂ HIGH CONVICTION PICKS"}>
+      <Panel label={"◈ MORNING DISCOVERY — HIGH CONVICTION PICKS"}>
         <div style={{fontSize:"9px",color:CD,marginBottom:"10px",letterSpacing:"1px"}}>AI-researched speculative picks. Not financial advice. Do your own due diligence.</div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
           {DISCOVERY_PICKS.map(function(pick){return (
@@ -1025,27 +1062,27 @@ function TabIntel({enriched,status}) {
                 <span style={{fontFamily:"Orbitron",fontSize:"13px",fontWeight:800,color:CA,letterSpacing:"2px"}}>{pick.ticker}</span>
                 <span style={{fontFamily:"Orbitron",fontSize:"9px",padding:"2px 5px",background:CG+"22",color:CG,border:"1px solid "+CG+"33"}}>{pick.conviction}</span>
               </div>
-              <div style={{fontSize:"9px",color:CD,letterSpacing:"2px",marginBottom:"6px"}}>{pick.sector} Ã¢ÂÂª {pick.timeframe}</div>
-              <div style={{fontSize:"12px",color:CB,lineHeight:1.6,marginBottom:"6px"}}>{pick.price} Ã¢ÂÂ {pick.thesis}</div>
-              <div style={{fontSize:"10px",color:CR,lineHeight:1.5}}>Ã¢ÂÂ  {pick.risk}</div>
+              <div style={{fontSize:"9px",color:CD,letterSpacing:"2px",marginBottom:"6px"}}>{pick.sector} ▪ {pick.timeframe}</div>
+              <div style={{fontSize:"12px",color:CB,lineHeight:1.6,marginBottom:"6px"}}>{pick.price} — {pick.thesis}</div>
+              <div style={{fontSize:"10px",color:CR,lineHeight:1.5}}>⚠ {pick.risk}</div>
             </div>
           );})}
         </div>
       </Panel>
 
       {/* Bull vs Bear Debate */}
-      <Panel label={"Ã¢ÂÂ AI BULL vs BEAR DEBATE"}>
+      <Panel label={"◈ AI BULL vs BEAR DEBATE"}>
         <div style={{display:"flex",gap:"6px",marginBottom:"12px",alignItems:"center"}}>
           <span style={{fontSize:"9px",color:CD,letterSpacing:"1px"}}>TICKER:</span>
           <select value={debateTicker} onChange={function(e){setDebateTicker(e.target.value);}} style={{background:"#080812",border:"1px solid #1a1520",color:CA,fontFamily:"'Share Tech Mono',monospace",fontSize:"11px",padding:"4px 8px",outline:"none"}}>
             {POSITIONS.map(function(p){return <option key={p.ticker} value={p.ticker}>{p.ticker}</option>;})}
           </select>
           <button className="btn bsm" onClick={function(){setDebateMode(function(v){return !v;});}}>
-            {debateMode?"CLOSE DEBATE":"Ã¢ÂÂ¸ RUN DEBATE"}
+            {debateMode?"CLOSE DEBATE":"▸ RUN DEBATE"}
           </button>
         </div>
         {debateMode&&<DebateView ticker={debateTicker} enriched={enriched}/>}
-        {!debateMode&&<div style={{fontSize:"10px",color:CD}}>Ã¢ÂÂ¸ Select a ticker and run the AI debate to see bull vs bear case</div>}
+        {!debateMode&&<div style={{fontSize:"10px",color:CD}}>▸ Select a ticker and run the AI debate to see bull vs bear case</div>}
       </Panel>
     </div>
   );
@@ -1058,32 +1095,32 @@ function DebateView({ticker,enriched}) {
     ticker+" is positioned in a high-growth sector with strong institutional backing.",
     "Current price offers attractive entry relative to sector peers and historical valuations.",
     "Day momentum of "+(p.chg>=0?"+":"")+p.chg+"% suggests near-term buying pressure.",
-    "Portfolio cost basis of "+usd(p.avgCost)+" vs current "+usd(p.cur)+" shows "+(p.gainP>=0?"a gain":"manageable loss")+" Ã¢ÂÂ thesis intact.",
+    "Portfolio cost basis of "+usd(p.avgCost)+" vs current "+usd(p.cur)+" shows "+(p.gainP>=0?"a gain":"manageable loss")+" — thesis intact.",
   ];
   var bearPoints = [
-    "Macro headwinds Ã¢ÂÂ Fed policy and tariff uncertainty create sector-wide pressure.",
+    "Macro headwinds — Fed policy and tariff uncertainty create sector-wide pressure.",
     "Position size in portfolio warrants stop-loss review at current levels.",
     "High volatility environment means any gap-down could accelerate selling.",
-    p.gainP<0?"Current loss of "+p.gainP.toFixed(1)+"% suggests thesis under pressure Ã¢ÂÂ review catalyst timeline.":"Taking profits on "+p.gainP.toFixed(1)+"% gain may be tactically sound given macro risks.",
+    p.gainP<0?"Current loss of "+p.gainP.toFixed(1)+"% suggests thesis under pressure — review catalyst timeline.":"Taking profits on "+p.gainP.toFixed(1)+"% gain may be tactically sound given macro risks.",
   ];
   return (
     <div className="fi" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
       <div style={{background:"#001408",border:"1px solid "+CG+"33",padding:"10px"}}>
-        <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CG,letterSpacing:"2px",marginBottom:"8px"}}>Ã°ÂÂÂ BULL CASE</div>
-        {bullPoints.map(function(pt,i){return <div key={i} style={{fontSize:"11px",color:CB,lineHeight:1.65,marginBottom:"5px"}}>Ã¢ÂÂ¸ {pt}</div>;})}
+        <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CG,letterSpacing:"2px",marginBottom:"8px"}}>🐂 BULL CASE</div>
+        {bullPoints.map(function(pt,i){return <div key={i} style={{fontSize:"11px",color:CB,lineHeight:1.65,marginBottom:"5px"}}>▸ {pt}</div>;})}
       </div>
       <div style={{background:"#140000",border:"1px solid "+CR+"33",padding:"10px"}}>
-        <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CR,letterSpacing:"2px",marginBottom:"8px"}}>Ã°ÂÂÂ» BEAR CASE</div>
-        {bearPoints.map(function(pt,i){return <div key={i} style={{fontSize:"11px",color:CB,lineHeight:1.65,marginBottom:"5px"}}>Ã¢ÂÂ¸ {pt}</div>;})}
+        <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CR,letterSpacing:"2px",marginBottom:"8px"}}>🐻 BEAR CASE</div>
+        {bearPoints.map(function(pt,i){return <div key={i} style={{fontSize:"11px",color:CB,lineHeight:1.65,marginBottom:"5px"}}>▸ {pt}</div>;})}
       </div>
       <div style={{gridColumn:"1/-1",padding:"8px",background:sig.color+"11",border:"1px solid "+sig.color+"33",textAlign:"center"}}>
-        <span style={{fontFamily:"Orbitron",fontSize:"10px",color:sig.color,letterSpacing:"2px"}}>MARCUS VERDICT: {sig.sig} Ã¢ÂÂª CONVICTION {sig.score}/10</span>
+        <span style={{fontFamily:"Orbitron",fontSize:"10px",color:sig.color,letterSpacing:"2px"}}>MARCUS VERDICT: {sig.sig} ▪ CONVICTION {sig.score}/10</span>
       </div>
     </div>
   );
 }
 
-// Ã¢ÂÂÃ¢ÂÂ SOUN OPS TAB Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ── SOUN OPS TAB ───────────────────────────────────────────────────────────────
 function TabSoun({port}) {
   var [activeSection,setActiveSection] = useState("leaps");
   var sounPrice = 7.04;
@@ -1119,11 +1156,11 @@ function TabSoun({port}) {
       <div style={{background:BP,border:"1px solid "+CA+"33",padding:"12px 14px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
         <div>
           <div style={{fontFamily:"Orbitron",fontSize:"16px",fontWeight:900,color:CA,letterSpacing:"4px"}}>SOUN</div>
-          <div style={{fontSize:"10px",color:CC,marginTop:"2px",letterSpacing:"1px"}}>SOUNDHOUND AI Ã¢ÂÂª {SOUN_DATA.sector}</div>
+          <div style={{fontSize:"10px",color:CC,marginTop:"2px",letterSpacing:"1px"}}>SOUNDHOUND AI ▪ {SOUN_DATA.sector}</div>
         </div>
         <div style={{textAlign:"right"}}>
           <div style={{fontFamily:"Orbitron",fontSize:"22px",fontWeight:900,color:CB}}>${sounPrice.toFixed(2)}</div>
-          <div style={{fontSize:"10px",color:CD,marginTop:"2px"}}>BREAKEVEN GAP: +{((l1.breakeven-sounPrice)/sounPrice*100).toFixed(1)}% Ã¢ÂÂ +{((l2.breakeven-sounPrice)/sounPrice*100).toFixed(1)}%</div>
+          <div style={{fontSize:"10px",color:CD,marginTop:"2px"}}>BREAKEVEN GAP: +{((l1.breakeven-sounPrice)/sounPrice*100).toFixed(1)}% — +{((l2.breakeven-sounPrice)/sounPrice*100).toFixed(1)}%</div>
         </div>
       </div>
 
@@ -1170,8 +1207,8 @@ function TabSoun({port}) {
       {/* Theta Decay Section */}
       {activeSection==="theta"&&(
         <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
-          <Panel label={"Ã¢ÂÂ THETA DECAY CLOCK Ã¢ÂÂ DAILY PREMIUM BLEED"}>
-            <div style={{fontSize:"10px",color:CD,marginBottom:"12px",letterSpacing:"1px"}}>Every day that passes, your options lose value from time decay. This is theta Ã¢ÂÂ your cost of holding.</div>
+          <Panel label={"◈ THETA DECAY CLOCK — DAILY PREMIUM BLEED"}>
+            <div style={{fontSize:"10px",color:CD,marginBottom:"12px",letterSpacing:"1px"}}>Every day that passes, your options lose value from time decay. This is theta — your cost of holding.</div>
             {[{l:l1,theta:theta1,days:days1,label:"1/15/27 LEAPS"},{l:l2,theta:theta2,days:days2,label:"1/21/28 LEAPS"}].map(function(item,i){return (
               <div key={i} style={{background:BD,border:"1px solid #1a1520",padding:"12px",marginBottom:"8px"}}>
                 <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CA,marginBottom:"8px"}}>{item.label}</div>
@@ -1184,7 +1221,7 @@ function TabSoun({port}) {
                   );})}
                 </div>
                 <div style={{fontSize:"10px",color:CD,lineHeight:1.6}}>
-                  At current decay rate, you lose approximately <span style={{color:CY}}>${(item.theta.dailyDecay*30).toFixed(0)}/month</span> on this position while waiting for SOUN to move. The 2028 LEAPS bleeds slower per day Ã¢ÂÂ better for long-duration holds.
+                  At current decay rate, you lose approximately <span style={{color:CY}}>${(item.theta.dailyDecay*30).toFixed(0)}/month</span> on this position while waiting for SOUN to move. The 2028 LEAPS bleeds slower per day — better for long-duration holds.
                 </div>
               </div>
             );})}
@@ -1194,7 +1231,7 @@ function TabSoun({port}) {
 
       {/* Sentiment Section */}
       {activeSection==="sentiment"&&(
-        <Panel label={"Ã¢ÂÂ SOUN SENTIMENT ANALYSIS"}>
+        <Panel label={"◈ SOUN SENTIMENT ANALYSIS"}>
           <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
             {SOUN_DATA.sentiment.map(function(s){return (
               <div key={s.label} style={{background:BD,border:"1px solid #1a1520",padding:"10px"}}>
@@ -1209,11 +1246,11 @@ function TabSoun({port}) {
               </div>
             );})}
             <div style={{padding:"10px",background:"#001808",border:"1px solid "+CG+"22"}}>
-              <div style={{fontFamily:"Orbitron",fontSize:"10px",color:CG,letterSpacing:"2px",marginBottom:"6px"}}>Ã°ÂÂÂ BULL THESIS</div>
+              <div style={{fontFamily:"Orbitron",fontSize:"10px",color:CG,letterSpacing:"2px",marginBottom:"6px"}}>🐂 BULL THESIS</div>
               <div style={{fontSize:"11px",color:CB,lineHeight:1.7}}>{SOUN_DATA.bull}</div>
             </div>
             <div style={{padding:"10px",background:"#180000",border:"1px solid "+CR+"22"}}>
-              <div style={{fontFamily:"Orbitron",fontSize:"10px",color:CR,letterSpacing:"2px",marginBottom:"6px"}}>Ã°ÂÂÂ» BEAR THESIS</div>
+              <div style={{fontFamily:"Orbitron",fontSize:"10px",color:CR,letterSpacing:"2px",marginBottom:"6px"}}>🐻 BEAR THESIS</div>
               <div style={{fontSize:"11px",color:CB,lineHeight:1.7}}>{SOUN_DATA.bear}</div>
             </div>
           </div>
@@ -1222,7 +1259,7 @@ function TabSoun({port}) {
 
       {/* Catalysts Section */}
       {activeSection==="catalysts"&&(
-        <Panel label={"Ã¢ÂÂ SOUN CATALYST CALENDAR"}>
+        <Panel label={"◈ SOUN CATALYST CALENDAR"}>
           <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
             {SOUN_DATA.catalysts.map(function(c,i){return (
               <div key={i} style={{display:"flex",gap:"10px",padding:"10px",background:BD,border:"1px solid #1a1520"}}>
@@ -1236,11 +1273,11 @@ function TabSoun({port}) {
 
       {/* Risks Section */}
       {activeSection==="risks"&&(
-        <Panel label={"Ã¢ÂÂ SOUN RISK ASSESSMENT"}>
+        <Panel label={"◈ SOUN RISK ASSESSMENT"}>
           <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
             {SOUN_DATA.risks.map(function(r,i){return (
               <div key={i} style={{display:"flex",gap:"10px",padding:"10px",background:"#140000",border:"1px solid "+CR+"22"}}>
-                <span style={{color:CR,fontSize:"12px",flexShrink:0}}>Ã¢ÂÂ </span>
+                <span style={{color:CR,fontSize:"12px",flexShrink:0}}>⚠</span>
                 <div style={{fontSize:"11px",color:CB,lineHeight:1.6}}>{r}</div>
               </div>
             );})}
@@ -1255,7 +1292,7 @@ function TabSoun({port}) {
   );
 }
 
-// Ã¢ÂÂÃ¢ÂÂ VOICE MODE Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ── VOICE MODE ─────────────────────────────────────────────────────────────────
 function VoiceMode({alf,enriched,fg,onClose}) {
   var [status,setStatus]   = useState("idle"); // idle | listening | speaking | response
   var [transcript,setTranscript] = useState("");
@@ -1269,11 +1306,11 @@ function VoiceMode({alf,enriched,fg,onClose}) {
     if (q.includes("portfolio")||q.includes("holdings")||q.includes("stocks")) {
       var winners = enriched.filter(function(p){return p.gainP&&p.gainP>0;});
       var losers  = enriched.filter(function(p){return p.gainP&&p.gainP<0;});
-      resp = "Your portfolio currently holds "+POSITIONS.length+" positions. "+winners.length+" are in positive territory, led by SMCI at "+enriched.find(function(p){return p.ticker==="SMCI";}).gainP.toFixed(1)+"% total return. "+losers.length+" positions are underwater Ã¢ÂÂ notably DVN and MNTS. Overall, "+fg.label.toLowerCase()+" sentiment prevails with an average day change of "+fg.avg+"%.";
+      resp = "Your portfolio currently holds "+POSITIONS.length+" positions. "+winners.length+" are in positive territory, led by SMCI at "+enriched.find(function(p){return p.ticker==="SMCI";}).gainP.toFixed(1)+"% total return. "+losers.length+" positions are underwater — notably DVN and MNTS. Overall, "+fg.label.toLowerCase()+" sentiment prevails with an average day change of "+fg.avg+"%.";
     } else if (q.includes("soun")||q.includes("leaps")||q.includes("options")) {
-      resp = "Your SOUN LEAPS positions are both structured around the ten dollar strike. The nearer contract expires January 2027, requiring SOUN to reach eleven dollars and twenty-four cents Ã¢ÂÂ a sixty percent move from the current price of seven dollars and four cents. The longer contract expires January 2028, giving you nearly four years of runway. I would characterize the thesis as speculative but not unreasonable given the AI voice tailwinds.";
+      resp = "Your SOUN LEAPS positions are both structured around the ten dollar strike. The nearer contract expires January 2027, requiring SOUN to reach eleven dollars and twenty-four cents — a sixty percent move from the current price of seven dollars and four cents. The longer contract expires January 2028, giving you nearly four years of runway. I would characterize the thesis as speculative but not unreasonable given the AI voice tailwinds.";
     } else if (q.includes("parlay")||q.includes("mlb")||q.includes("baseball")||q.includes("bet")) {
-      resp = "You have four MLB futures parlays open, sir, with a total of one hundred and twelve dollars at risk and a maximum potential payout of thirteen thousand dollars. All four settle October 31st, 2026. The Yankees, Mariners, and Braves making the playoffs are your critical legs Ã¢ÂÂ appearing across all four parlays. I suggest monitoring their standings daily as the season progresses.";
+      resp = "You have four MLB futures parlays open, sir, with a total of one hundred and twelve dollars at risk and a maximum potential payout of thirteen thousand dollars. All four settle October 31st, 2026. The Yankees, Mariners, and Braves making the playoffs are your critical legs — appearing across all four parlays. I suggest monitoring their standings daily as the season progresses.";
     } else if (q.includes("alert")||q.includes("danger")||q.includes("worry")) {
       var big = enriched.filter(function(p){return p.gainP&&Math.abs(p.gainP)>15;});
       if (big.length) {
@@ -1321,7 +1358,7 @@ function VoiceMode({alf,enriched,fg,onClose}) {
       setTranscript(t);
       marcusRespond(t);
     };
-    rec.onerror = function() { setStatus("idle"); setResponse("I apologize, sir Ã¢ÂÂ the microphone appears to be unavailable."); setStatus("response"); };
+    rec.onerror = function() { setStatus("idle"); setResponse("I apologize, sir — the microphone appears to be unavailable."); setStatus("response"); };
     rec.start();
     setStatus("listening");
     setTranscript("");
@@ -1335,12 +1372,12 @@ function VoiceMode({alf,enriched,fg,onClose}) {
 
   return (
     <div style={{position:"fixed",inset:0,zIndex:500,background:"rgba(0,0,0,.9)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"20px",padding:"24px"}}>
-      <div style={{fontFamily:"Orbitron",fontSize:"14px",color:CA,letterSpacing:"5px"}}>MARCUS Ã¢ÂÂ VOICE INTERFACE</div>
+      <div style={{fontFamily:"Orbitron",fontSize:"14px",color:CA,letterSpacing:"5px"}}>MARCUS — VOICE INTERFACE</div>
 
       {/* Mic button */}
       <button onClick={status==="idle"||status==="response"?startListening:stopSpeaking}
         style={{width:"80px",height:"80px",borderRadius:"50%",border:"2px solid "+(status==="listening"?"#ff4422":status==="speaking"?CG:CA),background:status==="listening"?"rgba(204,34,0,.15)":status==="speaking"?"rgba(15,168,48,.1)":"rgba(240,163,10,.05)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"32px",transition:"all .3s",boxShadow:"0 0 "+(status==="idle"?"8px":"24px")+" "+(status==="listening"?"#cc220044":status==="speaking"?CG+"44":CA+"44")}}>
-        {status==="listening"?"Ã°ÂÂÂ´":status==="speaking"?"Ã°ÂÂÂ":"Ã°ÂÂÂ"}
+        {status==="listening"?"🔴":status==="speaking"?"🔊":"🎙"}
       </button>
 
       <div style={{fontFamily:"Orbitron",fontSize:"9px",letterSpacing:"3px",color:status==="listening"?CR:status==="speaking"?CG:CD}}>
@@ -1353,7 +1390,7 @@ function VoiceMode({alf,enriched,fg,onClose}) {
       </div>}
 
       {response&&<div style={{background:BP,border:"1px solid "+CA+"33",padding:"12px 16px",maxWidth:"320px",width:"100%"}}>
-        <div style={{fontSize:"9px",color:CD,letterSpacing:"2px",marginBottom:"6px"}}>Ã¢ÂÂ MARCUS Ã¢ÂÂª APEX</div>
+        <div style={{fontSize:"9px",color:CD,letterSpacing:"2px",marginBottom:"6px"}}>— MARCUS ▪ APEX</div>
         <div style={{fontSize:"11px",color:CB,lineHeight:1.8,fontStyle:"italic"}}>"{response}"</div>
       </div>}
 
@@ -1367,7 +1404,7 @@ function VoiceMode({alf,enriched,fg,onClose}) {
 }
 
 
-// Ã¢ÂÂÃ¢ÂÂ PARLAYS TAB Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ── PARLAYS TAB ────────────────────────────────────────────────────────────────
 
 const PARLAY_DATA = [
   {id:1,odds:"+35464",stake:15,payout:5334.69,legs:19,placed:"4/13/2026",settles:"10/31/2026",make:["NYY","SEA","BAL","PHI","ATL","SD","LAD","MIN"],miss:["MIA","LAA","HOU","CIN","SF","CWS","WSH","COL","BOS","CHC","MIL"]},
@@ -1379,9 +1416,9 @@ const PARLAY_DATA = [
 
 
 
-// Ã¢ÂÂÃ¢ÂÂ ENHANCED SCOUT ENGINE Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ── ENHANCED SCOUT ENGINE ─────────────────────────────────────────────────────
 
-// 2026 Vegas preseason win totals (O/U lines Ã¢ÂÂ best early-season predictor)
+// 2026 Vegas preseason win totals (O/U lines — best early-season predictor)
 var VEGAS_WINS = {
   LAD:100,ATL:95,NYY:92,PHI:89,NYM:88,SD:87,HOU:86,MIN:86,
   CLE:85,ATH:85,SEA:84,BAL:83,TOR:82,BOS:80,TEX:79,MIL:79,
@@ -1457,7 +1494,7 @@ async function fetchStreaks() {
   } catch(ex) { return {}; }
 }
 
-// Composite playoff probability Ã¢ÂÂ weighted for early season
+// Composite playoff probability — weighted for early season
 function computePlayoffScore(team, streaks) {
   var gp = team.w + team.l;
   var vegasWins = VEGAS_WINS[team.t] || 77;
@@ -1466,7 +1503,7 @@ function computePlayoffScore(team, streaks) {
   // Scale 60-102 win range to 0-100
   var vegasScore = ((vegasWins - 62) / (102 - 62)) * 100;
 
-  // 2. PYTHAGOREAN EXPECTED WINS (25% weight Ã¢ÂÂ better than actual W-L)
+  // 2. PYTHAGOREAN EXPECTED WINS (25% weight — better than actual W-L)
   // xWins projected over 162 games
   var xWins = team.xWins || Math.round((team.w/(gp||1)) * 162);
   var pythScore = ((xWins - 62) / (102 - 62)) * 100;
@@ -1494,20 +1531,25 @@ function computePlayoffScore(team, streaks) {
   return Math.min(97, Math.max(3, Math.round(composite)));
 }
 
-function buildScoutData(standings,streaks){
+function buildScoutData(standings, streaks) {
   return standings.map(function(t){
-    var sc=(t.simMakePct!=null)?Math.min(95,Math.max(5,t.simMakePct)):computePlayoffScore(t,streaks);
-    var sd=streaks[t.t]||{},l10w=sd.l10w,l10l=sd.l10l;
-    var gp=Math.max(1,t.w+t.l);
+    var score = computePlayoffScore(t, streaks);
+    var streakData = streaks[t.t]||{};
+    var l10w = streakData.l10w; var l10l = streakData.l10l;
+    var hot = l10w >= 7; var cold = l10w !== undefined && l10w <= 3;
+    var vegasWins = VEGAS_WINS[t.t]||77;
+    var xWins = t.xWins||Math.round((t.w/(t.w+t.l||1))*162);
+    var rdPerGame = (t.w+t.l)>0?(t.runDiff/(t.w+t.l)).toFixed(1):'0.0';
+    var streakLabel = t.streakType==='wins'?'W'+t.streakNum:t.streakType==='losses'?'L'+t.streakNum:'-';
     return Object.assign({},t,{
-      score:sc,
-      l10:(l10w!=null)?(l10w+'-'+l10l):'--',
-      hot:(l10w!=null&&l10w>=7),cold:(l10w!=null&&l10w<=3),
-      vegasWins:VEGAS_WINS?(VEGAS_WINS[t.t]||77):77,
-      rdPerGame:(t.runDiff!=null)?(t.runDiff/gp).toFixed(1):'0.0',
-      streakLabel:t.streakType==='wins'?('W'+t.streakNum):t.streakType==='losses'?('L'+t.streakNum):'--',
-      homeRec:(t.homeW!=null)?(t.homeW+'-'+t.homeL):'--',
-      awayRec:(t.awayW!=null)?(t.awayW+'-'+t.awayL):'--',
+      score:score,
+      l10: l10w!==undefined?(l10w+'-'+l10l):'-',
+      hot:hot, cold:cold,
+      vegasWins:vegasWins, xWins:xWins,
+      rdPerGame:rdPerGame,
+      streakLabel:streakLabel,
+      homeRec:t.homeW+'-'+t.homeL,
+      awayRec:t.awayW+'-'+t.awayL,
     });
   }).sort(function(a,b){return b.score-a.score;});
 }
@@ -1555,9 +1597,9 @@ function getLegSt(team,type,mlbData){
   var s=MLB.find(function(x){return x.t===team;});
   if(!s)return{color:CD,icon:"?",conf:50,label:"UNKNOWN"};
   var tracking=type==="make"?s.status==="make":s.status==="miss";
-  if(tracking&&s.conf>=75)return{color:CG,icon:"Ã¢ÂÂ",conf:s.conf,label:"ON TRACK",w:s.w,l:s.l};
+  if(tracking&&s.conf>=75)return{color:CG,icon:"✓",conf:s.conf,label:"ON TRACK",w:s.w,l:s.l};
   if(tracking&&s.conf>=55)return{color:CY,icon:"~",conf:s.conf,label:"LIKELY",w:s.w,l:s.l};
-  if(!tracking&&s.conf>=75)return{color:CR,icon:"Ã¢ÂÂ",conf:s.conf,label:"AT RISK",w:s.w,l:s.l};
+  if(!tracking&&s.conf>=75)return{color:CR,icon:"✗",conf:s.conf,label:"AT RISK",w:s.w,l:s.l};
   return{color:CY,icon:"~",conf:s.conf,label:"WATCH",w:s.w,l:s.l};
 }
 
@@ -1642,11 +1684,11 @@ function TabParlays(){
       </div>
 
       {mlbLoading&&<div style={{background:"#08080f",border:"1px solid "+CA+"33",padding:"8px 12px",fontSize:"9px",color:CY,fontFamily:"Orbitron",letterSpacing:"2px",display:"flex",alignItems:"center",gap:"8px"}}><div className="spinA" style={{width:"8px",height:"8px",border:"1px solid #4a3408",borderTopColor:CA,borderRadius:"50%"}}/> FETCHING LIVE MLB STANDINGS...</div>}
-      {!mlbLoading&&<div style={{background:"#08080f",border:"1px solid "+CG+"33",padding:"6px 12px",fontSize:"9px",color:CG,fontFamily:"Orbitron",letterSpacing:"1px"}}>Ã¢ÂÂ LIVE STANDINGS Ã¢ÂÂ UPDATED NOW Ã¢ÂÂª MLB STATS API</div>}
+      {!mlbLoading&&<div style={{background:"#08080f",border:"1px solid "+CG+"33",padding:"6px 12px",fontSize:"9px",color:CG,fontFamily:"Orbitron",letterSpacing:"1px"}}>◈ LIVE STANDINGS — UPDATED NOW ▪ MLB STATS API</div>}
 
       {/* Universal legs */}
       <div style={{background:"#08080f",border:"1px solid "+CA+"44",padding:"10px 12px"}}>
-        <div style={{fontSize:"9px",color:CA,fontFamily:"Orbitron",letterSpacing:"2px",marginBottom:"8px"}}>Ã¢ÂÂ¡ UNIVERSAL LEGS Ã¢ÂÂ IN ALL 4 PARLAYS</div>
+        <div style={{fontSize:"9px",color:CA,fontFamily:"Orbitron",letterSpacing:"2px",marginBottom:"8px"}}>⚡ UNIVERSAL LEGS — IN ALL 4 PARLAYS</div>
         <div style={{display:"flex",gap:"6px",flexWrap:"wrap"}}>
           {uMake.map(function(t){var st=getLegSt(t,"make",mlbData);return(<div key={t} style={{padding:"5px 10px",background:st.color+"15",border:"1px solid "+st.color+"44",fontFamily:"Orbitron",fontSize:"10px",color:st.color}}>{st.icon} {t} MAKE</div>);})}
           {uMiss.map(function(t){var st=getLegSt(t,"miss",mlbData);return(<div key={t} style={{padding:"5px 10px",background:st.color+"15",border:"1px solid "+st.color+"44",fontFamily:"Orbitron",fontSize:"10px",color:st.color}}>{st.icon} {t} MISS</div>);})}
@@ -1660,7 +1702,7 @@ function TabParlays(){
           return(
             <button key={i} onClick={function(){setAp(i);}} style={{flex:1,background:"transparent",border:"1px solid "+(ap===i?CA:"#2a1e08"),padding:"8px 4px",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:"2px",transition:"all .2s"}}>
               <span style={{fontFamily:"Orbitron",fontSize:"10px",color:ap===i?CA:CC,fontWeight:700}}>{pd.odds}</span>
-              <span style={{fontSize:"9px",color:CD}}>${pd.stake}Ã¢ÂÂ${pd.payout.toLocaleString()}</span>
+              <span style={{fontSize:"9px",color:CD}}>${pd.stake}→${pd.payout.toLocaleString()}</span>
               <span style={{fontSize:"9px",color:pr>5?CG:CY,fontFamily:"Orbitron"}}>{pr.toFixed(3)}%</span>
             </button>
           );
@@ -1676,7 +1718,7 @@ function TabParlays(){
 
       {/* OVERVIEW */}
       {view==="overview"&&(
-        <Panel label={"Ã¢ÂÂ "+p.odds+" Ã¢ÂÂ OVERVIEW & PROBABILITY"}>
+        <Panel label={"◈ "+p.odds+" — OVERVIEW & PROBABILITY"}>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px",marginBottom:"12px"}}>
             {[["STAKE","$"+p.stake,CC],["PAYOUT","$"+p.payout.toLocaleString(),CG],["LEGS",p.legs,CA],["MAKE LEGS",p.make.length,CG],["MISS LEGS",p.miss.length,CR],["PLACED",p.placed,CC],["SETTLES",p.settles,CY],["STATUS","OPEN",CG]].map(function(r){return(
               <div key={r[0]} style={{background:BD,padding:"7px 10px",border:"1px solid #1a1520"}}>
@@ -1693,15 +1735,15 @@ function TabParlays(){
             </div>
             <div style={{fontSize:"9px",color:CD}}>Calculated from {p.legs} individual leg confidence scores</div>
           </div>
-          <div style={{fontSize:"9px",color:CD,lineHeight:1.7}}>Ã¢ÂÂ  Parlays 2 &amp; 4 have conflicting CIN legs Ã¢ÂÂ an intentional hedge ensuring at least one parlay survives either outcome.</div>
+          <div style={{fontSize:"9px",color:CD,lineHeight:1.7}}>⚠ Parlays 2 &amp; 4 have conflicting CIN legs — an intentional hedge ensuring at least one parlay survives either outcome.</div>
         </Panel>
       )}
 
       {/* LEG STATUS */}
       {view==="legs"&&(
-        <Panel label={"Ã¢ÂÂ "+p.odds+" Ã¢ÂÂ ALL "+p.legs+" LEGS"}>
+        <Panel label={"◈ "+p.odds+" — ALL "+p.legs+" LEGS"}>
           <div style={{marginBottom:"12px"}}>
-            <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CG,letterSpacing:"2px",marginBottom:"8px"}}>Ã¢ÂÂ MAKE PLAYOFFS ({p.make.length})</div>
+            <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CG,letterSpacing:"2px",marginBottom:"8px"}}>✓ MAKE PLAYOFFS ({p.make.length})</div>
             <div style={{display:"flex",flexWrap:"wrap",gap:"5px"}}>
               {p.make.map(function(t){
                 var st=getLegSt(t,"make",mlbData);
@@ -1711,7 +1753,7 @@ function TabParlays(){
                       <span style={{fontFamily:"Orbitron",fontSize:"11px",color:st.color,fontWeight:700}}>{t}</span>
                       <span style={{fontSize:"11px",color:st.color}}>{st.icon}</span>
                     </div>
-                    <div style={{fontSize:"9px",color:CD,marginTop:"2px"}}>{st.w}-{st.l} Ã¢ÂÂª {st.conf}%</div>
+                    <div style={{fontSize:"9px",color:CD,marginTop:"2px"}}>{st.w}-{st.l} ▪ {st.conf}%</div>
                     <div style={{fontSize:"9px",color:st.color}}>{st.label}</div>
                   </div>
                 );
@@ -1719,7 +1761,7 @@ function TabParlays(){
             </div>
           </div>
           <div>
-            <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CR,letterSpacing:"2px",marginBottom:"8px"}}>Ã¢ÂÂ MISS PLAYOFFS ({p.miss.length})</div>
+            <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CR,letterSpacing:"2px",marginBottom:"8px"}}>✗ MISS PLAYOFFS ({p.miss.length})</div>
             <div style={{display:"flex",flexWrap:"wrap",gap:"5px"}}>
               {p.miss.map(function(t){
                 var st=getLegSt(t,"miss",mlbData);
@@ -1729,7 +1771,7 @@ function TabParlays(){
                       <span style={{fontFamily:"Orbitron",fontSize:"11px",color:st.color,fontWeight:700}}>{t}</span>
                       <span style={{fontSize:"11px",color:st.color}}>{st.icon}</span>
                     </div>
-                    <div style={{fontSize:"9px",color:CD,marginTop:"2px"}}>{st.w}-{st.l} Ã¢ÂÂª {st.conf}%</div>
+                    <div style={{fontSize:"9px",color:CD,marginTop:"2px"}}>{st.w}-{st.l} ▪ {st.conf}%</div>
                     <div style={{fontSize:"9px",color:st.color}}>{st.label}</div>
                   </div>
                 );
@@ -1741,7 +1783,7 @@ function TabParlays(){
 
       {/* STANDINGS */}
       {view==="standings"&&(
-        <Panel label={"Ã¢ÂÂ 2026 MLB STANDINGS Ã¢ÂÂ PLAYOFF PROJECTION"}>
+        <Panel label={"◈ 2026 MLB STANDINGS — PLAYOFF PROJECTION"}>
           <div style={{fontSize:"9px",color:CD,marginBottom:"10px"}}>Teams in your parlays are highlighted. Confidence = estimated playoff probability.</div>
           {["AL East","AL Central","AL West","NL East","NL Central","NL West"].map(function(div){
             var teams=mlbData.filter(function(t){return t.div===div;}).sort(function(a,b){return b.w-a.w;});
@@ -1788,8 +1830,8 @@ function TabParlays(){
 
           {!mlbLoading&&(function(){
             var ranked = scoutData;
-            var makeTeams=ranked.filter(function(t){return t.score>=50;}).sort(function(a,b){return b.score-a.score;});
-            var missTeams=ranked.filter(function(t){return t.score<50;}).sort(function(a,b){return a.score-b.score;});.slice().sort(function(a,b){return a.simMakePct!=null?(a.simMakePct-b.simMakePct):(a.score-b.score);});
+            var makeTeams = ranked.filter(function(t){return t.score>=50;});
+            var missTeams = ranked.filter(function(t){return t.score<50;}).slice().sort(function(a,b){return a.simMakePct!=null?(a.simMakePct-b.simMakePct):(a.score-b.score);});
             var inParlay = function(tm){return PARLAY_DATA.some(function(p){return p.make.includes(tm)||p.miss.includes(tm);});};
             var parlayType = function(tm){
               if(PARLAY_DATA.some(function(p){return p.make.includes(tm);}))return "MAKE";
@@ -1839,22 +1881,22 @@ function TabParlays(){
                   <span style={{color:CA,fontFamily:"Orbitron"}}>HOW SCORES WORK: </span>
                   Vegas O/U (40%) + Pythagorean expected wins (25%) + Run differential/game (15%) + Division standing (10%) + Last-10 streak (10%).
                   Early season = Vegas projection weighted heavily since W-L is too small a sample.
-                  <span style={{color:CG}}> Ã°ÂÂÂ¥ = 7+ wins last 10. </span>
-                  <span style={{color:CR}}> Ã¢ÂÂ = 3 or fewer last 10. </span>
+                  <span style={{color:CG}}> 🔥 = 7+ wins last 10. </span>
+                  <span style={{color:CR}}> ❄ = 3 or fewer last 10. </span>
                   <span style={{color:CA}}> GOLD border = your parlay leg.</span>
                 </div>
 
-                <Panel label={"Ã¢ÂÂ MOST LIKELY TO MAKE PLAYOFFS Ã¢ÂÂ TOP "+makeTeams.length+" TEAMS"}>
+                <Panel label={"◈ MOST LIKELY TO MAKE PLAYOFFS — TOP "+makeTeams.length+" TEAMS"}>
                   <div style={{fontSize:"9px",color:CD,marginBottom:"8px"}}>Ranked #1 = most likely to make playoffs. Score 50-97%.</div>
                   {makeTeams.map(function(t,i){return renderTeam(t,i,"make",t.simMakePct!=null?t.simMakePct:t.score);})}
                 </Panel>
 
-                <Panel label={"Ã¢ÂÂ MOST LIKELY TO MISS PLAYOFFS Ã¢ÂÂ BOTTOM "+missTeams.length+" TEAMS"}>
+                <Panel label={"◈ MOST LIKELY TO MISS PLAYOFFS — BOTTOM "+missTeams.length+" TEAMS"}>
                   <div style={{fontSize:"9px",color:CD,marginBottom:"8px"}}>Ranked #1 = most certain to miss playoffs. Score 3-49%.</div>
                   {missTeams.map(function(t,i){return renderTeam(t,i,"miss",t.simMissPct!=null?t.simMissPct:100-t.score);})}
                 </Panel>
 
-                <Panel label={"Ã¢ÂÂ MARCUS Ã¢ÂÂ RECOMMENDED NEXT PARLAY LEGS"}>
+                <Panel label={"◈ MARCUS — RECOMMENDED NEXT PARLAY LEGS"}>
                   <div style={{fontSize:"9px",color:CD,marginBottom:"10px",lineHeight:1.7}}>
                     Top 3 MAKE legs + top 3 MISS legs by composite score. These are the highest-conviction picks today.
                   </div>
@@ -1865,7 +1907,7 @@ function TabParlays(){
                         <div key={t.t+"m"} style={{display:"flex",justifyContent:"space-between",padding:"6px 8px",marginBottom:"3px",background:"rgba(24,201,58,.06)",border:"1px solid "+CG+"22"}}>
                           <div>
                             <span style={{fontFamily:"Orbitron",fontSize:"11px",color:CA,fontWeight:700}}>{t.t}</span>
-                            <span style={{fontSize:"9px",color:CD,marginLeft:"6px"}}>{t.w}-{t.l} Ã¢ÂÂª {t.vegasWins}W O/U</span>
+                            <span style={{fontSize:"9px",color:CD,marginLeft:"6px"}}>{t.w}-{t.l} ▪ {t.vegasWins}W O/U</span>
                           </div>
                           <span style={{fontFamily:"Orbitron",fontSize:"10px",color:CG}}>{t.score}%</span>
                         </div>
@@ -1877,7 +1919,7 @@ function TabParlays(){
                         <div key={t.t+"ms"} style={{display:"flex",justifyContent:"space-between",padding:"6px 8px",marginBottom:"3px",background:"rgba(224,48,16,.06)",border:"1px solid "+CR+"22"}}>
                           <div>
                             <span style={{fontFamily:"Orbitron",fontSize:"11px",color:CA,fontWeight:700}}>{t.t}</span>
-                            <span style={{fontSize:"9px",color:CD,marginLeft:"6px"}}>{t.w}-{t.l} Ã¢ÂÂª {t.vegasWins}W O/U</span>
+                            <span style={{fontSize:"9px",color:CD,marginLeft:"6px"}}>{t.w}-{t.l} ▪ {t.vegasWins}W O/U</span>
                           </div>
                           <span style={{fontFamily:"Orbitron",fontSize:"10px",color:CR}}>{t.score}%</span>
                         </div>
@@ -1885,10 +1927,10 @@ function TabParlays(){
                     </div>
                   </div>
                   <div style={{padding:"10px",background:"#08080f",border:"1px solid "+CA+"33"}}>
-                    <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CA,letterSpacing:"2px",marginBottom:"6px"}}>MARCUS Ã¢ÂÂ CONSTRUCTION ADVICE</div>
+                    <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CA,letterSpacing:"2px",marginBottom:"6px"}}>MARCUS — CONSTRUCTION ADVICE</div>
                     <div style={{fontSize:"10px",color:CB,lineHeight:1.8}}>
-                      Stack your highest-score MAKE legs with your lowest-score MISS legs. Legs above 80% are your anchors Ã¢ÂÂ build around them.
-                      Legs 60-79% are strong value adds. Avoid legs 50-60% Ã¢ÂÂ too close to call this early.
+                      Stack your highest-score MAKE legs with your lowest-score MISS legs. Legs above 80% are your anchors — build around them.
+                      Legs 60-79% are strong value adds. Avoid legs 50-60% — too close to call this early.
                       Watch the run differential column: teams winning with poor RD are due for regression. Teams with strong RD but losing are due to bounce back.
                     </div>
                   </div>
@@ -1901,7 +1943,7 @@ function TabParlays(){
 
       {/* CALCULATOR */}
       {view==="calc"&&(
-        <Panel label={"Ã¢ÂÂ CASH OUT CALCULATOR Ã¢ÂÂ ALL 4 PARLAYS"}>
+        <Panel label={"◈ CASH OUT CALCULATOR — ALL 4 PARLAYS"}>
           <div style={{fontSize:"9px",color:CD,marginBottom:"12px"}}>Season is ~3% complete. Cash out values are estimates based on current win probability.</div>
           {PARLAY_DATA.map(function(pd){
             var pr=calcProb(pd);
@@ -1926,14 +1968,14 @@ function TabParlays(){
                   <span style={{fontFamily:"Orbitron",fontSize:"13px",color:CA,fontWeight:800}}>${estCo}</span>
                 </div>
                 <div style={{fontSize:"9px",color:CD,marginTop:"5px"}}>
-                  Verdict: <span style={{color:pr>2?CY:CR}}>{pr>2?"HOLD Ã¢ÂÂ season too early to cash out":"MONITOR Ã¢ÂÂ assess leg risk mid-season"}</span>
+                  Verdict: <span style={{color:pr>2?CY:CR}}>{pr>2?"HOLD — season too early to cash out":"MONITOR — assess leg risk mid-season"}</span>
                 </div>
               </div>
             );
           })}
           <div style={{padding:"10px",background:"#08080f",border:"1px solid "+CA+"33"}}>
-            <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CA,letterSpacing:"2px",marginBottom:"6px"}}>MARCUS Ã¢ÂÂ PARLAY ASSESSMENT</div>
-            <div style={{fontSize:"10px",color:CB,lineHeight:1.8}}>$112 at risk against a $13,009 maximum return. The CIN hedge across parlays 2 and 4 is rational construction. Your five universal legs Ã¢ÂÂ Yankees, Mariners, Braves making playoffs; Angels and Astros missing Ã¢ÂÂ are the critical path. Monitor those above all others. It is early. Patience is the correct posture.</div>
+            <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CA,letterSpacing:"2px",marginBottom:"6px"}}>MARCUS — PARLAY ASSESSMENT</div>
+            <div style={{fontSize:"10px",color:CB,lineHeight:1.8}}>$112 at risk against a $13,009 maximum return. The CIN hedge across parlays 2 and 4 is rational construction. Your five universal legs — Yankees, Mariners, Braves making playoffs; Angels and Astros missing — are the critical path. Monitor those above all others. It is early. Patience is the correct posture.</div>
           </div>
         </Panel>
       )}
@@ -1942,53 +1984,38 @@ function TabParlays(){
 }
 
 
-function StockPopup({ticker, price, cost, shares, gainP, chgP, onClose}) {
-  var up = gainP>=0;
-  var todayUp = chgP>=0;
-  var mktVal = price*shares;
-  var costVal = cost*shares;
-  var totalGain = mktVal-costVal;
-  var rec = gainP > 15 ? "HOLD" : gainP < -20 ? "REVIEW" : gainP > 5 ? "HOLD" : "HOLD";
-  var reasoning = gainP > 20 ? "Strong total return. No action needed Ã¢ÂÂ let winners run unless position size exceeds 25% of portfolio." :
-    gainP < -15 ? "Position underwater. Evaluate if thesis is intact. Consider averaging down only if fundamentals unchanged." :
-    chgP < -5 ? "Sharp single-day decline. Check for news catalyst before acting. Likely noise at this timeframe." :
-    chgP > 5 ? "Strong day. Consider trimming a small portion to lock in gains if overweight." :
-    "Position within normal range. No immediate action required.";
-  var sizing = "At "+shares.toFixed(3)+" shares your exposure is $"+mktVal.toFixed(2)+". Standard position sizing for a speculative portfolio suggests no single name exceed 20% of total value.";
+function StockPopup({ticker,price,cost,shares,gainP,chgP,onClose}){
+  var up=gainP>=0, tUp=chgP>=0;
+  var mktVal=parseFloat(price)*shares;
+  var costVal=parseFloat(cost)*shares;
+  var totalGain=mktVal-costVal;
+  var rec=gainP>20?"HOLD — STRONG POSITION":gainP<-20?"REVIEW — THESIS CHECK":chgP<-5?"WATCH — SHARP DECLINE":chgP>5?"TRIM — CONSIDER LOCKING GAINS":"HOLD — WITHIN NORMAL RANGE";
+  var color=gainP>0?CG:CR;
   return (
-    <div style={{position:"fixed",top:0,left:0,right:0,bottom:0,background:"rgba(3,3,8,.92)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center"}} onClick={onClose}>
-      <div style={{background:BP,border:"2px solid "+CA+"66",padding:"24px",maxWidth:"480px",width:"90%",maxHeight:"80vh",overflow:"auto"}} onClick={function(e){e.stopPropagation();}}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"16px"}}>
+    <div style={{position:"fixed",top:0,left:0,right:0,bottom:0,background:"rgba(3,3,8,.93)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center"}} onClick={onClose}>
+      <div style={{background:BP,border:"2px solid "+CA+"55",padding:"20px",maxWidth:"460px",width:"92%",maxHeight:"82vh",overflowY:"auto"}} onClick={function(e){e.stopPropagation();}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"14px"}}>
           <div>
-            <div style={{fontFamily:"Orbitron",fontSize:"22px",fontWeight:900,color:CA}}>{ticker}</div>
-            <div style={{fontSize:"11px",color:CD,marginTop:"2px",letterSpacing:"1px"}}>STOCK ANALYSIS</div>
+            <div style={{fontFamily:"Orbitron",fontSize:"24px",fontWeight:900,color:CA}}>{ticker}</div>
+            <div style={{fontSize:"10px",color:CD,letterSpacing:"2px",marginTop:"2px"}}>POSITION ANALYSIS</div>
           </div>
-          <button className="xbtn" onClick={onClose} style={{fontSize:"18px",padding:"4px 10px"}}>ÃÂ</button>
+          <button className="xbtn" onClick={onClose}>×</button>
         </div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"8px",marginBottom:"16px"}}>
-          {[["PRICE","$"+parseFloat(price).toFixed(2),CB],["TODAY",(todayUp?"+":"")+parseFloat(chgP).toFixed(2)+"%",todayUp?CG:CR],["TOTAL RETURN",(up?"+":"")+gainP.toFixed(2)+"%",up?CG:CR]].map(function(r){return(
-            <div key={r[0]} style={{background:BD,padding:"10px",textAlign:"center",border:"1px solid #1a1520"}}>
-              <div style={{fontSize:"8px",color:CD,marginBottom:"4px",letterSpacing:"1px"}}>{r[0]}</div>
-              <div style={{fontFamily:"Orbitron",fontSize:"13px",fontWeight:700,color:r[2]}}>{r[1]}</div>
-            </div>
-          );})}
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"6px",marginBottom:"12px"}}>
+          {[["PRICE","$"+parseFloat(price).toFixed(2),CB],["TODAY",(tUp?"+":"")+parseFloat(chgP).toFixed(2)+"%",tUp?CG:CR],["TOTAL",(up?"+":"")+parseFloat(gainP).toFixed(2)+"%",color]].map(function(row,ri){
+            return(<div key={ri} style={{background:BD,padding:"10px",textAlign:"center",border:"1px solid #1a1520"}}><div style={{fontSize:"8px",color:CD,letterSpacing:"1px",marginBottom:"3px"}}>{row[0]}</div><div style={{fontFamily:"Orbitron",fontSize:"13px",fontWeight:700,color:row[2]}}>{row[1]}</div></div>);
+          })}
         </div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px",marginBottom:"16px"}}>
-          {[["SHARES",shares.toFixed(3)],["AVG COST","$"+cost.toFixed(2)],["MKT VALUE","$"+mktVal.toFixed(2)],["TOTAL P&L",(totalGain>=0?"+$":"-$")+Math.abs(totalGain).toFixed(2)]].map(function(r){return(
-            <div key={r[0]} style={{background:BD,padding:"8px",border:"1px solid #1a1520"}}>
-              <div style={{fontSize:"9px",color:CD}}>{r[0]}</div>
-              <div style={{fontFamily:"Orbitron",fontSize:"11px",color:CB,marginTop:"2px"}}>{r[1]}</div>
-            </div>
-          );})}
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px",marginBottom:"12px"}}>
+          {[["SHARES",parseFloat(shares).toFixed(3)],["AVG COST","$"+parseFloat(cost).toFixed(2)],["MKT VALUE","$"+mktVal.toFixed(2)],["TOTAL P&L",(totalGain>=0?"+$":"-$")+Math.abs(totalGain).toFixed(2)]].map(function(row,ri){
+            return(<div key={ri} style={{background:BD,padding:"8px",border:"1px solid #1a1520"}}><div style={{fontSize:"9px",color:CD}}>{row[0]}</div><div style={{fontFamily:"Orbitron",fontSize:"11px",color:CB,marginTop:"2px"}}>{row[1]}</div></div>);
+          })}
         </div>
-        <div style={{padding:"12px",background:"rgba(240,163,10,.06)",border:"1px solid "+CA+"44",marginBottom:"12px"}}>
-          <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CA,letterSpacing:"2px",marginBottom:"6px"}}>MARCUS Ã¢ÂÂ {rec}</div>
-          <div style={{fontSize:"11px",color:CB,lineHeight:1.8}}>{reasoning}</div>
+        <div style={{padding:"12px",background:"rgba(240,163,10,.06)",border:"1px solid "+CA+"33",marginBottom:"10px"}}>
+          <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CA,letterSpacing:"2px",marginBottom:"6px"}}>MARCUS — {rec}</div>
+          <div style={{fontSize:"10px",color:CC,lineHeight:1.8}}>{gainP>20?"Strong total return. Let this winner run unless it exceeds 25% of portfolio.":gainP<-20?"Position is significantly underwater. Re-evaluate if original thesis still holds.":chgP<-5?"Sharp single-day drop. Check for news before acting — likely noise.":chgP>5?"Strong day. Consider trimming a small portion to lock in gains if overweight.":"Position within normal range. No immediate action required."}</div>
         </div>
-        <div style={{padding:"10px",background:BD,border:"1px solid #1a1520"}}>
-          <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CD,letterSpacing:"1px",marginBottom:"4px"}}>POSITION SIZING</div>
-          <div style={{fontSize:"10px",color:CC,lineHeight:1.7}}>{sizing}</div>
-        </div>
+        <div style={{fontSize:"9px",color:CD,lineHeight:1.6}}>Position sizing: at {parseFloat(shares).toFixed(3)} shares your exposure is ${mktVal.toFixed(2)}. Standard sizing suggests no single name exceed 20% of portfolio value.</div>
       </div>
     </div>
   );
@@ -2053,5 +2080,5 @@ function Spinner({label}) {
 }
 
 function ErrMsg({text}) {
-  return <div style={{color:CR,fontSize:"10px",letterSpacing:"1px"}}>Ã¢ÂÂ  {text}</div>;
+  return <div style={{color:CR,fontSize:"10px",letterSpacing:"1px"}}>⚠ {text}</div>;
 }
