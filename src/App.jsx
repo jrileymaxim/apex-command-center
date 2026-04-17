@@ -974,6 +974,7 @@ function TabIntel({enriched,status,totP,fg}){
       {dbMode&&<DebateView ticker={dbTicker} enriched={enriched} onClose={function(){setDbMode(false);}}/>}
     </div>
   );
+}
 function DebateView({ticker,enriched,onClose}) {
   var p = enriched.find(function(e){return e.ticker===ticker;})||{};
   var sig = deriveSignal(p);
@@ -2024,6 +2025,4 @@ function Spinner({label}) {
 
 function ErrMsg({text}) {
   return <div style={{color:CR,fontSize:"10px",letterSpacing:"1px"}}>⚠ {text}</div>;
-}
-
 }
