@@ -821,36 +821,21 @@ function FilingCard({filing,enriched}){
   var [aiLoading,setAiLoading]=useState(false);
   var exp=explainFiling(filing,enriched);
   var ic=exp.impact==="BULLISH"?CG:exp.impact==="BEARISH"?CR:exp.impact==="WATCH"?CY:CC;
-  async function getAI(){
+  function getAI(){
     setAiLoading(true);
-    var CIKS={"AAL":"0000006201","SMCI":"0001375365","ANET":"0001313925","TSM":"0001046179","MU":"0000723254","NVDA":"0001045810","CRWV":"0001866175","DVN":"0000315189","MNTS":"0001801236","SOUN":"0001653519","BBAI":"0001835016"};
-    var cik=CIKS[filing.ticker]||"";
-    var filingData="";
-    try{
-      if(filing.form==="4"&&cik){
-        var atom=await fetch("https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK="+cik+"&type=4&dateb=&owner=include&count=1&search_text=&output=atom",{headers:{"User-Agent":"apex/1.0 apex@app.com"}}).then(function(r){return r.text();}).catch(function(){return "";});
-        var xmlMatch=atom.match(/href="(\/Archives\/edgar\/data\/[^"]+\.xml)"/i);
-        if(xmlMatch){
-          var xml=await fetch("https://www.sec.gov"+xmlMatch[1],{headers:{"User-Agent":"apex/1.0 apex@app.com"}}).then(function(r){return r.text();}).catch(function(){return "";});
-          var ex=function(tag){var m=xml.match(new RegExp("<"+tag+">([^<]+)<\/"+tag+">"));return m?m[1].trim():"unknown";};
-          var txCode=ex("transactionCode");
-          var dir=txCode==="P"||txCode==="A"?"PURCHASED":txCode==="S"||txCode==="D"?"SOLD":"transacted (code: "+txCode+")";
-          filingData="Insider name: "+ex("rptOwnerName")+". Title: "+ex("officerTitle")+". Action: "+dir+" "+ex("transactionShares")+" shares at $"+ex("transactionPricePerShare")+" per share. Shares owned after: "+ex("sharesOwnedFollowingTransaction")+". Date: "+ex("transactionDate")+".";
-        }
-      } else if(filing.form==="8-K"&&cik){
-        var atom8=await fetch("https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK="+cik+"&type=8-K&dateb=&owner=include&count=1&output=atom",{headers:{"User-Agent":"apex/1.0 apex@app.com"}}).then(function(r){return r.text();}).catch(function(){return "";});
-        var htmMatch=atom8.match(/href="(\/Archives\/edgar\/data\/[^"]+\.htm[l]?)"/i);
-        if(htmMatch){
-          var htm=await fetch("https://www.sec.gov"+htmMatch[1],{headers:{"User-Agent":"apex/1.0 apex@app.com"}}).then(function(r){return r.text();}).catch(function(){return "";});
-          filingData=htm.replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim().substring(0,2500);
-        }
-      }
-    }catch(e){filingData="";}
-    var prompt="I own "+filing.ticker+" stock in my portfolio. They filed a "+filing.form+" with the SEC on "+filing.date+". "+(filingData?"Here is the actual filing data:\n\n"+filingData+"\n\n":"")+"In exactly 3 sentences tell me: (1) what specifically happened — who did what, (2) whether this is bullish or bearish for my position and exactly why, (3) should I buy more, hold, or consider selling. Be direct and specific. No hedging, no disclaimers.";
-    fetch("/api/marcus",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:[{role:"user",content:prompt}]})})
-      .then(function(r){return r.json();})
-      .then(function(d){setAiAnalysis(d.content&&d.content[0]&&d.content[0].text||"No response.");setAiLoading(false);})
-      .catch(function(){setAiAnalysis("API unavailable.");setAiLoading(false);});
+    var prompt="I own "+filing.ticker+" stock. They just filed a "+filing.form+" with the SEC on "+filing.date+". In 3 sentences: (1) what specifically happened — who did what and how many shares, (2) is this bullish or bearish for my position and exactly why, (3) should I buy more, hold, or consider selling. Be direct. No hedging.";
+    fetch("/api/marcus",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        ticker:filing.ticker,
+        form:filing.form,
+        messages:[{role:"user",content:prompt}]
+      })
+    })
+    .then(function(r){return r.json();})
+    .then(function(d){setAiAnalysis(d.content&&d.content[0]&&d.content[0].text||"No response.");setAiLoading(false);})
+    .catch(function(){setAiAnalysis("API unavailable.");setAiLoading(false);});
   }
   return(
     <div style={{marginBottom:"8px",background:BD,border:"1px solid "+(filing.urgent?CR+"44":"#1a1520")}}>
