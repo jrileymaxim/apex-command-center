@@ -807,7 +807,7 @@ function FilingCard({filing,enriched}){
   function getAI(){
     setAiLoading(true);
     var prompt="I own "+filing.ticker+" stock in my portfolio. They just filed a "+filing.form+" with the SEC on "+filing.date+". In 2-3 sentences tell me: (1) what this typically signals, (2) whether I should be concerned or excited, and (3) one specific thing to look for in the actual document. Be direct, skip jargon.";
-    fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,messages:[{role:"user",content:prompt}]})})
+    fetch("/api/marcus",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:[{role:"user",content:prompt}]})})
       .then(function(r){return r.json();})
       .then(function(d){setAiAnalysis(d.content&&d.content[0]&&d.content[0].text||"No response.");setAiLoading(false);})
       .catch(function(){setAiAnalysis("API unavailable. Check your connection.");setAiLoading(false);});
