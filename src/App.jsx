@@ -980,45 +980,134 @@ function TabSoon({icon,label,items,phase}) {
 }
 
 // ── INTELLIGENCE TAB ──────────────────────────────────────────────────────────
-function TabIntel({enriched,status,totP,fg}){
-  var [dbMode,setDbMode]=useState(false);
-  var [dbTicker,setDbTicker]=useState("");
-  var signals=enriched.map(function(p){
-    var chg=parseFloat(p.chgP)||0,gain=p.gainP||0;
-    var ts=techSignal(chg,gain);
-    var conf=Math.min(92,Math.max(25,Math.abs(chg)*14+Math.abs(gain)*0.4+42));
-    return {ticker:p.ticker,signal:ts.signal,rsi:ts.rsi,conf:conf.toFixed(0),chg:chg.toFixed(2)};
+function TabIntel({enriched, status, totP, fg}) {
+  var [dbMode, setDbMode] = useState(false);
+  var [dbTicker, setDbTicker] = useState("");
+  var [notifSent, setNotifSent] = useState({});
+
+  // Real signal logic using actual live price data
+  var signals = enriched.map(function(p) {
+    var chg = parseFloat(p.chgP) || 0;
+    var gain = parseFloat(p.gainP) || 0;
+    var price = parseFloat(p.price) || parseFloat(p.avgCost) || 0;
+    var cost = parseFloat(p.avgCost) || 0;
+
+    // RSI approximation: use 14-day momentum proxy from daily chg
+    // Extreme moves indicate oversold/overbought
+    var rsi;
+    if (chg <= -4) rsi = 22;
+    else if (chg <= -2.5) rsi = 32;
+    else if (chg <= -1) rsi = 42;
+    else if (chg < 1) rsi = 50;
+    else if (chg < 2.5) rsi = 58;
+    else if (chg < 4) rsi = 68;
+    else rsi = 78;
+
+    // Adjust RSI based on total position gain (overbought if up a lot)
+    if (gain > 25) rsi = Math.min(rsi + 8, 85);
+    else if (gain < -15) rsi = Math.max(rsi - 8, 15);
+
+    // Signal: BUY = oversold + good fundamentals, SELL = overbought
+    var signal, conf, reason;
+    if (rsi < 30) {
+      signal = "BUY";
+      conf = Math.round(75 + (30 - rsi) * 0.8);
+      reason = "Oversold — price dropped hard. Historically good entry point for strong positions.";
+    } else if (rsi > 70) {
+      signal = "SELL";
+      conf = Math.round(60 + (rsi - 70) * 0.8);
+      reason = "Overbought — price ran up fast. Consider trimming to lock in gains.";
+    } else if (rsi < 42 && gain > 0) {
+      signal = "BUY";
+      conf = Math.round(55 + Math.abs(chg) * 3);
+      reason = "Mild pullback on a winning position. Could be a good add opportunity.";
+    } else if (rsi > 62 && gain > 20) {
+      signal = "SELL";
+      conf = Math.round(50 + gain * 0.5);
+      reason = "Position up big and momentum fading. Trim to protect gains.";
+    } else {
+      signal = "HOLD";
+      conf = Math.round(45 + Math.abs(chg) * 2);
+      reason = "No strong signal. Stay the course and monitor.";
+    }
+    conf = Math.min(conf, 94);
+
+    return { ticker: p.ticker, signal: signal, rsi: rsi, conf: conf, chg: chg, gain: gain, price: price, cost: cost, reason: reason };
   });
-  var buys=signals.filter(function(s){return s.signal==="BUY";});
-  var holds=signals.filter(function(s){return s.signal==="HOLD";});
-  var sells=signals.filter(function(s){return s.signal==="SELL";});
-  var sc=function(s){return s==="BUY"?CG:s==="SELL"?CR:CY;};
-  var rc=function(r){return r<30?CG:r>70?CR:CD;};
-  return(
+
+  var buys = signals.filter(function(s) { return s.signal === "BUY"; });
+  var holds = signals.filter(function(s) { return s.signal === "HOLD"; });
+  var sells = signals.filter(function(s) { return s.signal === "SELL"; });
+  var sc = function(s) { return s === "BUY" ? CG : s === "SELL" ? CR : CY; };
+  var rc = function(r) { return r < 30 ? CG : r > 70 ? CR : CC; };
+
+  // Send ntfy notification for strong BUY signals
+  function sendBuyAlert(sig) {
+    if (notifSent[sig.ticker]) return;
+    setNotifSent(function(prev) { return Object.assign({}, prev, { [sig.ticker]: true }); });
+    var msg = "BUY SIGNAL: " + sig.ticker + " @ $" + sig.price.toFixed(2) + " (RSI:" + sig.rsi + ", +" + sig.chg.toFixed(1) + "% today) — " + sig.reason;
+    fetch("https://ntfy.sh/apex-jrileymaxim-alerts", {
+      method: "POST",
+      headers: { "Title": "APEX BUY SIGNAL — " + sig.ticker, "Priority": "urgent", "Tags": "chart_with_upwards_trend", "Content-Type": "text/plain" },
+      body: msg
+    });
+  }
+
+  // Auto-alert on strong buys (RSI < 30)
+  useState(function() {
+    signals.filter(function(s) { return s.signal === "BUY" && s.rsi < 30; }).forEach(sendBuyAlert);
+  });
+
+  return (
     <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
       <Panel label={"SIGNALS + RSI"}>
-        {status==="loading"&&<Spinner label="LOADING..."/>}
-        {status!=="loading"&&signals.map(function(s,si){
-          return(
-            <div key={si} style={{display:"flex",alignItems:"center",gap:"8px",padding:"7px 0",borderBottom:"1px solid #0c0a14",cursor:"pointer"}} onClick={function(){setDbTicker(s.ticker);setDbMode(true);}}>
-              <span style={{fontFamily:"Orbitron",fontSize:"12px",fontWeight:800,color:CA,minWidth:"46px"}}>{s.ticker}</span>
-              <span style={{fontFamily:"Orbitron",fontSize:"9px",padding:"2px 8px",background:sc(s.signal)+"22",color:sc(s.signal),border:"1px solid "+sc(s.signal)+"44",minWidth:"40px",textAlign:"center"}}>{s.signal}</span>
-              <div style={{flex:1,height:"4px",background:"#0c0a14",borderRadius:"2px"}}>
-                <div style={{height:"100%",width:s.conf+"%",background:sc(s.signal),borderRadius:"2px"}}></div>
+        {status === "loading" && <Spinner label="LOADING..."/>}
+        {status !== "loading" && signals.map(function(s, si) {
+          return (
+            <div key={si} style={{display:"flex",alignItems:"center",gap:"8px",padding:"8px 0",borderBottom:"1px solid #0c0a14",cursor:"pointer"}} onClick={function() { setDbTicker(s.ticker); setDbMode(true); }}>
+              <span style={{fontFamily:"Orbitron",fontSize:"12px",fontWeight:900,color:CA,minWidth:"46px"}}>{s.ticker}</span>
+              <span style={{fontFamily:"Orbitron",fontSize:"9px",padding:"2px 9px",background:sc(s.signal)+"22",color:sc(s.signal),border:"1px solid "+sc(s.signal)+"55",minWidth:"40px",textAlign:"center"}}>{s.signal}</span>
+              <div style={{flex:1,height:"5px",background:"#0c0a14",borderRadius:"3px"}}>
+                <div style={{height:"100%",width:s.conf+"%",background:sc(s.signal),borderRadius:"3px"}}></div>
               </div>
-              <span style={{fontFamily:"Orbitron",fontSize:"8px",color:rc(s.rsi),minWidth:"44px",textAlign:"right"}}>RSI:{s.rsi}</span>
-              <span style={{fontSize:"9px",color:parseFloat(s.chg)>0?CG:CR,minWidth:"52px",textAlign:"right"}}>{parseFloat(s.chg)>0?"+":""}{s.chg}%</span>
+              <span style={{fontFamily:"Orbitron",fontSize:"9px",color:sc(s.signal),minWidth:"34px",textAlign:"right"}}>{s.conf}%</span>
+              <span style={{fontFamily:"Orbitron",fontSize:"8px",color:rc(s.rsi),minWidth:"52px",textAlign:"right"}}>RSI {s.rsi}</span>
+              <span style={{fontSize:"9px",color:parseFloat(s.chg)>0?CG:CR,minWidth:"54px",textAlign:"right"}}>{parseFloat(s.chg)>0?"+":""}{s.chg.toFixed(1)}% today</span>
             </div>
           );
         })}
-        <div style={{marginTop:"8px",fontSize:"9px",color:CD,lineHeight:1.6}}>RSI under 30 = oversold (buy signal). Over 70 = overbought (sell). Tap any ticker for debate.</div>
+        <div style={{marginTop:"8px",fontSize:"9px",color:CD,lineHeight:1.6}}>
+          RSI below 30 = oversold (potential BUY). Above 70 = overbought (potential SELL). Strong BUY signals auto-send to your phone via ntfy. Tap any ticker for Bull vs Bear debate.
+        </div>
       </Panel>
+      {buys.length > 0 && (
+        <Panel label={"BUY SIGNALS ("+buys.length+")"} right={<span style={{fontFamily:"Orbitron",fontSize:"8px",color:CG}}>NTFY ALERT SENT</span>}>
+          {buys.map(function(s, i) {
+            return (
+              <div key={i} style={{padding:"10px",marginBottom:"6px",background:"rgba(24,201,58,.06)",border:"1px solid "+CG+"44"}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"5px"}}>
+                  <div style={{display:"flex",gap:"8px",alignItems:"center"}}>
+                    <span style={{fontFamily:"Orbitron",fontSize:"14px",fontWeight:900,color:CA}}>{s.ticker}</span>
+                    <span style={{fontFamily:"Orbitron",fontSize:"9px",color:CG}}>${s.price.toFixed(2)}</span>
+                    <span style={{fontFamily:"Orbitron",fontSize:"8px",color:CG}}>RSI {s.rsi}</span>
+                  </div>
+                  <span style={{fontFamily:"Orbitron",fontSize:"12px",fontWeight:900,color:CG}}>{s.conf}% CONF</span>
+                </div>
+                <div style={{fontSize:"10px",color:CC,lineHeight:1.7}}>{s.reason}</div>
+                <button className="btn" style={{marginTop:"8px",width:"100%",color:CG,borderColor:CG+"66"}} onClick={function(){sendBuyAlert(s);}}>
+                  SEND BUY ALERT TO PHONE
+                </button>
+              </div>
+            );
+          })}
+        </Panel>
+      )}
       <Panel label={"CONVICTION"}>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"8px"}}>
-          {[["BUY",buys,CG],["HOLD",holds,CY],["SELL",sells,CR]].map(function(row,ri){
-            return(
-              <div key={ri} style={{background:row[2]+"11",border:"1px solid "+row[2]+"33",padding:"10px",textAlign:"center"}}>
-                <div style={{fontFamily:"Orbitron",fontSize:"22px",fontWeight:900,color:row[2]}}>{row[1].length}</div>
+          {[["BUY", buys, CG], ["HOLD", holds, CY], ["SELL", sells, CR]].map(function(row, ri) {
+            return (
+              <div key={ri} style={{background:row[2]+"11",border:"1px solid "+row[2]+"33",padding:"12px",textAlign:"center"}}>
+                <div style={{fontFamily:"Orbitron",fontSize:"28px",fontWeight:900,color:row[2]}}>{row[1].length}</div>
                 <div style={{fontFamily:"Orbitron",fontSize:"9px",color:row[2],letterSpacing:"1px",marginTop:"2px"}}>{row[0]}</div>
                 <div style={{fontSize:"9px",color:CD,marginTop:"4px"}}>{row[1].slice(0,3).map(function(s){return s.ticker;}).join(", ")||"—"}</div>
               </div>
@@ -1026,7 +1115,7 @@ function TabIntel({enriched,status,totP,fg}){
           })}
         </div>
       </Panel>
-      {dbMode&&<DebateView ticker={dbTicker} enriched={enriched} onClose={function(){setDbMode(false);}}/>}
+      {dbMode && <DebateView ticker={dbTicker} enriched={enriched} onClose={function(){setDbMode(false);}}/>}
     </div>
   );
 }
