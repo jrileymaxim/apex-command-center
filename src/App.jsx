@@ -495,7 +495,7 @@ export default function App() {
         {tab==="intel"     && <TabIntel enriched={enriched} status={port.s} totP={totP} fg={fg}/>}
         {tab==="soun"      && <TabSoun port={port}/>}
         {tab==="parlays"   && <TabParlays/>}
-        {tab==="alerts"    && <TabAlerts filings={edgar} loading={edgarL} onScan={async function(){setEdgarL(true);var f=await fetchEdgarFilings();setEdgar(f);setEdgarL(false);}}/>}
+        {tab==="alerts"    && <TabAlerts filings={edgar} loading={edgarL} enriched={enriched} onScan={async function(){setEdgarL(true);var f=await fetchEdgarFilings();setEdgar(f);setEdgarL(false);}}/>}
         {tab==="mission"   && <TabMission tasks={tasks} newTask={newTask} setNewTask={setNewTask} onAdd={addTask} onToggle={togTask} onDel={delTask} wl={wl} newWl={newWl} setNewWl={setNewWl} onAddWl={addWl} onDelWl={delWl} journal={journal} setJournal={setJournal} enriched={enriched}/>}
       </div>
 
@@ -783,51 +783,106 @@ async function fetchEdgarFilings(){
   return all.sort(function(a,b){return b.date.localeCompare(a.date);});
 }
 
-function TabAlerts({filings,loading,onScan}){
+function explainFiling(filing, enriched) {
+  var ticker=filing.ticker, form=filing.form;
+  var pos=enriched?enriched.find(function(p){return p.ticker===ticker;}):null;
+  var gainP=pos?(pos.gainP||0).toFixed(1):null;
+  var exps={
+    "8-K":{what:"Something material just happened at "+ticker+" — the SEC required immediate disclosure. Could be surprise earnings, a merger, leadership change, or serious bad news.",why:"8-Ks must be filed within 4 business days of a major event. The market reacts fast.",impact:"UNKNOWN",reason:"Read the actual filing — 8-Ks range from highly bullish (buyout) to catastrophic (bankruptcy). Click VIEW to see what it is."},
+    "4":{what:"An insider at "+ticker+" — executive, director, or major shareholder — just bought or sold stock and had to report it by law.",why:"Insiders must report within 2 business days. When executives buy with personal money it's a strong bullish signal. Selling is less meaningful.",impact:"WATCH",reason:"If this was a BUY: historically bullish. If a SELL: check the size. Click VIEW to see which direction."},
+    "SC 13D":{what:"A large activist investor revealed they own 5%+ of "+ticker+" and plan to push for changes — new CEO, sale of company, spinoff, or major restructuring.",why:"Activists don't buy quietly. They want to shake things up to force the stock higher. Many companies get acquired after a 13D.",impact:"BULLISH",reason:"Activist investors taking 5%+ stakes historically cause 10-30% price jumps. They pressure management to create shareholder value."},
+    "SC 13G":{what:"A large passive fund disclosed they now own 5%+ of "+ticker+". Unlike activists, they don't plan to interfere with management.",why:"Big institutions owning large stakes is generally stabilizing but not a trading signal.",impact:"NEUTRAL",reason:"Passive institutional ownership. Positive for long-term stability but no near-term catalyst."},
+    "10-Q":{what:ticker+" filed their quarterly earnings report with full financial details — revenue, profit, debt levels, and forward guidance.",why:"10-Qs show how the business is actually doing vs Wall Street expectations. Details the earnings call skipped.",impact:"NEUTRAL",reason:"Routine quarterly filing. Your current position: "+(gainP?gainP+"% total return.":"check portfolio.")},
+    "10-K":{what:ticker+"'s full annual report — the most comprehensive financial document they publish all year, including audited financials.",why:"10-Ks contain risk factors and footnotes that reveal things the earnings call glosses over.",impact:"NEUTRAL",reason:"Annual report. "+ticker+" is at "+(gainP||"unknown")+"% total return in your portfolio."}
+  };
+  return exps[form]||{what:ticker+" filed a "+form+" with the SEC.",why:"SEC disclosure of significant corporate information.",impact:"NEUTRAL",reason:"Review the filing for details."};
+}
+
+function FilingCard({filing,enriched}){
+  var [expanded,setExpanded]=useState(false);
+  var [aiAnalysis,setAiAnalysis]=useState(null);
+  var [aiLoading,setAiLoading]=useState(false);
+  var exp=explainFiling(filing,enriched);
+  var ic=exp.impact==="BULLISH"?CG:exp.impact==="BEARISH"?CR:exp.impact==="WATCH"?CY:CC;
+  function getAI(){
+    setAiLoading(true);
+    var prompt="I own "+filing.ticker+" stock in my portfolio. They just filed a "+filing.form+" with the SEC on "+filing.date+". In 2-3 sentences tell me: (1) what this typically signals, (2) whether I should be concerned or excited, and (3) one specific thing to look for in the actual document. Be direct, skip jargon.";
+    fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,messages:[{role:"user",content:prompt}]})})
+      .then(function(r){return r.json();})
+      .then(function(d){setAiAnalysis(d.content&&d.content[0]&&d.content[0].text||"No response.");setAiLoading(false);})
+      .catch(function(){setAiAnalysis("API unavailable. Check your connection.");setAiLoading(false);});
+  }
+  return(
+    <div style={{marginBottom:"8px",background:BD,border:"1px solid "+(filing.urgent?CR+"44":"#1a1520")}}>
+      <div style={{padding:"10px",cursor:"pointer"}} onClick={function(){setExpanded(!expanded);}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"6px"}}>
+          <div style={{display:"flex",gap:"8px",alignItems:"center"}}>
+            <span style={{fontFamily:"Orbitron",fontSize:"13px",fontWeight:900,color:CA}}>{filing.ticker}</span>
+            <span style={{fontFamily:"Orbitron",fontSize:"8px",padding:"2px 7px",background:ic+"22",color:ic,border:"1px solid "+ic+"55"}}>{exp.impact}</span>
+            {filing.urgent&&<span style={{fontFamily:"Orbitron",fontSize:"8px",color:CR}}>URGENT</span>}
+          </div>
+          <div style={{display:"flex",gap:"8px",alignItems:"center"}}>
+            <span style={{fontSize:"9px",color:CD}}>{filing.date}</span>
+            <span style={{fontFamily:"Orbitron",fontSize:"9px",color:CC}}>{filing.form}</span>
+            <span style={{color:CD}}>{expanded?"▲":"▼"}</span>
+          </div>
+        </div>
+        <div style={{fontSize:"10px",color:CB,lineHeight:1.6}}>{exp.what}</div>
+      </div>
+      {expanded&&(
+        <div style={{padding:"0 10px 10px 10px",borderTop:"1px solid #1a1520"}}>
+          <div style={{marginTop:"10px",marginBottom:"8px"}}>
+            <div style={{fontSize:"8px",color:CD,letterSpacing:"2px",marginBottom:"4px"}}>WHY IT MATTERS</div>
+            <div style={{fontSize:"10px",color:CC,lineHeight:1.7}}>{exp.why}</div>
+          </div>
+          <div style={{padding:"8px",background:ic+"11",border:"1px solid "+ic+"33",marginBottom:"8px"}}>
+            <div style={{fontSize:"8px",color:ic,letterSpacing:"2px",marginBottom:"3px"}}>IMPACT: {exp.impact}</div>
+            <div style={{fontSize:"10px",color:CB,lineHeight:1.6}}>{exp.reason}</div>
+          </div>
+          {!aiAnalysis&&(
+            <button className="btn" style={{width:"100%",marginBottom:"8px",color:CA,borderColor:CA+"66"}} onClick={function(e){e.stopPropagation();getAI();}}>
+              {aiLoading?"MARCUS IS ANALYZING...":"ASK MARCUS FOR HIS TAKE"}
+            </button>
+          )}
+          {aiAnalysis&&(
+            <div style={{padding:"10px",background:"rgba(240,163,10,.06)",border:"1px solid "+CA+"33",marginBottom:"8px"}}>
+              <div style={{fontSize:"8px",color:CA,letterSpacing:"2px",marginBottom:"6px"}}>MARCUS SAYS</div>
+              <div style={{fontSize:"10px",color:CC,lineHeight:1.8}}>{aiAnalysis}</div>
+            </div>
+          )}
+          <a href={filing.url} target="_blank" rel="noreferrer" style={{display:"block",textAlign:"center",fontSize:"9px",color:CA,textDecoration:"none",padding:"6px",border:"1px solid "+CA+"33"}}>VIEW ACTUAL FILING ON SEC.GOV</a>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function TabAlerts({filings,loading,onScan,enriched}){
   var urgent=filings.filter(function(f){return f.urgent;});
   var normal=filings.filter(function(f){return !f.urgent;});
-  var fc=function(form){return form==="8-K"||form==="4"?CR:form==="SC 13D"?CY:CG;};
-  var fl={"8-K":"MATERIAL","4":"INSIDER","10-Q":"QUARTERLY","10-K":"ANNUAL","SC 13D":"ACTIVIST"};
   return(
     <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
       <Panel label={"EDGAR SCANNER"}>
-        <button className="btn" style={{width:"100%",marginBottom:"10px"}} onClick={onScan}>{loading?"SCANNING...":"SCAN SEC EDGAR"}</button>
-        <div style={{fontSize:"9px",color:CD,lineHeight:1.7}}>Scans 8-K, Form 4 insider trades, SC 13D activist filings. GitHub Actions also runs every 5 min and sends ntfy push alerts.</div>
+        <button className="btn" style={{width:"100%",marginBottom:"10px"}} onClick={onScan}>{loading?"SCANNING...":"SCAN SEC EDGAR — ALL POSITIONS"}</button>
+        <div style={{fontSize:"9px",color:CD,lineHeight:1.7}}>Scans 8-K material events, Form 4 insider trades, SC 13D activist filings across all positions. Each alert explains what happened and what it means for your stock. GitHub Actions also runs every 5 min with ntfy push alerts.</div>
       </Panel>
-      {urgent.length>0&&(
-        <Panel label={"URGENT ("+urgent.length+")"}>
-          {urgent.map(function(f,fi){
-            return(
-              <div key={fi} style={{padding:"8px",marginBottom:"4px",background:"rgba(224,48,16,.06)",border:"1px solid "+CR+"44"}}>
-                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                  <span style={{fontFamily:"Orbitron",fontSize:"11px",color:CA}}>{f.ticker}</span>
-                  <span style={{fontFamily:"Orbitron",fontSize:"8px",color:CR}}>{fl[f.form]||f.form}</span>
-                  <span style={{fontSize:"9px",color:CD}}>{f.date}</span>
-                </div>
-                <a href={f.url} target="_blank" rel="noreferrer" style={{fontSize:"9px",color:CA,textDecoration:"none"}}>VIEW ON SEC.GOV</a>
-              </div>
-            );
-          })}
+      {loading&&<div style={{padding:"20px",textAlign:"center",fontFamily:"Orbitron",fontSize:"10px",color:CD}}>SCANNING EDGAR...</div>}
+      {!loading&&urgent.length>0&&(
+        <Panel label={"URGENT — ACTION MAY BE REQUIRED ("+urgent.length+")"}>
+          {urgent.map(function(f,i){return <FilingCard key={f.ticker+f.form+i} filing={f} enriched={enriched||[]}/>;})}
         </Panel>
       )}
-      <Panel label={"FILINGS — LAST 7 DAYS"+(filings.length>0?" ("+filings.length+")":"")}>
-        {loading&&<Spinner label="SCANNING..."/>}
-        {!loading&&filings.length===0&&<div style={{fontSize:"10px",color:CD}}>Hit SCAN to fetch filings.</div>}
-        {!loading&&normal.map(function(f,fi){
-          return(
-            <div key={fi} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"7px 0",borderBottom:"1px solid #0c0a14"}}>
-              <div style={{display:"flex",gap:"8px",alignItems:"center"}}>
-                <span style={{fontFamily:"Orbitron",fontSize:"11px",color:CA,minWidth:"42px"}}>{f.ticker}</span>
-                <span style={{fontFamily:"Orbitron",fontSize:"8px",padding:"1px 5px",background:fc(f.form)+"22",color:fc(f.form)}}>{fl[f.form]||f.form}</span>
-              </div>
-              <div style={{display:"flex",gap:"10px",alignItems:"center"}}>
-                <span style={{fontSize:"9px",color:CD}}>{f.date}</span>
-                <a href={f.url} target="_blank" rel="noreferrer" style={{fontSize:"9px",color:CC,textDecoration:"none"}}>VIEW</a>
-              </div>
-            </div>
-          );
-        })}
-      </Panel>
+      {!loading&&filings.length>0&&(
+        <Panel label={"ALL FILINGS — LAST 7 DAYS ("+filings.length+")"}>
+          {normal.map(function(f,i){return <FilingCard key={f.ticker+f.form+i} filing={f} enriched={enriched||[]}/>;})}
+          {normal.length===0&&<div style={{fontSize:"10px",color:CD}}>No routine filings this week.</div>}
+        </Panel>
+      )}
+      {!loading&&filings.length===0&&(
+        <Panel label={"NO RECENT FILINGS"}>
+          <div style={{fontSize:"10px",color:CD,lineHeight:1.7}}>Hit SCAN to check all positions for SEC filings. The monitor also runs every 5 minutes and sends ntfy push alerts for urgent events.</div>
+        </Panel>
+      )}
     </div>
   );
 }
