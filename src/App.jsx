@@ -792,7 +792,10 @@ async function fetchEdgarFilings(){
                 }
               }catch(e){}
             }
-            all.push({ticker:kv[0],form:forms[i],date:dates[i],txDir:txDir,urgent:(forms[i]==="8-K"||(forms[i]==="4"&&txDir!=="SELL")),url:"https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK="+kv[1]+"&type="+forms[i]+"&dateb=&owner=include&count=5"});
+            var primDoc=(recent.primaryDocument||[])[i]||"";
+            var xmlFile=primDoc.indexOf("/")>-1?primDoc.split("/").pop():primDoc;
+            var numCik=parseInt(kv[1]);
+            all.push({ticker:kv[0],form:forms[i],date:dates[i],txDir:txDir,acc:(recent.accessionNumber||[])[i]||null,xmlFile:xmlFile||null,cik:String(numCik),urgent:(forms[i]==="8-K"||(forms[i]==="4"&&txDir!=="SELL")),url:"https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK="+kv[1]+"&type="+forms[i]+"&dateb=&owner=include&count=5"});
         }
       }
     }catch(e){}
@@ -835,31 +838,21 @@ function FilingCard({filing,enriched}){
   var [aiLoading,setAiLoading]=useState(false);
   var exp=explainFiling(filing,enriched);
   var ic=exp.impact==="BULLISH"?CG:exp.impact==="BEARISH"?CR:exp.impact==="WATCH"?CY:CC;
-  async function getAI(){
+  function getAI(){
     setAiLoading(true);
-    var CIKS={"AAL":"0000006201","SMCI":"0001375365","ANET":"0001313925","TSM":"0001046179","MU":"0000723254","NVDA":"0001045810","CRWV":"0001866175","DVN":"0000315189","MNTS":"0001801236","SOUN":"0001653519","BBAI":"0001835016"};
-    var cik=CIKS[filing.ticker];
-    var acc=null, numCik=null, xmlFile=null;
-    if(cik&&(filing.form==="4"||filing.form==="8-K")){
-      try{
-        var subs=await fetch("https://data.sec.gov/submissions/CIK"+cik+".json",{headers:{"User-Agent":"apex/1.0 apex@app.com"}}).then(function(r){return r.json();});
-        var recent=(subs.filings&&subs.filings.recent)||{};
-        var forms=recent.form||[], accNums=recent.accessionNumber||[], primDocs=recent.primaryDocument||[];
-        var idx=forms.findIndex(function(f){return f===filing.form;});
-        if(idx>-1){
-          acc=accNums[idx];
-          numCik=parseInt(cik);
-          // primaryDocument is like "xslF345X06/ownership.xml" — get just the filename
-          var pd=primDocs[idx]||"";
-          xmlFile=pd.indexOf("/")>-1?pd.split("/").pop():pd;
-        }
-      }catch(e){}
-    }
-    var prompt="I own "+filing.ticker+" stock. They just filed a "+filing.form+" with the SEC on "+filing.date+". In exactly 3 sentences: (1) who did what — name, title, bought or sold, how many shares, at what price, (2) is this bullish or bearish for my position and exactly why, (3) should I buy more, hold, or consider selling. Be specific. No disclaimers.";
+    // Use the filing's own acc+cik+xmlFile stored during scan
+    var acc=filing.acc||null;
+    var cik=filing.cik||null;
+    var xmlFile=filing.xmlFile||null;
+    var isTSM=filing.ticker==="TSM";
+    var prompt="I own "+filing.ticker+" stock. They just filed a "+filing.form+
+      " with the SEC on "+filing.date+
+      (isTSM?" Note: TSM insiders receive shares on Taiwan Stock Exchange priced in New Taiwan Dollars (NT$), not USD. NT$1 = ~$0.031 USD.":"")+
+      " In exactly 3 sentences: (1) who did what — name, title, bought or sold, how many shares, at what price (convert NT$ to USD if TSM), (2) is this bullish or bearish and exactly why, (3) buy more, hold, or sell. Be direct.";
     fetch("/api/marcus",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({ticker:filing.ticker,form:filing.form,acc:acc,cik:numCik?String(numCik):null,xmlFile:xmlFile,messages:[{role:"user",content:prompt}]})
+      body:JSON.stringify({ticker:filing.ticker,form:filing.form,acc:acc,cik:cik,xmlFile:xmlFile,messages:[{role:"user",content:prompt}]})
     })
     .then(function(r){return r.json();})
     .then(function(d){setAiAnalysis(d.content&&d.content[0]&&d.content[0].text||"No response.");setAiLoading(false);})
