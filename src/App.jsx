@@ -821,20 +821,39 @@ function FilingCard({filing,enriched}){
   var [aiLoading,setAiLoading]=useState(false);
   var exp=explainFiling(filing,enriched);
   var ic=exp.impact==="BULLISH"?CG:exp.impact==="BEARISH"?CR:exp.impact==="WATCH"?CY:CC;
-  function getAI(){
+  async function getAI(){
     setAiLoading(true);
-    var prompt="I own "+filing.ticker+" stock. They just filed a "+filing.form+" with the SEC on "+filing.date+". In 3 sentences: (1) what specifically happened — who did what and how many shares, (2) is this bullish or bearish for my position and exactly why, (3) should I buy more, hold, or consider selling. Be direct. No hedging.";
+    var CIKS={"AAL":"0000006201","SMCI":"0001375365","ANET":"0001313925","TSM":"0001046179","MU":"0000723254","NVDA":"0001045810","CRWV":"0001866175","DVN":"0000315189","MNTS":"0001801236","SOUN":"0001653519","BBAI":"0001835016"};
+    var cik=CIKS[filing.ticker];
+    var acc=null, numCik=null;
+    // Client fetches acc number from data.sec.gov (CORS allowed)
+    if(cik&&(filing.form==="4"||filing.form==="8-K")){
+      try{
+        var subs=await fetch("https://data.sec.gov/submissions/CIK"+cik+".json",{headers:{"User-Agent":"apex/1.0 apex@app.com"}}).then(function(r){return r.json();});
+        var recent=(subs.filings&&subs.filings.recent)||{};
+        var forms=recent.form||[], accNums=recent.accessionNumber||[];
+        var idx=forms.findIndex(function(f){return f===filing.form;});
+        if(idx>-1){acc=accNums[idx];numCik=parseInt(cik);}
+      }catch(e){}
+    }
+    var prompt="I own "+filing.ticker+" stock. They just filed a "+filing.form+" with the SEC on "+filing.date+". In exactly 3 sentences: (1) what specifically happened — who did what and how many shares at what price, (2) is this bullish or bearish for my position and why, (3) should I buy more, hold, or consider selling. Be direct. No disclaimers about data access.";
     fetch("/api/marcus",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({
         ticker:filing.ticker,
         form:filing.form,
+        acc:acc,
+        cik:numCik?String(numCik):null,
         messages:[{role:"user",content:prompt}]
       })
     })
     .then(function(r){return r.json();})
-    .then(function(d){setAiAnalysis(d.content&&d.content[0]&&d.content[0].text||"No response.");setAiLoading(false);})
+    .then(function(d){
+      var text=d.content&&d.content[0]&&d.content[0].text||"No response.";
+      setAiAnalysis(text);
+      setAiLoading(false);
+    })
     .catch(function(){setAiAnalysis("API unavailable.");setAiLoading(false);});
   }
   return(
