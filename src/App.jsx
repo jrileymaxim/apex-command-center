@@ -2,17 +2,18 @@ import { useState, useEffect } from "react";
 
 // ── PORTFOLIO DATA ─────────────────────────────────────────────────────────────
 const POSITIONS = [
-  {ticker:"AAL", shares:12.70, avgCost:11.30, name:"American Airlines"},
-  {ticker:"SMCI",shares:13.71, avgCost:23.24, name:"Super Micro Computer"},
-  {ticker:"MNTS",shares:40,    avgCost:5.50,  name:"Momentus Inc"},
-  {ticker:"ANET",shares:2,     avgCost:143.29,name:"Arista Networks"},
-  {ticker:"TSM", shares:3,     avgCost:368.72,name:"Taiwan Semiconductor"},
-  {ticker:"MU",  shares:1.008, avgCost:413.38,name:"Micron Technology"},
-  {ticker:"NVDA",shares:2.9,   avgCost:185.49,name:"NVIDIA"},
-  {ticker:"VTI", shares:3,     avgCost:338.75,name:"Vanguard Total Market"},
-  {ticker:"CRWV",shares:10,    avgCost:111.40,name:"CoreWeave"},
-  {ticker:"DVN", shares:13,    avgCost:47.28, name:"Devon Energy"},
-  {ticker:"GLD", shares:0.4,   avgCost:439.23,name:"SPDR Gold Trust"},
+  {ticker:"AAL",  shares:12.70, avgCost:11.30,  name:"American Airlines"},
+  {ticker:"SMCI", shares:13.71, avgCost:23.24,  name:"Super Micro Computer"},
+  {ticker:"MNTS", shares:40,    avgCost:5.84,   name:"Momentus"},
+  {ticker:"ANET", shares:2,     avgCost:143.29, name:"Arista Networks"},
+  {ticker:"TSM",  shares:3.9,   avgCost:368.53, name:"Taiwan Semiconductor"},
+  {ticker:"MU",   shares:1.008, avgCost:413.38, name:"Micron Technology"},
+  {ticker:"NVDA", shares:3.9,   avgCost:188.64, name:"NVIDIA"},
+  {ticker:"VTI",  shares:3,     avgCost:338.75, name:"Vanguard Total Market"},
+  {ticker:"CRWV", shares:10.9,  avgCost:111.86, name:"CoreWeave"},
+  {ticker:"DVN",  shares:13,    avgCost:47.28,  name:"Devon Energy"},
+  {ticker:"GLD",  shares:0.4,   avgCost:439.23, name:"SPDR Gold Trust"},
+  {ticker:"BBAI", shares:50,    avgCost:3.56,   name:"BigBear.ai"},
 ];
 const LEAPS = [
   {label:"SOUN $10C 1/15/27",contracts:1,avgCost:1.24,breakeven:11.24,sounNow:7.04},
