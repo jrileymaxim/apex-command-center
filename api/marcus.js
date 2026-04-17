@@ -1,3 +1,4 @@
+// v2 - picks up ANTHROPIC_API_KEY env var
 export const config = { runtime: 'edge' };
 
 export default async function handler(req) {
