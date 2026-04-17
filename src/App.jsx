@@ -776,7 +776,23 @@ async function fetchEdgarFilings(){
       var forms=recent.form||[],dates=recent.filingDate||[];
       for(var i=0;i<Math.min(forms.length,10);i++){
         if(dates[i]>=cutoff&&["8-K","4","SC 13D","10-Q","10-K"].indexOf(forms[i])>-1){
-          all.push({ticker:kv[0],form:forms[i],date:dates[i],urgent:(forms[i]==="8-K"||forms[i]==="4"),url:"https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK="+kv[1]+"&type="+forms[i]+"&dateb=&owner=include&count=5"});
+            var accNum=(recent.accessionNumber||[])[i]||""; 
+            var accFmt=accNum.replace(/-/g,""); 
+            var txDir=null;
+            if(forms[i]==="4"&&accFmt){
+              try{
+                var xmlList=await fetch("https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK="+kv[1]+"&type=4&dateb=&owner=include&count=1&search_text=&output=atom",{headers:{"User-Agent":"apex/1.0 apex@app.com"}}).then(function(r){return r.text();}).catch(function(){return "";});
+                var xmlMatch=xmlList.match(/\/Archives\/edgar\/data\/\d+\/[\d]+\/[\w-]+\.xml/);
+                if(xmlMatch){
+                  var xml=await fetch("https://www.sec.gov"+xmlMatch[0],{headers:{"User-Agent":"apex/1.0 apex@app.com"}}).then(function(r){return r.text();}).catch(function(){return "";});
+                  var codes=(xml.match(/<transactionCode>([A-Z])<\/transactionCode>/g)||[]);
+                  var hasBuy=codes.some(function(x){return x.includes(">P<")||x.includes(">A<");});
+                  var hasSell=codes.some(function(x){return x.includes(">S<")||x.includes(">D<");});
+                  txDir=hasBuy&&!hasSell?"BUY":hasSell&&!hasBuy?"SELL":codes.length>0?"MIXED":null;
+                }
+              }catch(e){}
+            }
+            all.push({ticker:kv[0],form:forms[i],date:dates[i],txDir:txDir,urgent:(forms[i]==="8-K"||(forms[i]==="4"&&txDir!=="SELL")),url:"https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK="+kv[1]+"&type="+forms[i]+"&dateb=&owner=include&count=5"});
         }
       }
     }catch(e){}
@@ -790,7 +806,7 @@ function explainFiling(filing, enriched) {
   var gainP=pos?(pos.gainP||0).toFixed(1):null;
   var exps={
     "8-K":{what:"Something material just happened at "+ticker+" — the SEC required immediate disclosure. Could be surprise earnings, a merger, leadership change, or serious bad news.",why:"8-Ks must be filed within 4 business days of a major event. The market reacts fast.",impact:"UNKNOWN",reason:"Read the actual filing — 8-Ks range from highly bullish (buyout) to catastrophic (bankruptcy). Click VIEW to see what it is."},
-    "4":{what:"An insider at "+ticker+" — executive, director, or major shareholder — just bought or sold stock and had to report it by law.",why:"Insiders must report within 2 business days. When executives buy with personal money it's a strong bullish signal. Selling is less meaningful.",impact:"WATCH",reason:"If this was a BUY: historically bullish. If a SELL: check the size. Click VIEW to see which direction."},
+    "4":{what:function(txDir){var dir=txDir==="BUY"?"BOUGHT":txDir==="SELL"?"SOLD":txDir==="MIXED"?"both bought and sold":"traded";return "An insider at "+ticker+" — an executive, director, or major shareholder — just "+dir+" company stock and had to report it by law.";}(filing.txDir),why:"Insiders must report within 2 business days. "+((filing.txDir==="BUY")?"When executives buy their own stock with personal money, it's one of the strongest bullish signals possible — they only buy when they're confident.":filing.txDir==="SELL"?"Insider selling is less meaningful on its own — executives often sell for taxes, diversification, or personal reasons. Check the size relative to their holdings.":"Check the filing to see transaction direction."),impact:filing.txDir==="BUY"?"BULLISH":filing.txDir==="SELL"?"BEARISH":"WATCH",reason:filing.txDir==="BUY"?"Insider PURCHASE detected. Executives buying their own stock with personal money is historically a strong bullish indicator. They rarely buy unless they expect the price to go up.":filing.txDir==="SELL"?"Insider SALE detected. Not necessarily bad — could be taxes or diversification. Check the size vs their total holdings before reacting.":"Could not auto-detect direction. Click VIEW on SEC.GOV to check if it was a purchase (code P) or sale (code S)."},
     "SC 13D":{what:"A large activist investor revealed they own 5%+ of "+ticker+" and plan to push for changes — new CEO, sale of company, spinoff, or major restructuring.",why:"Activists don't buy quietly. They want to shake things up to force the stock higher. Many companies get acquired after a 13D.",impact:"BULLISH",reason:"Activist investors taking 5%+ stakes historically cause 10-30% price jumps. They pressure management to create shareholder value."},
     "SC 13G":{what:"A large passive fund disclosed they now own 5%+ of "+ticker+". Unlike activists, they don't plan to interfere with management.",why:"Big institutions owning large stakes is generally stabilizing but not a trading signal.",impact:"NEUTRAL",reason:"Passive institutional ownership. Positive for long-term stability but no near-term catalyst."},
     "10-Q":{what:ticker+" filed their quarterly earnings report with full financial details — revenue, profit, debt levels, and forward guidance.",why:"10-Qs show how the business is actually doing vs Wall Street expectations. Details the earnings call skipped.",impact:"NEUTRAL",reason:"Routine quarterly filing. Your current position: "+(gainP?gainP+"% total return.":"check portfolio.")},
@@ -807,7 +823,7 @@ function FilingCard({filing,enriched}){
   var ic=exp.impact==="BULLISH"?CG:exp.impact==="BEARISH"?CR:exp.impact==="WATCH"?CY:CC;
   function getAI(){
     setAiLoading(true);
-    var prompt="I own "+filing.ticker+" stock in my portfolio. They just filed a "+filing.form+" with the SEC on "+filing.date+". In 2-3 sentences tell me: (1) what this typically signals, (2) whether I should be concerned or excited, and (3) one specific thing to look for in the actual document. Be direct, skip jargon.";
+    var txNote=filing.form==="4"&&filing.txDir?(" An insider "+( filing.txDir==="BUY"?"PURCHASED":"SOLD")+" shares."):""; var prompt="I own "+filing.ticker+" stock in my portfolio. They just filed a "+filing.form+" with the SEC on "+filing.date+"."+txNote+" In 2-3 sentences: (1) what does this mean for my position, (2) should I be buying more, holding, or worried, and (3) one thing I should check. Be direct and specific.";
     fetch("/api/marcus",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:[{role:"user",content:prompt}]})})
       .then(function(r){return r.json();})
       .then(function(d){setAiAnalysis(d.content&&d.content[0]&&d.content[0].text||"No response.");setAiLoading(false);})
@@ -821,6 +837,7 @@ function FilingCard({filing,enriched}){
             <span style={{fontFamily:"Orbitron",fontSize:"13px",fontWeight:900,color:CA}}>{filing.ticker}</span>
             <span style={{fontFamily:"Orbitron",fontSize:"8px",padding:"2px 7px",background:ic+"22",color:ic,border:"1px solid "+ic+"55"}}>{exp.impact}</span>
             {filing.urgent&&<span style={{fontFamily:"Orbitron",fontSize:"8px",color:CR}}>URGENT</span>}
+              {filing.form==="4"&&filing.txDir&&<span style={{fontFamily:"Orbitron",fontSize:"9px",fontWeight:900,padding:"2px 8px",background:(filing.txDir==="BUY"?CG:filing.txDir==="SELL"?CR:CY)+"33",color:filing.txDir==="BUY"?CG:filing.txDir==="SELL"?CR:CY,border:"1px solid "+(filing.txDir==="BUY"?CG:filing.txDir==="SELL"?CR:CY)+"66"}}>INSIDER {filing.txDir}</span>}
           </div>
           <div style={{display:"flex",gap:"8px",alignItems:"center"}}>
             <span style={{fontSize:"9px",color:CD}}>{filing.date}</span>
