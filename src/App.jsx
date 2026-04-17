@@ -797,7 +797,21 @@ async function fetchEdgarFilings(){
       }
     }catch(e){}
   }));
-  return all.sort(function(a,b){return b.date.localeCompare(a.date);});
+    // Deduplicate: one card per ticker+form+date (multiple same-day Form 4s become one)
+  var seen={};
+  var deduped=[];
+  all.forEach(function(f){
+    var key=f.ticker+"|"+f.form+"|"+f.date;
+    if(!seen[key]){
+      seen[key]=true;
+      deduped.push(f);
+    } else {
+      // Count how many same-day filings exist — update the existing entry
+      var existing=deduped.find(function(x){return x.ticker===f.ticker&&x.form===f.form&&x.date===f.date;});
+      if(existing){existing.count=(existing.count||1)+1;}
+    }
+  });
+  return deduped.sort(function(a,b){return b.date.localeCompare(a.date);});
 }
 
 function explainFiling(filing, enriched) {
@@ -859,6 +873,7 @@ function FilingCard({filing,enriched}){
             <span style={{fontFamily:"Orbitron",fontSize:"13px",fontWeight:900,color:CA}}>{filing.ticker}</span>
             <span style={{fontFamily:"Orbitron",fontSize:"8px",padding:"2px 7px",background:ic+"22",color:ic,border:"1px solid "+ic+"55"}}>{exp.impact}</span>
             {filing.urgent&&<span style={{fontFamily:"Orbitron",fontSize:"8px",color:CR}}>URGENT</span>}
+              {(filing.count||1)>1&&<span style={{fontFamily:"Orbitron",fontSize:"8px",padding:"1px 6px",background:"#ffffff22",color:CC,border:"1px solid #ffffff33"}}>{filing.count} FILINGS</span>}
               {filing.form==="4"&&filing.txDir&&<span style={{fontFamily:"Orbitron",fontSize:"9px",fontWeight:900,padding:"2px 8px",background:(filing.txDir==="BUY"?CG:filing.txDir==="SELL"?CR:CY)+"33",color:filing.txDir==="BUY"?CG:filing.txDir==="SELL"?CR:CY,border:"1px solid "+(filing.txDir==="BUY"?CG:filing.txDir==="SELL"?CR:CY)+"66"}}>INSIDER {filing.txDir}</span>}
           </div>
           <div style={{display:"flex",gap:"8px",alignItems:"center"}}>
