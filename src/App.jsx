@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from "recharts";
 
 // ── PORTFOLIO DATA ─────────────────────────────────────────────────────────────
@@ -2340,8 +2339,7 @@ function StockPopup({ticker,price,cost,shares,gainP,chgP,onClose}){
 
 function Panel({label,right,children}){
   return(
-    <motion.div
-      initial={{opacity:0,y:16}} animate={{opacity:1,y:0}} transition={{duration:0.3,ease:"easeOut"}}
+    <div
       style={{background:"rgba(255,255,255,0.65)",backdropFilter:"blur(12px)",WebkitBackdropFilter:"blur(12px)",border:"1px solid rgba(255,255,255,0.85)",borderRadius:"16px",padding:"14px 16px",marginBottom:"10px",boxShadow:"0 2px 20px rgba(99,102,241,0.07)"}}>
       {label&&(
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"10px",paddingBottom:"8px",borderBottom:"1px solid rgba(99,102,241,0.1)"}}>
@@ -2350,7 +2348,7 @@ function Panel({label,right,children}){
         </div>
       )}
       {children}
-    </motion.div>
+    </div>
   );
 }
 
@@ -2622,13 +2620,13 @@ function AnimatedNumber({value,prefix,suffix,decimals,color}){
   },[value]);
   var flashColor=flash==="up"?CG:flash==="down"?CR:"transparent";
   return(
-    <motion.span
+    <span
       key={display}
       initial={{scale:1.15,color:flash==="up"?CG:flash==="down"?CR:(color||CB)}}
       animate={{scale:1,color:color||CB}}
       transition={{duration:0.5}}
       style={{display:"inline-block",fontVariantNumeric:"tabular-nums"}}
-    >{(prefix||"")+Number(display).toFixed(decimals!=null?decimals:2)+(suffix||"")}</motion.span>
+    >{(prefix||"")+Number(display).toFixed(decimals!=null?decimals:2)+(suffix||"")}</span>
   );
 }
 
