@@ -2232,8 +2232,8 @@ function Spinner({label}) {
 }
 
 function TabJarvis(){
-  var [livePrices,setLivePrices]=React.useState({});
-  React.useEffect(function(){
+  var [livePrices,setLivePrices]=useState({});
+  useEffect(function(){
     fetch("/api/prices?symbols=AAL,SMCI,MNTS,ANET,TSM,MU,NVDA,VTI,CRWV,DVN,GLD,BBAI,SOUN")
     .then(function(r){return r.json();})
     .then(function(d){
@@ -2244,14 +2244,14 @@ function TabJarvis(){
       setLivePrices(lp);
     }).catch(function(){});
   },[]);
-  var [digest,setDigest]=React.useState("");
-  var [digestLoading,setDigestLoading]=React.useState(false);
-  var [speaking,setSpeaking]=React.useState(false);
-  var [skillResult,setSkillResult]=React.useState("");
-  var [skillLoading,setSkillLoading]=React.useState(false);
-  var [activeSkill,setActiveSkill]=React.useState(null);
-  var [monitorLog,setMonitorLog]=React.useState([]);
-  var [monitorRunning,setMonitorRunning]=React.useState(false);
+  var [digest,setDigest]=useState("");
+  var [digestLoading,setDigestLoading]=useState(false);
+  var [speaking,setSpeaking]=useState(false);
+  var [skillResult,setSkillResult]=useState("");
+  var [skillLoading,setSkillLoading]=useState(false);
+  var [activeSkill,setActiveSkill]=useState(null);
+  var [monitorLog,setMonitorLog]=useState([]);
+  var [monitorRunning,setMonitorRunning]=useState(false);
   var POSITIONS=[
     {t:"AAL",sh:12.70,avg:11.30},{t:"SMCI",sh:13.713,avg:23.24},{t:"MNTS",sh:40,avg:5.84},
     {t:"ANET",sh:2,avg:143.29},{t:"TSM",sh:5.8,avg:372.13},{t:"MU",sh:1.008,avg:413.38},
