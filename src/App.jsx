@@ -649,8 +649,6 @@ export default function App() {
 
       {/* CONTENT */}
       <div style={{flex:1,minHeight:0,overflow:"auto",position:"relative",zIndex:1,padding:"12px 14px"}}>
-        <AnimatePresence mode="wait">
-        <motion.div key={tab} initial={{opacity:0,x:8}} animate={{opacity:1,x:0}} exit={{opacity:0,x:-8}} transition={{duration:0.2}}>
         {tab==="briefing"  && <TabBriefing alf={alf} onAlf={function(){setAlf({s:"done",text:marcusBriefing()});}} eod={eod} onEod={function(){setEod(generateEOD(enriched,totCost,totMkt,totGain,totP,bench,fg));}} wx={wx} city={city} setCity={setCity} onWx={doWeather} fg={fg} enriched={enriched} totP={totP}/>}
         {tab==="portfolio" && <TabPortfolio enriched={enriched} totCost={totCost} totMkt={totMkt} totGain={totGain} totP={totP} leaps={LEAPS} status={port.s} live={port.live} onRefresh={doPortfolio} bench={bench}/>}
         {tab==="intel"     && <TabIntel enriched={enriched} status={port.s} totP={totP} fg={fg}/>}
@@ -659,8 +657,6 @@ export default function App() {
         {tab==="alerts"    && <TabAlerts filings={edgar} loading={edgarL} enriched={enriched} onScan={async function(){setEdgarL(true);var f=await fetchEdgarFilings();setEdgar(f);setEdgarL(false);}}/>}
         {tab==="mission"   && <TabMission tasks={tasks} newTask={newTask} setNewTask={setNewTask} onAdd={addTask} onToggle={togTask} onDel={delTask} wl={wl} newWl={newWl} setNewWl={setNewWl} onAddWl={addWl} onDelWl={delWl} journal={journal} setJournal={setJournal} enriched={enriched}/>}
             {tab==="jarvis"   && <TabJarvis wakeState={wakeState} voiceTranscript={voiceTranscript} marcusReply={marcusReply}/>}
-        </motion.div>
-        </AnimatePresence>
       </div>
 
       {/* VOICE OVERLAY */}
