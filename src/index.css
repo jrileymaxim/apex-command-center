@@ -4,6 +4,7 @@
 
 body {
   font-family: "Share Tech Mono", monospace;
+  font-size: 15px;
   background: linear-gradient(135deg, #e8f0fe 0%, #f8f0ff 55%, #e8f8f0 100%);
   min-height: 100vh;
 }
@@ -12,7 +13,7 @@ body {
   background: none;
   border: 1px solid transparent;
   cursor: pointer;
-  padding: 5px 14px;
+  padding: 6px 16px;
   border-radius: 20px;
   transition: all 0.2s;
   display: flex;
@@ -25,9 +26,9 @@ body {
   border-color: rgba(99,102,241,0.35);
 }
 .tab:hover:not(.on) { background: rgba(99,102,241,0.07); }
-.tab .ti { font-size: 16px; opacity: 0.4; }
+.tab .ti { font-size: 18px; opacity: 0.4; }
 .tab.on .ti { opacity: 1; }
-.tab .tl { font-family: Orbitron; font-size: 8px; letter-spacing: 1px; color: #9ca3af; }
+.tab .tl { font-family: Orbitron; font-size: 10px; letter-spacing: 1px; color: #9ca3af; }
 .tab.on .tl { color: #6366f1; font-weight: 700; }
 
 .btn {
@@ -35,30 +36,30 @@ body {
   border: 1px solid rgba(99,102,241,0.3);
   color: #6366f1;
   font-family: Orbitron;
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 1px;
-  padding: 7px 14px;
+  padding: 9px 16px;
   cursor: pointer;
   border-radius: 8px;
   transition: all 0.2s;
 }
 .btn:hover { background: rgba(99,102,241,0.2); }
-.btn.bsm { font-size: 8px; padding: 4px 10px; }
+.btn.bsm { font-size: 10px; padding: 5px 12px; }
 
 .inp {
   background: rgba(255,255,255,0.75);
   border: 1px solid rgba(99,102,241,0.2);
   color: #1a1a2e;
   font-family: Orbitron;
-  font-size: 9px;
-  padding: 6px 10px;
+  font-size: 11px;
+  padding: 8px 12px;
   border-radius: 8px;
   outline: none;
 }
 .inp:focus { border-color: rgba(99,102,241,0.5); background: rgba(255,255,255,0.95); }
 .inp::placeholder { color: #9ca3af; }
 
-.fi { font-size: 11px; color: #4b5563; line-height: 1.8; }
+.fi { font-size: 13px; color: #4b5563; line-height: 1.8; }
 
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
