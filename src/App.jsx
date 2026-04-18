@@ -606,7 +606,7 @@ export default function App() {
   ];
 
   return (
-    <div style={{height:"100vh",overflow:"hidden",background:BG,color:CC,fontFamily:"'Share Tech Mono',monospace",display:"flex",flexDirection:"column",position:"relative"}} className={alertOn?"alertMode":""}>
+    <div style={{height:"100vh",overflow:"hidden",background:BG,color:"#005c7a",fontFamily:"'Share Tech Mono',monospace",display:"flex",flexDirection:"column",position:"relative"}} className={alertOn?"alertMode":""}>
 
       {conf.map(function(c){return <div key={c.id} className="cfp" style={{left:c.l+"%",top:"-12px",background:c.c,animationDelay:c.dl+"s"}}/> ;})}
 
@@ -811,7 +811,7 @@ function TabPortfolio({enriched,totCost,totMkt,totGain,totP,leaps,status,live,on
               <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
                 <div style={{textAlign:"right"}}>
                   <div style={{fontSize:"15px",color:CD}}>COST</div>
-                  <div style={{fontSize:"17px",color:CC}}>{usd(p.avgCost)}</div>
+                  <div style={{fontSize:"17px",color:"#005c7a"}}>{usd(p.avgCost)}</div>
                 </div>
                 {p.cur&&(
                   <div style={{textAlign:"right"}}>
@@ -1046,12 +1046,12 @@ function FilingCard({filing,enriched}){
             <span style={{fontFamily:"Orbitron",fontSize:"19px",fontWeight:900,color:CA}}>{filing.ticker}</span>
             <span style={{fontFamily:"Orbitron",fontSize:"17px",padding:"2px 7px",background:ic+"22",color:ic,border:"1px solid "+ic+"55"}}>{exp.impact}</span>
             {filing.urgent&&<span style={{fontFamily:"Orbitron",fontSize:"17px",color:CR}}>URGENT</span>}
-              {(filing.count||1)>1&&<span style={{fontFamily:"Orbitron",fontSize:"17px",padding:"1px 6px",background:"#1a1a2e22",color:CC,border:"1px solid #1a1a2e33"}}>{filing.count} FILINGS</span>}
+              {(filing.count||1)>1&&<span style={{fontFamily:"Orbitron",fontSize:"17px",padding:"1px 6px",background:"#1a1a2e22",color:"#005c7a",border:"1px solid #1a1a2e33"}}>{filing.count} FILINGS</span>}
               {filing.form==="4"&&filing.txDir&&<span style={{fontFamily:"Orbitron",fontSize:"15px",fontWeight:900,padding:"2px 8px",background:(filing.txDir==="BUY"?CG:filing.txDir==="SELL"?CR:CY)+"33",color:filing.txDir==="BUY"?CG:filing.txDir==="SELL"?CR:CY,border:"1px solid "+(filing.txDir==="BUY"?CG:filing.txDir==="SELL"?CR:CY)+"66"}}>INSIDER {filing.txDir}</span>}
           </div>
           <div style={{display:"flex",gap:"8px",alignItems:"center"}}>
             <span style={{fontSize:"15px",color:CD}}>{filing.date}</span>
-            <span style={{fontFamily:"Orbitron",fontSize:"15px",color:CC}}>{filing.form}</span>
+            <span style={{fontFamily:"Orbitron",fontSize:"15px",color:"#005c7a"}}>{filing.form}</span>
             <span style={{color:CD}}>{expanded?"▲":"▼"}</span>
           </div>
         </div>
@@ -1061,7 +1061,7 @@ function FilingCard({filing,enriched}){
         <div style={{padding:"0 10px 10px 10px",borderTop:"1px solid #1a1520"}}>
           <div style={{marginTop:"10px",marginBottom:"8px"}}>
             <div style={{fontSize:"17px",color:CD,letterSpacing:"2px",marginBottom:"4px"}}>WHY IT MATTERS</div>
-            <div style={{fontSize:"19px",color:CC,lineHeight:1.7}}>{exp.why}</div>
+            <div style={{fontSize:"19px",color:"#005c7a",lineHeight:1.7}}>{exp.why}</div>
           </div>
           <div style={{padding:"8px",background:ic+"11",border:"1px solid "+ic+"33",marginBottom:"8px"}}>
             <div style={{fontSize:"17px",color:ic,letterSpacing:"2px",marginBottom:"3px"}}>IMPACT: {exp.impact}</div>
@@ -1075,7 +1075,7 @@ function FilingCard({filing,enriched}){
           {aiAnalysis&&(
             <div style={{padding:"10px",background:"rgba(240,163,10,.06)",border:"1px solid "+CA+"33",marginBottom:"8px"}}>
               <div style={{fontSize:"17px",color:CA,letterSpacing:"2px",marginBottom:"6px"}}>MARCUS SAYS</div>
-              <div style={{fontSize:"19px",color:CC,lineHeight:1.8}}>{aiAnalysis}</div>
+              <div style={{fontSize:"19px",color:"#005c7a",lineHeight:1.8}}>{aiAnalysis}</div>
             </div>
           )}
           <a href={filing.url} target="_blank" rel="noreferrer" style={{display:"block",textAlign:"center",fontSize:"15px",color:CA,textDecoration:"none",padding:"6px",border:"1px solid "+CA+"33"}}>VIEW ACTUAL FILING ON SEC.GOV</a>
@@ -1181,7 +1181,7 @@ function TabMission({tasks,newTask,setNewTask,onAdd,onToggle,onDel,wl,newWl,setN
           <input className="inp" value={newEntry.notes} onChange={function(ev){setNewEntry(function(p){return Object.assign({},p,{notes:ev.target.value});});}} onKeyDown={function(ev){if(ev.key==="Enter")addJournalEntry();}} placeholder="REASONING..."/>
         </div>
         <button className="btn" onClick={addJournalEntry} style={{marginBottom:"10px",width:"100%"}}>+ LOG ENTRY</button>
-        {showJournal&&(<div style={{maxHeight:"260px",overflow:"auto"}}>{(!journal||journal.length===0)&&<div style={{fontSize:"19px",color:CD}}>No entries yet.</div>}{(journal||[]).map(function(jentry){var ac=jentry.action==="BUY"||jentry.action==="ADD"?CG:jentry.action==="SELL"||jentry.action==="TRIM"?CR:CY;return(<div key={jentry.id} style={{padding:"8px 0",borderBottom:"1px solid #0c0a14"}}><div style={{display:"flex",justifyContent:"space-between",marginBottom:"3px"}}><div style={{display:"flex",gap:"8px",alignItems:"center"}}><span style={{fontFamily:"Orbitron",fontSize:"17px",color:CA,fontWeight:700}}>{jentry.ticker}</span><span style={{fontFamily:"Orbitron",fontSize:"15px",padding:"2px 6px",background:ac+"22",color:ac,border:"1px solid "+ac+"44"}}>{jentry.action}</span>{jentry.price&&<span style={{fontSize:"15px",color:CC}}>${jentry.price}</span>}</div><div style={{display:"flex",gap:"8px",alignItems:"center"}}><span style={{fontSize:"15px",color:CD}}>{jentry.date}</span><button className="xbtn" onClick={function(){setJournal(function(p){return p.filter(function(j){return j.id!==jentry.id;});});}}>x</button></div></div><div style={{fontSize:"19px",color:CB,lineHeight:1.6}}>{jentry.notes}</div></div>);})}</div>)}
+        {showJournal&&(<div style={{maxHeight:"260px",overflow:"auto"}}>{(!journal||journal.length===0)&&<div style={{fontSize:"19px",color:CD}}>No entries yet.</div>}{(journal||[]).map(function(jentry){var ac=jentry.action==="BUY"||jentry.action==="ADD"?CG:jentry.action==="SELL"||jentry.action==="TRIM"?CR:CY;return(<div key={jentry.id} style={{padding:"8px 0",borderBottom:"1px solid #0c0a14"}}><div style={{display:"flex",justifyContent:"space-between",marginBottom:"3px"}}><div style={{display:"flex",gap:"8px",alignItems:"center"}}><span style={{fontFamily:"Orbitron",fontSize:"17px",color:CA,fontWeight:700}}>{jentry.ticker}</span><span style={{fontFamily:"Orbitron",fontSize:"15px",padding:"2px 6px",background:ac+"22",color:ac,border:"1px solid "+ac+"44"}}>{jentry.action}</span>{jentry.price&&<span style={{fontSize:"15px",color:"#005c7a"}}>${jentry.price}</span>}</div><div style={{display:"flex",gap:"8px",alignItems:"center"}}><span style={{fontSize:"15px",color:CD}}>{jentry.date}</span><button className="xbtn" onClick={function(){setJournal(function(p){return p.filter(function(j){return j.id!==jentry.id;});});}}>x</button></div></div><div style={{fontSize:"19px",color:CB,lineHeight:1.6}}>{jentry.notes}</div></div>);})}</div>)}
       </Panel>
     </div>
   );
@@ -1321,7 +1321,7 @@ function TabIntel({enriched, status, totP, fg}) {
                   </div>
                   <span style={{fontFamily:"Orbitron",fontSize:"15px",fontWeight:900,color:CG}}>{s.conf}% CONF</span>
                 </div>
-                <div style={{fontSize:"19px",color:CC,lineHeight:1.7}}>{s.reason}</div>
+                <div style={{fontSize:"19px",color:"#005c7a",lineHeight:1.7}}>{s.reason}</div>
                 <button className="btn" style={{marginTop:"8px",width:"100%",color:CG,borderColor:CG+"66"}} onClick={function(){sendBuyAlert(s);}}>
                   SEND BUY ALERT TO PHONE
                 </button>
@@ -1415,7 +1415,7 @@ function TabSoun({port}) {
       <div style={{background:BP,border:"1px solid "+CA+"33",padding:"12px 14px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
         <div>
           <div style={{fontFamily:"Orbitron",fontSize:"19px",fontWeight:900,color:CA,letterSpacing:"4px"}}>SOUN</div>
-          <div style={{fontSize:"19px",color:CC,marginTop:"2px",letterSpacing:"1px"}}>SOUNDHOUND AI ▪ {SOUN_DATA.sector}</div>
+          <div style={{fontSize:"19px",color:"#005c7a",marginTop:"2px",letterSpacing:"1px"}}>SOUNDHOUND AI ▪ {SOUN_DATA.sector}</div>
         </div>
         <div style={{textAlign:"right"}}>
           <div style={{fontFamily:"Orbitron",fontSize:"26px",fontWeight:900,color:CB}}>${sounPrice.toFixed(2)}</div>
@@ -2124,7 +2124,7 @@ function TabParlays(){
                     {t.bookMakePct!=null&&<span style={{fontSize:"15px",color:CD}}>BOOK: <span style={{color:CB}}>{side==="miss"?t.bookMissPct:t.bookMakePct}%</span></span>}
                     {edgeVal!=null&&<span style={{fontSize:"15px",color:CD}}>EDGE: <span style={{color:edgeCol,fontWeight:700}}>{edgeVal>0?"+":""}{edgeVal}%</span></span>}
                     <span style={{fontSize:"15px",color:CD}}>REC: <span style={{color:CB}}>{t.w}-{t.l}</span></span>
-                    <span style={{fontSize:"15px",color:CD}}>VEGAS: <span style={{color:CC}}>{t.vegasWins||"--"}W</span></span>
+                    <span style={{fontSize:"15px",color:CD}}>VEGAS: <span style={{color:"#005c7a"}}>{t.vegasWins||"--"}W</span></span>
                     <span style={{fontSize:"15px",color:CD}}>RD/G: <span style={{color:rdColor}}>{parseFloat(t.rdPerGame)>0?"+":""}{t.rdPerGame}</span></span>
                     <span style={{fontSize:"15px",color:t.hot?CG:t.cold?CR:CD}}>L10: {t.l10}{t.hot?" HOT":t.cold?" COLD":""}</span>
                     <span style={{fontSize:"15px",color:t.streakLabel&&t.streakLabel[0]==="W"?CG:CR}}>STK: {t.streakLabel}</span>
@@ -2330,7 +2330,7 @@ function StockPopup({ticker,price,cost,shares,gainP,chgP,onClose}){
         <div style={{padding:"12px",background:"rgba(240,163,10,.06)",border:"1px solid "+CA+"33"}}>
           <div style={{fontSize:"17px",color:CD,marginBottom:"4px"}}>RSI: {ts.rsi} — {ts.rsi<30?"OVERSOLD":ts.rsi>70?"OVERBOUGHT":"NEUTRAL"}</div>
           <div style={{fontFamily:"Orbitron",fontSize:"15px",color:CA,letterSpacing:"2px",marginBottom:"6px"}}>MARCUS — {recMap[ts.signal]}</div>
-          <div style={{fontSize:"19px",color:CC,lineHeight:1.8}}>{noteMap[ts.signal]}</div>
+          <div style={{fontSize:"19px",color:"#005c7a",lineHeight:1.8}}>{noteMap[ts.signal]}</div>
         </div>
       </div>
     </div>
@@ -2340,7 +2340,7 @@ function StockPopup({ticker,price,cost,shares,gainP,chgP,onClose}){
 function Panel({label,right,children}){
   return(
     <div
-      style={{background:"rgba(255,255,255,0.65)",backdropFilter:"blur(12px)",WebkitBackdropFilter:"blur(12px)",border:"1px solid rgba(255,255,255,0.85)",borderRadius:"16px",padding:"14px 16px",marginBottom:"10px",boxShadow:"0 2px 20px rgba(99,102,241,0.07)"}}>
+      style={{background:"#020d18",backdropFilter:"blur(12px)",WebkitBackdropFilter:"blur(12px)",border:"1px solid #0a3050",borderRadius:"16px",padding:"14px 16px",marginBottom:"10px",boxShadow:"0 2px 20px rgba(99,102,241,0.07)"}}>
       {label&&(
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"10px",paddingBottom:"8px",borderBottom:"1px solid #060f18"}}>
           <span style={{fontFamily:"Orbitron",fontSize:"15px",fontWeight:700,color:"#00cfff",letterSpacing:"2px"}}>{label}</span>
