@@ -55,9 +55,9 @@ const BENCH_FALLBACK = {
   DIA:{price:"402.44",chg:"0.88"},
 };
 // ── COLORS ─────────────────────────────────────────────────────────────────────
-const CA="#f0a30a",CB="#ffffff",CC="#d4a84b",CD="#7a6030";
-const CG="#18c93a",CR="#e03010",CY="#e8b820";
-const BG="#030308",BP="#0a0a18",BD="#0d0d22";
+const CA="#6366f1",CB="#1a1a2e",CC="#4b5563",CD="#9ca3af";
+const CG="#10b981",CR="#ef4444",CY="#f59e0b";
+const BG="#f0f4ff",BP="rgba(255,255,255,0.6)",BD="rgba(255,255,255,0.4)";
 
 // ── PHASE 2 DATA ───────────────────────────────────────────────────────────────
 
@@ -268,7 +268,7 @@ const CSS = `
 @keyframes spinA{to{transform:rotate(360deg)}}
 @keyframes si{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
 @keyframes fi{from{opacity:0}to{opacity:1}}
-@keyframes ap{0%,100%{background:#030308}50%{background:#100005}}
+@keyframes ap{0%,100%{background:#f0f4ff}50%{background:#100005}}
 @keyframes cf{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
 .bl{animation:blink 1s step-end infinite}
 .pu{animation:pulse 2.5s ease-in-out infinite}
@@ -278,14 +278,14 @@ const CSS = `
 .alertMode{animation:ap 1.5s ease-in-out infinite}
 .cfp{position:fixed;pointer-events:none;z-index:999;width:8px;height:8px;border-radius:2px;animation:cf 3s ease-in forwards}
 .tab{background:transparent;border:none;border-bottom:2px solid transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 6px;flex:1;transition:all .2s;font-family:'Orbitron',sans-serif;position:relative}
-.tab.on{border-bottom-color:#f0a30a}
-.tl{font-size:8px;letter-spacing:1px;color:#7a6030;transition:color .2s}
-.tab.on .tl{color:#f0a30a;text-shadow:0 0 6px rgba(240,163,10,.5)}
+.tab.on{border-bottom-color:#6366f1}
+.tl{font-size:8px;letter-spacing:1px;color:#9ca3af;transition:color .2s}
+.tab.on .tl{color:#6366f1;text-shadow:0 0 6px rgba(240,163,10,.5)}
 .ti{font-size:14px;filter:grayscale(1) brightness(.4);transition:filter .2s}
 .tab.on .ti{filter:none}
 .bdg{position:absolute;top:4px;right:8px;width:6px;height:6px;border-radius:50%;background:#cc2200;box-shadow:0 0 4px #cc2200}
-.btn{background:transparent;border:1px solid #2a1e08;color:#f0a30a;font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:2px;padding:6px 14px;cursor:pointer;text-transform:uppercase;transition:all .2s;white-space:nowrap}
-.btn:hover{border-color:#f0a30a;box-shadow:0 0 8px rgba(240,163,10,.2);color:#fde68a}
+.btn{background:transparent;border:1px solid #2a1e08;color:#6366f1;font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:2px;padding:6px 14px;cursor:pointer;text-transform:uppercase;transition:all .2s;white-space:nowrap}
+.btn:hover{border-color:#6366f1;box-shadow:0 0 8px rgba(240,163,10,.2);color:#fde68a}
 .btn:disabled{opacity:.3;cursor:default}
 .bsm{padding:4px 10px;font-size:8px}
 .inp{flex:1;min-width:0;background:#080812;border:1px solid #1a1520;color:#c49a50;font-family:'Share Tech Mono',monospace;font-size:11px;padding:6px 10px;outline:none;letter-spacing:1px;transition:border-color .2s}
@@ -703,7 +703,7 @@ function TabPortfolio({enriched,totCost,totMkt,totGain,totP,leaps,status,live,on
             var needs=((l.breakeven-l.sounNow)/l.sounNow*100).toFixed(1);
             return (
               <div key={i} style={{background:BD,border:"1px solid #1a1520",padding:"10px",position:"relative"}}>
-                <Corners/>
+                
                 <div style={{fontFamily:"Orbitron",fontSize:"10px",color:CA,letterSpacing:"2px",marginBottom:"8px"}}>{l.label}</div>
                 {[["CONTRACTS",l.contracts+"x"],["AVG COST","$"+l.avgCost],["MKT VALUE","$"+(l.contracts*100*l.avgCost).toFixed(0)],["BREAKEVEN","$"+l.breakeven],["SOUN NOW","$"+l.sounNow],["NEEDS +",needs+"%"]].map(function(r){return (
                   <div key={r[0]} style={{display:"flex",justifyContent:"space-between",marginBottom:"3px"}}>
@@ -866,7 +866,7 @@ function FilingCard({filing,enriched}){
             <span style={{fontFamily:"Orbitron",fontSize:"13px",fontWeight:900,color:CA}}>{filing.ticker}</span>
             <span style={{fontFamily:"Orbitron",fontSize:"8px",padding:"2px 7px",background:ic+"22",color:ic,border:"1px solid "+ic+"55"}}>{exp.impact}</span>
             {filing.urgent&&<span style={{fontFamily:"Orbitron",fontSize:"8px",color:CR}}>URGENT</span>}
-              {(filing.count||1)>1&&<span style={{fontFamily:"Orbitron",fontSize:"8px",padding:"1px 6px",background:"#ffffff22",color:CC,border:"1px solid #ffffff33"}}>{filing.count} FILINGS</span>}
+              {(filing.count||1)>1&&<span style={{fontFamily:"Orbitron",fontSize:"8px",padding:"1px 6px",background:"#1a1a2e22",color:CC,border:"1px solid #1a1a2e33"}}>{filing.count} FILINGS</span>}
               {filing.form==="4"&&filing.txDir&&<span style={{fontFamily:"Orbitron",fontSize:"9px",fontWeight:900,padding:"2px 8px",background:(filing.txDir==="BUY"?CG:filing.txDir==="SELL"?CR:CY)+"33",color:filing.txDir==="BUY"?CG:filing.txDir==="SELL"?CR:CY,border:"1px solid "+(filing.txDir==="BUY"?CG:filing.txDir==="SELL"?CR:CY)+"66"}}>INSIDER {filing.txDir}</span>}
           </div>
           <div style={{display:"flex",gap:"8px",alignItems:"center"}}>
@@ -1257,7 +1257,7 @@ function TabSoun({port}) {
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
           {[{l:l1,days:days1,theta:theta1,pct:pct1,prob:prob1},{l:l2,days:days2,theta:theta2,pct:pct2,prob:prob2}].map(function(item,i){return (
             <div key={i} style={{background:BD,border:"1px solid #1a1520",padding:"12px",position:"relative"}}>
-              <Corners/>
+              
               <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CA,letterSpacing:"2px",marginBottom:"10px"}}>{item.l.label}</div>
               {[
                 ["CONTRACTS",item.l.contracts+"x"],
@@ -2157,14 +2157,15 @@ function StockPopup({ticker,price,cost,shares,gainP,chgP,onClose}){
   );
 }
 
-function Panel({label,children,right}) {
-  return (
-    <div style={{background:BP,border:"1px solid #141020",padding:"12px 14px",position:"relative"}}>
-      <Corners/>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"10px"}}>
-        <div style={{fontFamily:"Orbitron",fontSize:"10px",letterSpacing:"3px",color:"#4a3408"}}>{label}</div>
-        {right}
-      </div>
+function Panel({label,right,children}){
+  return(
+    <div style={{background:"rgba(255,255,255,0.65)",backdropFilter:"blur(12px)",WebkitBackdropFilter:"blur(12px)",border:"1px solid rgba(255,255,255,0.85)",borderRadius:"16px",padding:"14px 16px",marginBottom:"10px",boxShadow:"0 2px 20px rgba(99,102,241,0.07)"}}>
+      {label&&(
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"10px",paddingBottom:"8px",borderBottom:"1px solid rgba(99,102,241,0.1)"}}>
+          <span style={{fontFamily:"Orbitron",fontSize:"9px",fontWeight:700,color:"#6366f1",letterSpacing:"2px"}}>{label}</span>
+          {right&&<span>{right}</span>}
+        </div>
+      )}
       {children}
     </div>
   );
