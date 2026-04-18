@@ -300,7 +300,7 @@ const CSS = `
 // ── MAIN APP ───────────────────────────────────────────────────────────────────
 export default function App() {
   const [tab,setTab]       = useState("briefing");
-  const [alertOn,setAlert] = useState(false);
+  var alertOn=false,setAlert=function(){};
   const [now,setNow]       = useState(new Date());
   const [conf,setConf]     = useState([]);
   const [bdg,setBdg]       = useState({portfolio:true,parlays:true});
@@ -464,11 +464,9 @@ export default function App() {
           </svg>
           <div>
             <div style={{fontFamily:"Orbitron",fontSize:"11px",fontWeight:900,color:alertOn?"#ff4422":CA,letterSpacing:"5px"}}>APEX COMMAND CENTER</div>
-            <div style={{fontSize:"9px",letterSpacing:"2px",color:CD,marginTop:"2px"}}>{alertOn?"⚠ ALERT — POSITION MOVEMENT DETECTED":"PORTFOLIO INTELLIGENCE ▪ V2.0 ▪ PHASE 1"}</div>
           </div>
         </div>
         <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
-          <button className="btn bsm" onClick={function(){setAlert(function(v){return !v;});}} style={{color:alertOn?"#ff4422":CA,borderColor:alertOn?"#3d0000":"#2a1e08"}}>{alertOn?"◉ ALERT":"○ ALERT"}</button>
           <button className="btn bsm" onClick={function(){setVoice(function(v){return !v;});}} style={{color:voice?"#1a7acc":CA,borderColor:voice?"#0a3050":"#2a1e08"}}>{voice?"🎙 ON":"🎙 OFF"}</button>
           <button className="btn bsm" onClick={fireConfetti}>🎉</button>
           <div style={{textAlign:"right"}}>
