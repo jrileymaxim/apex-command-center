@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 // ── PORTFOLIO DATA ─────────────────────────────────────────────────────────────
 const POSITIONS = [
@@ -346,7 +346,9 @@ export default function App() {
     setWakeState("processing");
     setVoiceTranscript(question);
     setMarcusReply("");
-    var prompt=PORTFOLIO_CONTEXT+"\n\nQuestion: "+question+"\n\nAnswer concisely in 2-3 sentences max. Be direct and specific. No disclaimers.";
+    var isFinance=/stock|position|portfolio|price|buy|sell|hold|market|invest|SOUN|NVDA|MU|TSM|parlay|LEAP|option|sector|earnings/i.test(question);
+    var prompt=(isFinance?PORTFOLIO_CONTEXT+"\n\n":"")+
+      "You are Marcus, a sharp personal AI assistant. Answer this question directly and concisely in 2-3 sentences. No disclaimers, no hedging.\n\nQuestion: "+question;
     fetch("/api/marcus",{method:"POST",headers:{"Content-Type":"application/json"},
       body:JSON.stringify({ticker:"APEX",form:"voice",messages:[{role:"user",content:prompt}]})
     }).then(function(r){return r.json();})
