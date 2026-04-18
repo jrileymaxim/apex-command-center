@@ -1,59 +1,30 @@
 export const config = { runtime: 'edge' };
 
-// Voice IDs — change VOICE_ID to swap Marcus's voice
-// Adam (deep American male): pNInz6obpgDQGcFmaJgB
-// Josh (American male):      TxGEqnHWrfWFTfGW9XjX
-// Antoni (American male):    ErXwobaYiN019PkySvjV
-// Arnold (strong male):      VR6AewLTigWG4xSOukaG
-// Sam (American male):       yoZ06aMxZJJ28mfd3POQ
-const VOICE_ID = 'pNInz6obpgDQGcFmaJgB'; // Adam — deep, confident
+const VOICE_ID = '2ajXGJNYBR0iNHpS4VZb'; // Rob - Tough & Calloused (professional)
 
 export default async function handler(req) {
   if (req.method === 'OPTIONS') return new Response(null, {headers:{'Access-Control-Allow-Origin':'*','Access-Control-Allow-Methods':'POST','Access-Control-Allow-Headers':'Content-Type'}});
   try {
     const { text } = await req.json();
-    if (!text) return new Response(JSON.stringify({error:'no text'}), {status:400, headers:{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'}});
-
+    if (!text) return new Response(JSON.stringify({error:'no text'}), {status:400,headers:{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'}});
     const key = process.env.ELEVENLABS_API_KEY;
-    if (!key) {
-      // No key set — return a flag so client falls back to browser TTS
-      return new Response(JSON.stringify({fallback:true}), {headers:{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'}});
-    }
-
+    if (!key) return new Response(JSON.stringify({fallback:true}), {headers:{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'}});
     const resp = await fetch('https://api.elevenlabs.io/v1/text-to-speech/' + VOICE_ID, {
       method: 'POST',
-      headers: {
-        'xi-api-key': key,
-        'Content-Type': 'application/json',
-        'Accept': 'audio/mpeg'
-      },
+      headers: {'xi-api-key': key, 'Content-Type': 'application/json', 'Accept': 'audio/mpeg'},
       body: JSON.stringify({
         text: text,
-        model_id: 'eleven_monolingual_v1',
-        voice_settings: {
-          stability: 0.5,
-          similarity_boost: 0.75,
-          style: 0.2,
-          use_speaker_boost: true
-        }
+        model_id: 'eleven_multilingual_v2',
+        voice_settings: {stability: 0.45, similarity_boost: 0.80, style: 0.25, use_speaker_boost: true}
       })
     });
-
     if (!resp.ok) {
       const err = await resp.text();
-      return new Response(JSON.stringify({error: err, fallback: true}), {headers:{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'}});
+      return new Response(JSON.stringify({error:err, fallback:true}), {headers:{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'}});
     }
-
-    // Stream audio directly back to client
     const audio = await resp.arrayBuffer();
-    return new Response(audio, {
-      headers: {
-        'Content-Type': 'audio/mpeg',
-        'Access-Control-Allow-Origin': '*',
-        'Cache-Control': 'no-cache'
-      }
-    });
+    return new Response(audio, {headers:{'Content-Type':'audio/mpeg','Access-Control-Allow-Origin':'*','Cache-Control':'no-cache'}});
   } catch(e) {
-    return new Response(JSON.stringify({error: e.message, fallback: true}), {status:500, headers:{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'}});
+    return new Response(JSON.stringify({error:e.message, fallback:true}), {status:500,headers:{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'}});
   }
 }
