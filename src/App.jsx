@@ -2399,6 +2399,10 @@ function Spinner({label}) {
 
 function TabJarvis({wakeState,voiceTranscript,marcusReply}){
   var [livePrices,setLivePrices]=useState({});
+  var [imgPrompt,setImgPrompt]=useState("");
+  var [imgSrc,setImgSrc]=useState(null);
+  var [imgLoading,setImgLoading]=useState(false);
+  var [imgErr,setImgErr]=useState(null);
   useEffect(function(){
     fetch("/api/prices?symbols=AAL,SMCI,MNTS,ANET,TSM,MU,NVDA,VTI,CRWV,DVN,GLD,BBAI,SOUN")
     .then(function(r){return r.json();})
@@ -2409,6 +2413,17 @@ function TabJarvis({wakeState,voiceTranscript,marcusReply}){
       });
       setLivePrices(lp);
     }).catch(function(){});
+  var generateImage=function(){
+    if(!imgPrompt.trim()) return;
+    setImgLoading(true); setImgErr(null); setImgSrc(null);
+    fetch('/api/imagine',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:imgPrompt})})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(d.error){setImgErr(d.error);}
+      else{setImgSrc('data:'+d.mimeType+';base64,'+d.image);}
+      setImgLoading(false);
+    }).catch(function(e){setImgErr(e.message);setImgLoading(false);});
+  };
   },[]);
   var [digest,setDigest]=useState("");
   var [digestLoading,setDigestLoading]=useState(false);
@@ -2603,6 +2618,17 @@ function TabJarvis({wakeState,voiceTranscript,marcusReply}){
             })}
           </div>
         )}
+      </Panel>
+
+      <Panel label="🍌 NANO BANANA // IMAGE GEN" right={<span style={{color:CD,fontSize:"9px"}}>GEMINI IMAGEN 3</span>}>
+        <div style={{display:"flex",gap:"8px",marginBottom:"10px"}}>
+          <input value={imgPrompt} onChange={function(e){setImgPrompt(e.target.value);}} onKeyDown={function(e){if(e.key==='Enter')generateImage();}} placeholder="Describe an image..." style={{flex:1,background:"#010812",border:"1px solid #0a3050",color:CB,fontFamily:"Courier New",fontSize:"12px",padding:"7px 10px",outline:"none"}}/>
+          <button onClick={generateImage} disabled={imgLoading||!imgPrompt.trim()} className="btn" style={{whiteSpace:"nowrap"}}>{imgLoading?"GENERATING...":"GENERATE"}</button>
+        </div>
+        {imgErr&&<div style={{color:CR,fontSize:"11px",fontFamily:"Courier New",marginBottom:"8px"}}>ERROR: {imgErr}</div>}
+        {imgLoading&&<div style={{color:CD,fontSize:"11px",fontFamily:"Courier New",padding:"20px 0",textAlign:"center",borderTop:"1px solid #060f18"}}>► RENDERING IMAGE...</div>}
+        {imgSrc&&<div style={{marginTop:"8px"}}><img src={imgSrc} alt="Generated" style={{width:"100%",borderTop:"2px solid rgba(0,207,255,0.2)",display:"block"}}/></div>}
+        {!imgSrc&&!imgLoading&&<div style={{color:CD,fontSize:"10px",fontFamily:"Courier New",padding:"12px 0",textAlign:"center",borderTop:"1px solid #060f18"}}>◈ AWAITING PROMPT</div>}
       </Panel>
     </div>
   );
