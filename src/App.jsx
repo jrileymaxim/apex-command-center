@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from "recharts";
 
 // ── PORTFOLIO DATA ─────────────────────────────────────────────────────────────
 const POSITIONS = [
@@ -647,6 +649,8 @@ export default function App() {
 
       {/* CONTENT */}
       <div style={{flex:1,minHeight:0,overflow:"auto",position:"relative",zIndex:1,padding:"12px 14px"}}>
+        <AnimatePresence mode="wait">
+        <motion.div key={tab} initial={{opacity:0,x:8}} animate={{opacity:1,x:0}} exit={{opacity:0,x:-8}} transition={{duration:0.2}}>
         {tab==="briefing"  && <TabBriefing alf={alf} onAlf={function(){setAlf({s:"done",text:marcusBriefing()});}} eod={eod} onEod={function(){setEod(generateEOD(enriched,totCost,totMkt,totGain,totP,bench,fg));}} wx={wx} city={city} setCity={setCity} onWx={doWeather} fg={fg} enriched={enriched} totP={totP}/>}
         {tab==="portfolio" && <TabPortfolio enriched={enriched} totCost={totCost} totMkt={totMkt} totGain={totGain} totP={totP} leaps={LEAPS} status={port.s} live={port.live} onRefresh={doPortfolio} bench={bench}/>}
         {tab==="intel"     && <TabIntel enriched={enriched} status={port.s} totP={totP} fg={fg}/>}
@@ -655,6 +659,8 @@ export default function App() {
         {tab==="alerts"    && <TabAlerts filings={edgar} loading={edgarL} enriched={enriched} onScan={async function(){setEdgarL(true);var f=await fetchEdgarFilings();setEdgar(f);setEdgarL(false);}}/>}
         {tab==="mission"   && <TabMission tasks={tasks} newTask={newTask} setNewTask={setNewTask} onAdd={addTask} onToggle={togTask} onDel={delTask} wl={wl} newWl={newWl} setNewWl={setNewWl} onAddWl={addWl} onDelWl={delWl} journal={journal} setJournal={setJournal} enriched={enriched}/>}
             {tab==="jarvis"   && <TabJarvis wakeState={wakeState} voiceTranscript={voiceTranscript} marcusReply={marcusReply}/>}
+        </motion.div>
+        </AnimatePresence>
       </div>
 
       {/* VOICE OVERLAY */}
@@ -794,6 +800,12 @@ function TabPortfolio({enriched,totCost,totMkt,totGain,totP,leaps,status,live,on
 
       <Panel label={"◈ POSITIONS — "+POSITIONS.length+" HOLDINGS "+(live?"▪ LIVE":"▪ SESSION DATA 4/14")} right={<button className="btn bsm" onClick={onRefresh} disabled={status==="loading"}>↻ REFRESH</button>}>
         {status==="loading"&&<Spinner label="PULLING LIVE PRICES"/>}
+        {status!=="loading"&&enriched&&enriched.length>0&&(
+          <Panel label="◈ PORTFOLIO HEAT MAP">
+            <div style={{fontSize:"11px",color:CD,fontFamily:"Orbitron",marginBottom:"6px"}}>% GAIN/LOSS PER POSITION (vs avg cost)</div>
+            <PortfolioChart positions={enriched}/>
+          </Panel>
+        )}
         {status!=="loading"&&enriched.map(function(p,i){return (
           <div key={p.ticker} className="pr si" style={{animationDelay:i*30+"ms"}}>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
@@ -2332,7 +2344,9 @@ function StockPopup({ticker,price,cost,shares,gainP,chgP,onClose}){
 
 function Panel({label,right,children}){
   return(
-    <div style={{background:"rgba(255,255,255,0.65)",backdropFilter:"blur(12px)",WebkitBackdropFilter:"blur(12px)",border:"1px solid rgba(255,255,255,0.85)",borderRadius:"16px",padding:"14px 16px",marginBottom:"10px",boxShadow:"0 2px 20px rgba(99,102,241,0.07)"}}>
+    <motion.div
+      initial={{opacity:0,y:16}} animate={{opacity:1,y:0}} transition={{duration:0.3,ease:"easeOut"}}
+      style={{background:"rgba(255,255,255,0.65)",backdropFilter:"blur(12px)",WebkitBackdropFilter:"blur(12px)",border:"1px solid rgba(255,255,255,0.85)",borderRadius:"16px",padding:"14px 16px",marginBottom:"10px",boxShadow:"0 2px 20px rgba(99,102,241,0.07)"}}>
       {label&&(
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"10px",paddingBottom:"8px",borderBottom:"1px solid rgba(99,102,241,0.1)"}}>
           <span style={{fontFamily:"Orbitron",fontSize:"15px",fontWeight:700,color:"#6366f1",letterSpacing:"2px"}}>{label}</span>
@@ -2340,7 +2354,7 @@ function Panel({label,right,children}){
         </div>
       )}
       {children}
-    </div>
+    </motion.div>
   );
 }
 
@@ -2596,6 +2610,56 @@ function TabJarvis({wakeState,voiceTranscript,marcusReply}){
           </div>
         )}
       </Panel>
+    </div>
+  );
+}
+
+function AnimatedNumber({value,prefix,suffix,decimals,color}){
+  var [display,setDisplay]=useState(value);
+  var [flash,setFlash]=useState(null);
+  useEffect(function(){
+    if(value===display) return;
+    setFlash(value>display?"up":"down");
+    setDisplay(value);
+    var t=setTimeout(function(){setFlash(null);},800);
+    return function(){clearTimeout(t);};
+  },[value]);
+  var flashColor=flash==="up"?CG:flash==="down"?CR:"transparent";
+  return(
+    <motion.span
+      key={display}
+      initial={{scale:1.15,color:flash==="up"?CG:flash==="down"?CR:(color||CB)}}
+      animate={{scale:1,color:color||CB}}
+      transition={{duration:0.5}}
+      style={{display:"inline-block",fontVariantNumeric:"tabular-nums"}}
+    >{(prefix||"")+Number(display).toFixed(decimals!=null?decimals:2)+(suffix||"")}</motion.span>
+  );
+}
+
+function PortfolioChart({positions}){
+  if(!positions||!positions.length) return null;
+  var data=positions.map(function(p){
+    var pct=p.price&&p.avg?((p.price-p.avg)/p.avg*100):0;
+    return {name:p.ticker,gain:parseFloat(pct.toFixed(2)),value:p.price&&p.shares?(p.price*p.shares):0};
+  });
+  return(
+    <div style={{width:"100%",height:"120px"}}>
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart data={data} margin={{top:4,right:4,left:4,bottom:4}}>
+          <XAxis dataKey="name" tick={{fontSize:9,fill:CD,fontFamily:"Orbitron"}} axisLine={false} tickLine={false}/>
+          <YAxis hide={true}/>
+          <Tooltip
+            contentStyle={{background:"rgba(255,255,255,0.95)",border:"1px solid rgba(99,102,241,0.2)",borderRadius:"8px",fontSize:"11px",fontFamily:"Orbitron"}}
+            formatter={function(v){return [v.toFixed(2)+"%","P&L"];}}
+            labelStyle={{color:CB}}
+          />
+          <Bar dataKey="gain" radius={[4,4,0,0]}>
+            {data.map(function(entry,i){
+              return <Cell key={i} fill={entry.gain>=0?CG:CR} fillOpacity={0.8}/>;
+            })}
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
     </div>
   );
 }
