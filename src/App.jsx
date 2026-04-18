@@ -443,7 +443,7 @@ export default function App() {
     {id:"soun",icon:"🎯",l:"SOUN OPS"},
     {id:"parlays",icon:"⚾",l:"PARLAYS"},
     {id:"alerts",icon:"🔔",l:"ALERTS"},
-    {id:"mission",icon:"🛠",l:"MISSION"},
+    {id:"mission",icon:"🛠",l:"MISSION"},{id:"jarvis",icon:"🤖",l:"JARVIS"},
   ];
 
   return (
@@ -496,6 +496,7 @@ export default function App() {
         {tab==="parlays"   && <TabParlays/>}
         {tab==="alerts"    && <TabAlerts filings={edgar} loading={edgarL} enriched={enriched} onScan={async function(){setEdgarL(true);var f=await fetchEdgarFilings();setEdgar(f);setEdgarL(false);}}/>}
         {tab==="mission"   && <TabMission tasks={tasks} newTask={newTask} setNewTask={setNewTask} onAdd={addTask} onToggle={togTask} onDel={delTask} wl={wl} newWl={newWl} setNewWl={setNewWl} onAddWl={addWl} onDelWl={delWl} journal={journal} setJournal={setJournal} enriched={enriched}/>}
+            {tab==="jarvis"   && <TabJarvis prices={prices}/>}
       </div>
 
       {/* VOICE OVERLAY */}
@@ -2226,6 +2227,171 @@ function Spinner({label}) {
     <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
       <div className="spinA" style={{width:"10px",height:"10px",border:"1px solid #4a3408",borderTopColor:CA,borderRadius:"50%"}}/>
       <span style={{fontFamily:"Orbitron",fontSize:"19px",letterSpacing:"2px",color:"#4a3408"}}>{label}{".".repeat(d)}</span>
+    </div>
+  );
+}
+
+function TabJarvis({prices}){
+  var [digest,setDigest]=React.useState("");
+  var [digestLoading,setDigestLoading]=React.useState(false);
+  var [speaking,setSpeaking]=React.useState(false);
+  var [skillResult,setSkillResult]=React.useState("");
+  var [skillLoading,setSkillLoading]=React.useState(false);
+  var [activeSkill,setActiveSkill]=React.useState(null);
+  var [monitorLog,setMonitorLog]=React.useState([]);
+  var [monitorRunning,setMonitorRunning]=React.useState(false);
+  var POSITIONS=[
+    {t:"AAL",sh:12.70,avg:11.30},{t:"SMCI",sh:13.713,avg:23.24},{t:"MNTS",sh:40,avg:5.84},
+    {t:"ANET",sh:2,avg:143.29},{t:"TSM",sh:5.8,avg:372.13},{t:"MU",sh:1.008,avg:413.38},
+    {t:"NVDA",sh:3.9,avg:188.64},{t:"VTI",sh:3,avg:338.75},{t:"CRWV",sh:10.9,avg:111.86},
+    {t:"DVN",sh:13,avg:47.28},{t:"GLD",sh:0.4,avg:439.22},{t:"BBAI",sh:50,avg:3.56}
+  ];
+  var SKILLS=[
+    {id:"soun",icon:"S",name:"SOUN DEEP DIVE",prompt:"I hold SOUN LEAPS: $10C 1/15/27 at $1.24 and $10C 1/21/28 at $2.38. Analyze SOUN momentum, near-term catalysts, and tell me: add more, hold, or close? Give price targets and timeline. Be specific."},
+    {id:"risk",icon:"R",name:"RISK PROFILE",prompt:"My portfolio: AAL 12.70sh, SMCI 13.713sh, MNTS 40sh, ANET 2sh, TSM 5.8sh, MU 1.008sh, NVDA 3.9sh, VTI 3sh, CRWV 10.9sh, DVN 13sh, GLD 0.4sh, BBAI 50sh. Top 3 risks right now, concentration rating, one position to trim and one to add to."},
+    {id:"parlay",icon:"P",name:"PARLAY CHECK",prompt:"I have 4 MLB parlays, $112 stake, $13,008.93 max payout, settle Oct 31 2026. What is the current MLB landscape — which teams are surging or collapsing — and how should I think about my parlay exposure?"},
+    {id:"earnings",icon:"E",name:"EARNINGS RADAR",prompt:"For AAL, SMCI, MNTS, ANET, TSM, MU, NVDA, CRWV, DVN, BBAI — which have earnings in the next 30 days? Key metrics to watch, implied moves from options market. Be specific per ticker."},
+    {id:"rotate",icon:"X",name:"SECTOR ROTATION",prompt:"Given current macro (Fed, semiconductor cycle, energy, AI capex) — of AAL, SMCI, MNTS, ANET, TSM, MU, NVDA, VTI, CRWV, DVN, GLD, BBAI — which sectors risk rotation OUT and which should I rotate INTO? Be specific."},
+    {id:"pulse",icon:"M",name:"MARKET PULSE",prompt:"Rapid-fire market pulse: (1) dominant narrative driving markets this week, (2) which of my sectors (semis, airlines, energy, AI) is strongest vs weakest, (3) one actionable trade idea based on current momentum. Direct, no fluff."}
+  ];
+
+  function buildDigestPrompt(){
+    var posLines=POSITIONS.map(function(p){
+      var live=prices&&prices[p.t];
+      var price=live?live.price:p.avg;
+      var gain=live?((price-p.avg)/p.avg*100).toFixed(1):0;
+      return p.t+" "+p.sh+"sh avg$"+p.avg+" now$"+price+" ("+gain+"%)"; 
+    }).join(", ");
+    return "You are APEX AI. Generate a spoken morning briefing covering:\n1. PORTFOLIO: total gain/loss using these positions: "+posLines+"\n2. TOP MOVERS: 3 biggest movers up and down\n3. SOUN LEAPS: SOUN $10C 1/15/27@$1.24 and $10C 1/21/28@$2.38 status\n4. RISK ALERT: one thing to watch today\n5. VERDICT: one sentence bullish or cautious and why\nConversational tone, 150 words max. Start with: Good morning.";
+  }
+
+  function generateDigest(){
+    setDigestLoading(true); setDigest("");
+    fetch("/api/marcus",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({ticker:"APEX",form:"digest",messages:[{role:"user",content:buildDigestPrompt()}]})
+    }).then(function(r){return r.json();})
+    .then(function(d){setDigest(d.content&&d.content[0]&&d.content[0].text||"Unavailable.");setDigestLoading(false);})
+    .catch(function(){setDigest("API unavailable.");setDigestLoading(false);});
+  }
+
+  function speakDigest(){
+    if(!digest) return;
+    if(speaking){window.speechSynthesis.cancel();setSpeaking(false);return;}
+    var utt=new SpeechSynthesisUtterance(digest);
+    utt.rate=0.95;
+    var voices=window.speechSynthesis.getVoices();
+    var best=voices.find(function(v){return v.name.includes("Google")&&v.lang==="en-US";});
+    if(best) utt.voice=best;
+    utt.onend=function(){setSpeaking(false);};
+    setSpeaking(true);
+    window.speechSynthesis.speak(utt);
+  }
+
+  function runSkill(skill){
+    setActiveSkill(skill.id); setSkillLoading(true); setSkillResult("");
+    fetch("/api/marcus",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({ticker:"APEX",form:"skill",messages:[{role:"user",content:skill.prompt}]})
+    }).then(function(r){return r.json();})
+    .then(function(d){setSkillResult(d.content&&d.content[0]&&d.content[0].text||"Unavailable.");setSkillLoading(false);})
+    .catch(function(){setSkillResult("API unavailable.");setSkillLoading(false);});
+  }
+
+  async function runMonitor(){
+    setMonitorRunning(true);
+    var log=[];
+    function addLog(msg,type){log=log.concat([{msg:msg,type:type||"info",ts:new Date().toLocaleTimeString()}]);setMonitorLog(log.slice());}
+    addLog("Monitor scan started","system");
+    try{
+      var syms=POSITIONS.map(function(p){return p.t;}).join(",");
+      var pd=await fetch("/api/prices?symbols="+syms).then(function(r){return r.json();});
+      var results=(pd.quoteResponse&&pd.quoteResponse.result)||[];
+      results.forEach(function(q){
+        var pos=POSITIONS.find(function(p){return p.t===q.symbol;});
+        if(!pos) return;
+        var chg=q.regularMarketChangePercent||0;
+        if(chg<=-5) addLog(q.symbol+" DOWN "+chg.toFixed(1)+"% — RISK","alert");
+        else if(chg>=5) addLog(q.symbol+" UP +"+chg.toFixed(1)+"% — MOMENTUM","ok");
+      });
+      addLog("Price scan done — "+results.length+" tickers checked","system");
+    }catch(e){addLog("Price scan failed","error");}
+    try{
+      var sd=await fetch("/api/prices?symbols=SOUN").then(function(r){return r.json();});
+      var sq=(sd.quoteResponse&&sd.quoteResponse.result&&sd.quoteResponse.result[0])||{};
+      var sounP=sq.regularMarketPrice||0;
+      var sounC=(sq.regularMarketChangePercent||0).toFixed(1);
+      addLog("SOUN $"+sounP.toFixed(2)+" ("+sounC+"%) | BE1 $11.24 | BE2 $12.38",sounP>=10?"alert":"ok");
+    }catch(e){addLog("SOUN fetch failed","error");}
+    try{
+      var CIKS={"AAL":"0000006201","MU":"0000723254","NVDA":"0001045810","TSM":"0001046179","SMCI":"0001375365"};
+      var today=new Date().toISOString().slice(0,10);
+      var entries=Object.entries(CIKS);
+      var checks=await Promise.all(entries.map(async function(e){
+        var subs=await fetch("https://data.sec.gov/submissions/CIK"+e[1]+".json",{headers:{"User-Agent":"apex/1.0"}}).then(function(r){return r.json();});
+        var recent=subs.filings&&subs.filings.recent||{};
+        var idx=(recent.filingDate||[]).findIndex(function(d){return d===today;});
+        if(idx>-1) return e[0]+": "+recent.form[idx]+" filed TODAY";
+        return null;
+      }));
+      var newF=checks.filter(Boolean);
+      if(newF.length>0) newF.forEach(function(f){addLog(f,"alert");});
+      else addLog("SEC EDGAR — no new filings today for watched tickers","ok");
+    }catch(e){addLog("EDGAR scan failed","error");}
+    addLog("Scan complete","system");
+    setMonitorRunning(false);
+  }
+
+  var activeSkillObj=SKILLS.find(function(s){return s.id===activeSkill;})||{name:"RESULT"};
+
+  return(
+    <div style={{padding:"12px",display:"flex",flexDirection:"column",gap:"12px"}}>
+      <Panel label="🌅 MORNING DIGEST" right={
+        <div style={{display:"flex",gap:"8px"}}>
+          {digest&&<button className="btn bsm" onClick={speakDigest} style={{color:speaking?CR:CA}}>{speaking?"⏹ STOP":"🔊 SPEAK"}</button>}
+          <button className="btn bsm" onClick={generateDigest} disabled={digestLoading}>{digestLoading?"GENERATING...":"▶ GENERATE"}</button>
+        </div>
+      }>
+        {!digest&&!digestLoading&&<div style={{color:CD,fontSize:"13px",padding:"8px 0"}}>Personalized briefing: portfolio P&L, top movers, SOUN LEAPS status, risk alert, and Marcus verdict. Reads aloud with SPEAK.</div>}
+        {digestLoading&&<div style={{color:CA,fontSize:"13px"}}>Marcus is preparing your briefing...</div>}
+        {digest&&<div style={{fontSize:"15px",color:CB,lineHeight:"1.9",whiteSpace:"pre-wrap"}}>{digest}</div>}
+      </Panel>
+      <Panel label="⚡ SKILLS">
+        <div style={{display:"flex",flexWrap:"wrap",gap:"8px",marginBottom:"10px"}}>
+          {SKILLS.map(function(skill){
+            var isActive=activeSkill===skill.id;
+            return(<button key={skill.id} className="btn bsm" onClick={function(){runSkill(skill);}}
+              style={{opacity:skillLoading&&!isActive?0.5:1,background:isActive?"rgba(99,102,241,0.25)":"rgba(99,102,241,0.1)"}}>
+              {skill.name}
+            </button>);
+          })}
+        </div>
+        {skillLoading&&<div style={{color:CA,fontSize:"13px"}}>Running {activeSkillObj.name}...</div>}
+        {skillResult&&!skillLoading&&(
+          <div style={{borderTop:"1px solid rgba(99,102,241,0.15)",paddingTop:"12px"}}>
+            <span style={{fontFamily:"Orbitron",fontSize:"11px",color:CA}}>◆ {activeSkillObj.name}</span>
+            <div style={{marginTop:"8px",fontSize:"14px",color:CB,lineHeight:"1.8",whiteSpace:"pre-wrap"}}>{skillResult}</div>
+          </div>
+        )}
+      </Panel>
+      <Panel label="👁 MONITOR AGENT" right={
+        <button className="btn bsm" onClick={runMonitor} disabled={monitorRunning}
+          style={{color:monitorRunning?CY:CG,borderColor:monitorRunning?"rgba(245,158,11,0.4)":"rgba(16,185,129,0.4)"}}>
+          {monitorRunning?"◉ SCANNING...":"▶ RUN SCAN"}
+        </button>
+      }>
+        {monitorLog.length===0&&!monitorRunning&&<div style={{color:CD,fontSize:"13px",padding:"8px 0"}}>Checks prices (flags ±5% movers), SOUN LEAPS status, and SEC EDGAR for today's filings across AAL, MU, NVDA, TSM, SMCI.</div>}
+        {monitorLog.length>0&&(
+          <div style={{display:"flex",flexDirection:"column",gap:"5px"}}>
+            {monitorLog.map(function(entry,i){
+              var color=entry.type==="alert"?CY:entry.type==="ok"?CG:entry.type==="error"?CR:CD;
+              var icon=entry.type==="alert"?"⚠ ":entry.type==="ok"?"✓ ":entry.type==="error"?"✗ ":"› ";
+              return(<div key={i} style={{display:"flex",gap:"10px",alignItems:"flex-start"}}>
+                <span style={{fontSize:"11px",color:CD,minWidth:"60px",fontFamily:"Orbitron",paddingTop:"2px"}}>{entry.ts}</span>
+                <span style={{fontSize:"13px",color:color}}>{icon}{entry.msg}</span>
+              </div>);
+            })}
+          </div>
+        )}
+      </Panel>
     </div>
   );
 }
