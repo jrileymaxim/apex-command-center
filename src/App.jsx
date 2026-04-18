@@ -349,11 +349,11 @@ export default function App() {
     var isFinance=/stock|position|portfolio|price|buy|sell|hold|market|invest|SOUN|NVDA|MU|TSM|parlay|LEAP|option|sector|earnings/i.test(question);
     var prompt=(isFinance?PORTFOLIO_CONTEXT+"\n\n":"")+
       "You are Marcus, a sharp personal AI assistant. Answer this question directly and concisely in 2-3 sentences. No disclaimers, no hedging.\n\nQuestion: "+question;
-    fetch("/api/marcus",{method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({ticker:"APEX",form:"voice",messages:[{role:"user",content:prompt}]})
+    fetch("/api/voice",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({question:question})
     }).then(function(r){return r.json();})
     .then(function(d){
-      var reply=d.content&&d.content[0]&&d.content[0].text||"I could not get an answer.";
+      var reply=d.answer||"I could not get an answer.";
       setMarcusReply(reply);
       setWakeState("speaking");
       playTone(660,0.15);
