@@ -56,9 +56,9 @@ const BENCH_FALLBACK = {
   DIA:{price:"402.44",chg:"0.88"},
 };
 // ── COLORS ─────────────────────────────────────────────────────────────────────
-const CA="#6366f1",CB="#1a1a2e",CC="#4b5563",CD="#9ca3af";
-const CG="#10b981",CR="#ef4444",CY="#f59e0b";
-const BG="#f0f4ff",BP="rgba(255,255,255,0.6)",BD="rgba(255,255,255,0.4)";
+const CA="#00cfff",CB="#a0d8ef",CC="#008faa",CD="#005c7a";
+const CG="#00ff8a",CR="#ff3d5a",CY="#fbbf24";
+const BG="#03080f",BP="#020d18",BD="#0a3050";
 
 // ── PHASE 2 DATA ───────────────────────────────────────────────────────────────
 
@@ -626,7 +626,7 @@ export default function App() {
           </div>
         </div>
         <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
-          <button className="btn bsm" onClick={function(){setVoiceOn(function(v){return !v;});}} style={{color:wakeState==="off"?CA:wakeState==="listening"?"#10b981":wakeState==="awake"?"#f59e0b":wakeState==="processing"?"#6366f1":"#ef4444",borderColor:wakeState==="off"?"rgba(99,102,241,0.3)":wakeState==="listening"?"rgba(16,185,129,0.5)":"rgba(99,102,241,0.5)"}}>{wakeState==="off"?"🎙 OFF":wakeState==="listening"?"🎙 READY":wakeState==="awake"?"🔴 SPEAK":wakeState==="processing"?"⚙ THINKING":"🔊 MARCUS"}</button>
+          <button className="btn bsm" onClick={function(){setVoiceOn(function(v){return !v;});}} style={{color:wakeState==="off"?CA:wakeState==="listening"?"#10b981":wakeState==="awake"?"#f59e0b":wakeState==="processing"?"#00cfff":"#ef4444",borderColor:wakeState==="off"?"rgba(0,207,255,0.3)":wakeState==="listening"?"rgba(16,185,129,0.5)":"rgba(0,207,255,0.5)"}}>{wakeState==="off"?"🎙 OFF":wakeState==="listening"?"🎙 READY":wakeState==="awake"?"🔴 SPEAK":wakeState==="processing"?"⚙ THINKING":"🔊 MARCUS"}</button>
           <button className="btn bsm" onClick={fireConfetti}>🎉</button>
           <div style={{textAlign:"right"}}>
             <div style={{fontFamily:"Orbitron",fontWeight:900,color:alertOn?"#ff4422":CA,fontSize:"clamp(16px,2.2vw,26px)",letterSpacing:"3px",lineHeight:1}}>{HH}<span className="bl">:</span>{MM}<span style={{fontSize:"0.55em",opacity:.45}}>:{SS}</span></div>
@@ -2342,8 +2342,8 @@ function Panel({label,right,children}){
     <div
       style={{background:"rgba(255,255,255,0.65)",backdropFilter:"blur(12px)",WebkitBackdropFilter:"blur(12px)",border:"1px solid rgba(255,255,255,0.85)",borderRadius:"16px",padding:"14px 16px",marginBottom:"10px",boxShadow:"0 2px 20px rgba(99,102,241,0.07)"}}>
       {label&&(
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"10px",paddingBottom:"8px",borderBottom:"1px solid rgba(99,102,241,0.1)"}}>
-          <span style={{fontFamily:"Orbitron",fontSize:"15px",fontWeight:700,color:"#6366f1",letterSpacing:"2px"}}>{label}</span>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"10px",paddingBottom:"8px",borderBottom:"1px solid #060f18"}}>
+          <span style={{fontFamily:"Orbitron",fontSize:"15px",fontWeight:700,color:"#00cfff",letterSpacing:"2px"}}>{label}</span>
           {right&&<span>{right}</span>}
         </div>
       )}
@@ -2548,11 +2548,11 @@ function TabJarvis({wakeState,voiceTranscript,marcusReply}){
             <Panel label="🎙 HEY MARCUS">
         <div style={{display:"flex",alignItems:"center",gap:"12px",flexWrap:"wrap"}}>
           <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
-            <div style={{width:"10px",height:"10px",borderRadius:"50%",background:wakeState==="off"?"#9ca3af":wakeState==="listening"?"#10b981":wakeState==="awake"?"#f59e0b":"#6366f1"}}></div>
-            <span style={{fontFamily:"Orbitron",fontSize:"11px",color:wakeState==="off"?"#9ca3af":wakeState==="listening"?"#10b981":wakeState==="awake"?"#f59e0b":"#6366f1"}}>{wakeState==="off"?"OFFLINE — tap 🎙 in header to activate":wakeState==="listening"?"LISTENING... say HEY MARCUS":wakeState==="awake"?"🔴 SPEAK NOW — ask anything":wakeState==="processing"?"⚙ THINKING...":"🔊 SPEAKING"}</span>
+            <div style={{width:"10px",height:"10px",borderRadius:"50%",background:wakeState==="off"?"#9ca3af":wakeState==="listening"?"#10b981":wakeState==="awake"?"#f59e0b":"#00cfff"}}></div>
+            <span style={{fontFamily:"Orbitron",fontSize:"11px",color:wakeState==="off"?"#9ca3af":wakeState==="listening"?"#10b981":wakeState==="awake"?"#f59e0b":"#00cfff"}}>{wakeState==="off"?"OFFLINE — tap 🎙 in header to activate":wakeState==="listening"?"LISTENING... say HEY MARCUS":wakeState==="awake"?"🔴 SPEAK NOW — ask anything":wakeState==="processing"?"⚙ THINKING...":"🔊 SPEAKING"}</span>
           </div>
         </div>
-        {voiceTranscript&&<div style={{marginTop:"10px",padding:"8px 12px",background:"rgba(99,102,241,0.08)",borderRadius:"8px",fontSize:"13px",color:"#4b5563"}}><b style={{fontFamily:"Orbitron",fontSize:"10px",color:"#6366f1"}}>YOU SAID: </b>{voiceTranscript}</div>}
+        {voiceTranscript&&<div style={{marginTop:"10px",padding:"8px 12px",background:"rgba(0,207,255,0.08)",borderRadius:"8px",fontSize:"13px",color:"#4b5563"}}><b style={{fontFamily:"Orbitron",fontSize:"10px",color:"#00cfff"}}>YOU SAID: </b>{voiceTranscript}</div>}
         {marcusReply&&<div style={{marginTop:"8px",padding:"10px 12px",background:"rgba(16,185,129,0.08)",borderRadius:"8px",fontSize:"14px",color:"#1a1a2e",lineHeight:"1.7"}}><b style={{fontFamily:"Orbitron",fontSize:"10px",color:"#10b981"}}>MARCUS: </b>{marcusReply}</div>}
       </Panel>
 
@@ -2571,7 +2571,7 @@ function TabJarvis({wakeState,voiceTranscript,marcusReply}){
           {SKILLS.map(function(skill){
             var isActive=activeSkill===skill.id;
             return(<button key={skill.id} className="btn bsm" onClick={function(){runSkill(skill);}}
-              style={{opacity:skillLoading&&!isActive?0.5:1,background:isActive?"rgba(99,102,241,0.25)":"rgba(99,102,241,0.1)"}}>
+              style={{opacity:skillLoading&&!isActive?0.5:1,background:isActive?"rgba(0,207,255,0.25)":"rgba(0,207,255,0.1)"}}>
               {skill.name}
             </button>);
           })}
