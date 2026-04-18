@@ -301,6 +301,141 @@ const CSS = `
 export default function App() {
   const [tab,setTab]       = useState("briefing");
   var alertOn=false,setAlert=function(){};
+
+  // ── HEY MARCUS VOICE SYSTEM ─────────────────────────────
+  var [wakeState,setWakeState]=useState("off"); // off|listening|awake|processing|speaking
+  var [voiceTranscript,setVoiceTranscript]=useState("");
+  var [marcusReply,setMarcusReply]=useState("");
+  var [voiceOn,setVoiceOn]=useState(false);
+  var wakeRef=useRef(null); // holds the SpeechRecognition instance
+  var cmdRef=useRef(null);
+
+  var PORTFOLIO_CONTEXT="My portfolio: AAL 12.70sh avg$11.30, SMCI 13.713sh avg$23.24, MNTS 40sh avg$5.84, ANET 2sh avg$143.29, TSM 5.8sh avg$372.13, MU 1.008sh avg$413.38, NVDA 3.9sh avg$188.64, VTI 3sh avg$338.75, CRWV 10.9sh avg$111.86, DVN 13sh avg$47.28, GLD 0.4sh avg$439.22, BBAI 50sh avg$3.56. SOUN LEAPS: $10C 1/15/27 at $1.24 and $10C 1/21/28 at $2.38. 4 MLB parlays, $112 stake, $13,008.93 max payout, settle Oct 31 2026.";
+
+  function playTone(freq,dur){
+    try{
+      var ctx=new (window.AudioContext||window.webkitAudioContext)();
+      var osc=ctx.createOscillator();
+      var gain=ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.frequency.value=freq; osc.type="sine";
+      gain.gain.setValueAtTime(0.3,ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+dur);
+      osc.start(); osc.stop(ctx.currentTime+dur);
+    }catch(e){}
+  }
+
+  function speakReply(text,onDone){
+    if(!text){if(onDone)onDone();return;}
+    window.speechSynthesis.cancel();
+    var utt=new SpeechSynthesisUtterance(text);
+    utt.rate=0.92; utt.pitch=1.0; utt.volume=1.0;
+    function doSpeak(){
+      var voices=window.speechSynthesis.getVoices();
+      var best=voices.find(function(v){return v.name.includes("Google")&&v.lang==="en-US";})||voices.find(function(v){return v.lang&&v.lang.startsWith("en");});
+      if(best) utt.voice=best;
+      utt.onend=function(){if(onDone)onDone();};
+      utt.onerror=function(){if(onDone)onDone();};
+      window.speechSynthesis.speak(utt);
+    }
+    if(window.speechSynthesis.getVoices().length>0){doSpeak();}
+    else{window.speechSynthesis.addEventListener("voiceschanged",function h(){window.speechSynthesis.removeEventListener("voiceschanged",h);doSpeak();});setTimeout(doSpeak,300);}
+  }
+
+  function askMarcus(question){
+    setWakeState("processing");
+    setVoiceTranscript(question);
+    setMarcusReply("");
+    var prompt=PORTFOLIO_CONTEXT+"\n\nQuestion: "+question+"\n\nAnswer concisely in 2-3 sentences max. Be direct and specific. No disclaimers.";
+    fetch("/api/marcus",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({ticker:"APEX",form:"voice",messages:[{role:"user",content:prompt}]})
+    }).then(function(r){return r.json();})
+    .then(function(d){
+      var reply=d.content&&d.content[0]&&d.content[0].text||"I could not get an answer.";
+      setMarcusReply(reply);
+      setWakeState("speaking");
+      playTone(660,0.15);
+      speakReply(reply,function(){
+        setWakeState("listening");
+        startWakeListener();
+      });
+    }).catch(function(){
+      speakReply("Sorry, I could not reach the API.",function(){setWakeState("listening");startWakeListener();});
+    });
+  }
+
+  function startCommandListener(){
+    if(cmdRef.current){try{cmdRef.current.abort();}catch(e){}}
+    var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+    if(!SR) return;
+    var cmd=new SR();
+    cmd.continuous=false;
+    cmd.interimResults=false;
+    cmd.lang="en-US";
+    cmd.maxAlternatives=1;
+    cmdRef.current=cmd;
+    cmd.onresult=function(e){
+      var q=e.results[0][0].transcript.trim();
+      if(q.length>2) askMarcus(q);
+      else{setWakeState("listening");startWakeListener();}
+    };
+    cmd.onerror=function(){setWakeState("listening");startWakeListener();};
+    cmd.onend=function(){if(wakeRef.current===null)return;}; // handled by onresult
+    cmd.start();
+  }
+
+  function startWakeListener(){
+    if(wakeRef.current){try{wakeRef.current.abort();}catch(e){}}
+    var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+    if(!SR) return;
+    var rec=new SR();
+    rec.continuous=true;
+    rec.interimResults=true;
+    rec.lang="en-US";
+    wakeRef.current=rec;
+    rec.onresult=function(e){
+      for(var i=e.resultIndex;i<e.results.length;i++){
+        var t=(e.results[i][0].transcript||"").toLowerCase().trim();
+        if(t.includes("hey marcus")||t.includes("hey mark")||t.includes("a marcus")){
+          rec.abort();
+          wakeRef.current=null;
+          setWakeState("awake");
+          playTone(880,0.2);
+          setTimeout(function(){playTone(1100,0.15);},200);
+          setTimeout(function(){startCommandListener();},600);
+          return;
+        }
+      }
+    };
+    rec.onend=function(){
+      // Restart if still in listening mode (continuous workaround)
+      if(voiceOn&&wakeRef.current!==null) setTimeout(startWakeListener,200);
+    };
+    rec.onerror=function(e){
+      if(e.error==="not-allowed"||e.error==="service-not-allowed"){
+        setVoiceOn(false); setWakeState("off");
+      } else {
+        setTimeout(startWakeListener,500);
+      }
+    };
+    rec.start();
+  }
+
+  useEffect(function(){
+    if(voiceOn){
+      setWakeState("listening");
+      startWakeListener();
+    } else {
+      setWakeState("off");
+      if(wakeRef.current){try{wakeRef.current.abort();}catch(e){} wakeRef.current=null;}
+      if(cmdRef.current){try{cmdRef.current.abort();}catch(e){} cmdRef.current=null;}
+      window.speechSynthesis.cancel();
+    }
+    return function(){if(wakeRef.current){try{wakeRef.current.abort();}catch(e){}}};
+  },[voiceOn]);
+
+  // ── END HEY MARCUS ──────────────────────────────────────
+
   const [now,setNow]       = useState(new Date());
   const [conf,setConf]     = useState([]);
   const [bdg,setBdg]       = useState({portfolio:true,parlays:true});
@@ -467,7 +602,7 @@ export default function App() {
           </div>
         </div>
         <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
-          <button className="btn bsm" onClick={function(){setVoice(function(v){return !v;});}} style={{color:voice?"#1a7acc":CA,borderColor:voice?"#0a3050":"#2a1e08"}}>{voice?"🎙 ON":"🎙 OFF"}</button>
+          <button className="btn bsm" onClick={function(){setVoiceOn(function(v){return !v;});}} style={{color:wakeState==="off"?CA:wakeState==="listening"?"#10b981":wakeState==="awake"?"#f59e0b":wakeState==="processing"?"#6366f1":"#ef4444",borderColor:wakeState==="off"?"rgba(99,102,241,0.3)":wakeState==="listening"?"rgba(16,185,129,0.5)":"rgba(99,102,241,0.5)"}}>{wakeState==="off"?"🎙 OFF":wakeState==="listening"?"🎙 READY":wakeState==="awake"?"🔴 SPEAK":wakeState==="processing"?"⚙ THINKING":"🔊 MARCUS"}</button>
           <button className="btn bsm" onClick={fireConfetti}>🎉</button>
           <div style={{textAlign:"right"}}>
             <div style={{fontFamily:"Orbitron",fontWeight:900,color:alertOn?"#ff4422":CA,fontSize:"clamp(16px,2.2vw,26px)",letterSpacing:"3px",lineHeight:1}}>{HH}<span className="bl">:</span>{MM}<span style={{fontSize:"0.55em",opacity:.45}}>:{SS}</span></div>
@@ -496,7 +631,7 @@ export default function App() {
         {tab==="parlays"   && <TabParlays/>}
         {tab==="alerts"    && <TabAlerts filings={edgar} loading={edgarL} enriched={enriched} onScan={async function(){setEdgarL(true);var f=await fetchEdgarFilings();setEdgar(f);setEdgarL(false);}}/>}
         {tab==="mission"   && <TabMission tasks={tasks} newTask={newTask} setNewTask={setNewTask} onAdd={addTask} onToggle={togTask} onDel={delTask} wl={wl} newWl={newWl} setNewWl={setNewWl} onAddWl={addWl} onDelWl={delWl} journal={journal} setJournal={setJournal} enriched={enriched}/>}
-            {tab==="jarvis"   && <TabJarvis/>}
+            {tab==="jarvis"   && <TabJarvis wakeState={wakeState} voiceTranscript={voiceTranscript} marcusReply={marcusReply}/>}
       </div>
 
       {/* VOICE OVERLAY */}
@@ -2231,7 +2366,7 @@ function Spinner({label}) {
   );
 }
 
-function TabJarvis(){
+function TabJarvis({wakeState,voiceTranscript,marcusReply}){
   var [livePrices,setLivePrices]=useState({});
   useEffect(function(){
     fetch("/api/prices?symbols=AAL,SMCI,MNTS,ANET,TSM,MU,NVDA,VTI,CRWV,DVN,GLD,BBAI,SOUN")
@@ -2379,7 +2514,18 @@ function TabJarvis(){
 
   return(
     <div style={{padding:"12px",display:"flex",flexDirection:"column",gap:"12px"}}>
-      <Panel label="🌅 MORNING DIGEST" right={
+            <Panel label="🎙 HEY MARCUS">
+        <div style={{display:"flex",alignItems:"center",gap:"12px",flexWrap:"wrap"}}>
+          <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
+            <div style={{width:"10px",height:"10px",borderRadius:"50%",background:wakeState==="off"?"#9ca3af":wakeState==="listening"?"#10b981":wakeState==="awake"?"#f59e0b":"#6366f1"}}></div>
+            <span style={{fontFamily:"Orbitron",fontSize:"11px",color:wakeState==="off"?"#9ca3af":wakeState==="listening"?"#10b981":wakeState==="awake"?"#f59e0b":"#6366f1"}}>{wakeState==="off"?"OFFLINE — tap 🎙 in header to activate":wakeState==="listening"?"LISTENING... say HEY MARCUS":wakeState==="awake"?"🔴 SPEAK NOW — ask anything":wakeState==="processing"?"⚙ THINKING...":"🔊 SPEAKING"}</span>
+          </div>
+        </div>
+        {voiceTranscript&&<div style={{marginTop:"10px",padding:"8px 12px",background:"rgba(99,102,241,0.08)",borderRadius:"8px",fontSize:"13px",color:"#4b5563"}}><b style={{fontFamily:"Orbitron",fontSize:"10px",color:"#6366f1"}}>YOU SAID: </b>{voiceTranscript}</div>}
+        {marcusReply&&<div style={{marginTop:"8px",padding:"10px 12px",background:"rgba(16,185,129,0.08)",borderRadius:"8px",fontSize:"14px",color:"#1a1a2e",lineHeight:"1.7"}}><b style={{fontFamily:"Orbitron",fontSize:"10px",color:"#10b981"}}>MARCUS: </b>{marcusReply}</div>}
+      </Panel>
+
+<Panel label="🌅 MORNING DIGEST" right={
         <div style={{display:"flex",gap:"8px"}}>
           {digest&&<button className="btn bsm" onClick={speakDigest} style={{color:speaking?CR:CA}}>{speaking?"⏹ STOP":"🔊 SPEAK"}</button>}
           <button className="btn bsm" onClick={generateDigest} disabled={digestLoading}>{digestLoading?"GENERATING...":"▶ GENERATE"}</button>
