@@ -19,7 +19,9 @@
         "fuse.js": "^7.0.0",
         "regression": "^2.0.1",
         "currency.js": "^2.0.4",
-        "rss-parser": "^3.13.0"
+        "rss-parser": "^3.13.0",
+        "framer-motion": "11.18.2",
+        "recharts": "2.15.3"
     },
     "devDependencies": {
         "@vitejs/plugin-react": "^4.2.1",
