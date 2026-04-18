@@ -2638,9 +2638,11 @@ function AnimatedNumber({value,prefix,suffix,decimals,color}){
 
 function PortfolioChart({positions}){
   if(!positions||!positions.length) return null;
+  var hasLive=positions.some(function(p){return p.gainP!=null;});
+  if(!hasLive) return <div style={{color:CD,fontSize:"12px",padding:"8px 0",fontFamily:"Orbitron"}}>↻ HIT REFRESH TO LOAD HEAT MAP</div>;
   var data=positions.map(function(p){
-    var pct=p.price&&p.avg?((p.price-p.avg)/p.avg*100):0;
-    return {name:p.ticker,gain:parseFloat(pct.toFixed(2)),value:p.price&&p.shares?(p.price*p.shares):0};
+    var pct=p.gainP!=null?p.gainP:(p.price&&p.avg?((p.price-p.avg)/p.avg*100):0);
+    return {name:p.t||p.ticker||"?", gain:Math.abs(pct)||0.1, raw:pct};
   });
   return(
     <div style={{width:"100%",height:"120px"}}>
@@ -2650,12 +2652,12 @@ function PortfolioChart({positions}){
           <YAxis hide={true}/>
           <Tooltip
             contentStyle={{background:"rgba(255,255,255,0.95)",border:"1px solid rgba(99,102,241,0.2)",borderRadius:"8px",fontSize:"11px",fontFamily:"Orbitron"}}
-            formatter={function(v){return [v.toFixed(2)+"%","P&L"];}}
+             formatter={function(v,n,props){return [(props.payload.raw>=0?"+":"")+props.payload.raw.toFixed(2)+"%","P&L"];}}
             labelStyle={{color:CB}}
           />
           <Bar dataKey="gain" radius={[4,4,0,0]}>
             {data.map(function(entry,i){
-              return <Cell key={i} fill={entry.gain>=0?CG:CR} fillOpacity={0.8}/>;
+              return <Cell key={i} fill={entry.raw>=0?CG:CR} fillOpacity={0.8}/>;
             })}
           </Bar>
         </BarChart>
