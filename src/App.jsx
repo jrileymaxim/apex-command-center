@@ -496,7 +496,7 @@ export default function App() {
         {tab==="parlays"   && <TabParlays/>}
         {tab==="alerts"    && <TabAlerts filings={edgar} loading={edgarL} enriched={enriched} onScan={async function(){setEdgarL(true);var f=await fetchEdgarFilings();setEdgar(f);setEdgarL(false);}}/>}
         {tab==="mission"   && <TabMission tasks={tasks} newTask={newTask} setNewTask={setNewTask} onAdd={addTask} onToggle={togTask} onDel={delTask} wl={wl} newWl={newWl} setNewWl={setNewWl} onAddWl={addWl} onDelWl={delWl} journal={journal} setJournal={setJournal} enriched={enriched}/>}
-            {tab==="jarvis"   && <TabJarvis prices={prices}/>}
+            {tab==="jarvis"   && <TabJarvis/>}
       </div>
 
       {/* VOICE OVERLAY */}
@@ -2231,7 +2231,19 @@ function Spinner({label}) {
   );
 }
 
-function TabJarvis({prices}){
+function TabJarvis(){
+  var [livePrices,setLivePrices]=React.useState({});
+  React.useEffect(function(){
+    fetch("/api/prices?symbols=AAL,SMCI,MNTS,ANET,TSM,MU,NVDA,VTI,CRWV,DVN,GLD,BBAI,SOUN")
+    .then(function(r){return r.json();})
+    .then(function(d){
+      var lp={};
+      ((d.quoteResponse&&d.quoteResponse.result)||[]).forEach(function(q){
+        lp[q.symbol]={price:q.regularMarketPrice,chg:q.regularMarketChangePercent};
+      });
+      setLivePrices(lp);
+    }).catch(function(){});
+  },[]);
   var [digest,setDigest]=React.useState("");
   var [digestLoading,setDigestLoading]=React.useState(false);
   var [speaking,setSpeaking]=React.useState(false);
@@ -2257,7 +2269,7 @@ function TabJarvis({prices}){
 
   function buildDigestPrompt(){
     var posLines=POSITIONS.map(function(p){
-      var live=prices&&prices[p.t];
+      var live=livePrices[p.t];
       var price=live?live.price:p.avg;
       var gain=live?((price-p.avg)/p.avg*100).toFixed(1):0;
       return p.t+" "+p.sh+"sh avg$"+p.avg+" now$"+price+" ("+gain+"%)"; 
@@ -2317,7 +2329,7 @@ function TabJarvis({prices}){
     try{
       var sd=await fetch("/api/prices?symbols=SOUN").then(function(r){return r.json();});
       var sq=(sd.quoteResponse&&sd.quoteResponse.result&&sd.quoteResponse.result[0])||{};
-      var sounP=sq.regularMarketPrice||0;
+      var sounP=sq.regularMarketPrice||livePrices["SOUN"]&&livePrices["SOUN"].price||0;
       var sounC=(sq.regularMarketChangePercent||0).toFixed(1);
       addLog("SOUN $"+sounP.toFixed(2)+" ("+sounC+"%) | BE1 $11.24 | BE2 $12.38",sounP>=10?"alert":"ok");
     }catch(e){addLog("SOUN fetch failed","error");}
