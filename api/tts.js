@@ -1,6 +1,6 @@
 export const config = { runtime: 'edge' };
 
-const VOICE_ID = '2ajXGJNYBR0iNHpS4VZb'; // Rob - Tough & Calloused (professional)
+const VOICE_ID = 'pNInz6obpgDQGcFmaJgB'; // Adam - Dominant, Firm (premade, works on free plan)
 
 export default async function handler(req) {
   if (req.method === 'OPTIONS') return new Response(null, {headers:{'Access-Control-Allow-Origin':'*','Access-Control-Allow-Methods':'POST','Access-Control-Allow-Headers':'Content-Type'}});
@@ -14,8 +14,8 @@ export default async function handler(req) {
       headers: {'xi-api-key': key, 'Content-Type': 'application/json', 'Accept': 'audio/mpeg'},
       body: JSON.stringify({
         text: text,
-        model_id: 'eleven_multilingual_v2',
-        voice_settings: {stability: 0.45, similarity_boost: 0.80, style: 0.25, use_speaker_boost: true}
+        model_id: 'eleven_monolingual_v1',
+        voice_settings: {stability: 0.5, similarity_boost: 0.75, style: 0.2, use_speaker_boost: true}
       })
     });
     if (!resp.ok) {
