@@ -463,7 +463,7 @@ export default function App() {
             <circle cx="16" cy="16" r="2.5" fill={alertOn?"#ff4422":CA} style={{filter:"drop-shadow(0 0 3px rgba(240,163,10,.8))"}}/>
           </svg>
           <div>
-            <div style={{fontFamily:"Orbitron",fontSize:"11px",fontWeight:900,color:alertOn?"#ff4422":CA,letterSpacing:"5px"}}>APEX COMMAND CENTER</div>
+            <div style={{fontFamily:"Orbitron",fontSize:"17px",fontWeight:900,color:alertOn?"#ff4422":CA,letterSpacing:"5px"}}>APEX COMMAND CENTER</div>
           </div>
         </div>
         <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
@@ -471,7 +471,7 @@ export default function App() {
           <button className="btn bsm" onClick={fireConfetti}>🎉</button>
           <div style={{textAlign:"right"}}>
             <div style={{fontFamily:"Orbitron",fontWeight:900,color:alertOn?"#ff4422":CA,fontSize:"clamp(16px,2.2vw,26px)",letterSpacing:"3px",lineHeight:1}}>{HH}<span className="bl">:</span>{MM}<span style={{fontSize:"0.55em",opacity:.45}}>:{SS}</span></div>
-            <div style={{fontSize:"9px",letterSpacing:"2px",color:CD,marginTop:"3px"}}>{DS}</div>
+            <div style={{fontSize:"15px",letterSpacing:"2px",color:CD,marginTop:"3px"}}>{DS}</div>
           </div>
         </div>
       </div>
@@ -501,10 +501,10 @@ export default function App() {
       {/* VOICE OVERLAY */}
       {voice&&<VoiceMode alf={alf} enriched={enriched} fg={fg} onClose={function(){setVoice(false);}}/>}
       <div style={{position:"relative",zIndex:10,flexShrink:0,display:"flex",justifyContent:"space-between",alignItems:"center",padding:"4px 16px",background:"#020208",borderTop:"1px solid #14100a"}}>
-        <div style={{fontSize:"9px",letterSpacing:"1.5px",color:CD}}>APEX V2.0 ▪ {POSITIONS.length} POSITIONS ▪ 2 LEAPS ▪ 4 PARLAYS ▪ PHASE 1</div>
+        <div style={{fontSize:"15px",letterSpacing:"1.5px",color:CD}}>APEX V2.0 ▪ {POSITIONS.length} POSITIONS ▪ 2 LEAPS ▪ 4 PARLAYS ▪ PHASE 1</div>
         <div style={{display:"flex",gap:"14px"}}>
           {[["MARCUS",CA],["NEXUS",CG],["APEX",CG]].map(function(x){return (
-            <div key={x[0]} style={{display:"flex",alignItems:"center",gap:"4px",fontSize:"9px",color:CD}}>
+            <div key={x[0]} style={{display:"flex",alignItems:"center",gap:"4px",fontSize:"15px",color:CD}}>
               <div className="pu" style={{width:"4px",height:"4px",borderRadius:"50%",background:x[1],boxShadow:"0 0 4px "+x[1]}}/>
               {x[0]}
             </div>
@@ -534,21 +534,21 @@ function TabBriefing({alf,onAlf,wx,city,setCity,onWx,fg,enriched,totP,eod,onEod}
       <Panel label={"◈ MARCUS — MORNING BRIEFING"} right={<button className="btn bsm" onClick={onAlf}>↻</button>}>
         {alf.s==="done"&&(
           <div className="fi">
-            <p style={{fontSize:"12px",lineHeight:1.9,color:CB,fontStyle:"italic",marginBottom:"12px"}}>"{alf.text}"</p>
-            <div style={{fontSize:"9px",letterSpacing:"2px",color:CD}}>— MARCUS ▪ APEX</div>
+            <p style={{fontSize:"15px",lineHeight:1.9,color:CB,fontStyle:"italic",marginBottom:"12px"}}>"{alf.text}"</p>
+            <div style={{fontSize:"15px",letterSpacing:"2px",color:CD}}>— MARCUS ▪ APEX</div>
           </div>
         )}
       </Panel>
       <Panel label={"EOD BRIEFING"} right={<button className="btn bsm" onClick={onEod}>GENERATE</button>}>
-        {!eod&&<div style={{fontSize:"10px",color:CD}}>Refresh Portfolio first, then hit GENERATE.</div>}
+        {!eod&&<div style={{fontSize:"19px",color:CD}}>Refresh Portfolio first, then hit GENERATE.</div>}
         {eod&&(
           <div className="fi">
             {eod.split("\n").map(function(line,li){
-              if(li===0) return <div key={li} style={{fontFamily:"Orbitron",fontSize:"9px",color:CA,marginBottom:"8px"}}>{line}</div>;
+              if(li===0) return <div key={li} style={{fontFamily:"Orbitron",fontSize:"15px",color:CA,marginBottom:"8px"}}>{line}</div>;
               if(line==="") return <div key={li} style={{height:"4px"}}></div>;
-              return <div key={li} style={{fontSize:"11px",color:CB,lineHeight:1.8}}>{line}</div>;
+              return <div key={li} style={{fontSize:"17px",color:CB,lineHeight:1.8}}>{line}</div>;
             })}
-            <div style={{marginTop:"8px",fontSize:"9px",color:CD}}>— MARCUS</div>
+            <div style={{marginTop:"8px",fontSize:"15px",color:CD}}>— MARCUS</div>
           </div>
         )}
       </Panel>
@@ -557,10 +557,10 @@ function TabBriefing({alf,onAlf,wx,city,setCity,onWx,fg,enriched,totP,eod,onEod}
         {fg.s==="done"&&(
           <div className="fi" style={{display:"flex",flexDirection:"column",alignItems:"center",gap:"8px"}}>
             <Gauge score={fg.score} label={fg.label}/>
-            <div style={{fontSize:"9px",letterSpacing:"2px",color:CD,textAlign:"center"}}>AVG DAY CHANGE: {fg.avg>0?"+":""}{fg.avg}%</div>
+            <div style={{fontSize:"15px",letterSpacing:"2px",color:CD,textAlign:"center"}}>AVG DAY CHANGE: {fg.avg>0?"+":""}{fg.avg}%</div>
           </div>
         )}
-        {fg.s!=="done"&&<div style={{fontSize:"10px",color:CD}}>Loads with portfolio data...</div>}
+        {fg.s!=="done"&&<div style={{fontSize:"19px",color:CD}}>Loads with portfolio data...</div>}
       </Panel>
 
       <Panel label={"◈ ATMOSPHERIC CONDITIONS"}>
@@ -568,24 +568,24 @@ function TabBriefing({alf,onAlf,wx,city,setCity,onWx,fg,enriched,totP,eod,onEod}
           <input className="inp" value={city} onChange={function(e){setCity(e.target.value);}} onKeyDown={function(e){if(e.key==="Enter")onWx();}} placeholder="TARGET CITY..."/>
           <button className="btn" onClick={onWx} style={{padding:"6px 10px"}}>SCAN</button>
         </div>
-        {wx.s==="idle"&&<div style={{fontSize:"10px",color:CD}}>▸ Enter city to scan conditions</div>}
+        {wx.s==="idle"&&<div style={{fontSize:"19px",color:CD}}>▸ Enter city to scan conditions</div>}
         {wx.s==="loading"&&<Spinner label="SCANNING ATMOSPHERE"/>}
         {wx.s==="err"&&<ErrMsg text={wx.err||"SENSORS OFFLINE"}/>}
         {wx.s==="done"&&wx.data&&(
           <div className="fi">
-            <div style={{fontSize:"9px",color:CD,marginBottom:"8px",letterSpacing:"1px"}}>LOC: {wx.data.city&&wx.data.city.toUpperCase()}</div>
+            <div style={{fontSize:"15px",color:CD,marginBottom:"8px",letterSpacing:"1px"}}>LOC: {wx.data.city&&wx.data.city.toUpperCase()}</div>
             <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"10px"}}>
               <span style={{fontSize:"34px"}}>{wIcon(wx.data.cond)}</span>
               <div>
-                <div style={{fontFamily:"Orbitron",fontSize:"22px",fontWeight:900,color:CA}}>{wx.data.temp}</div>
-                <div style={{fontSize:"11px",color:CB,marginTop:"2px"}}>{wx.data.cond}</div>
+                <div style={{fontFamily:"Orbitron",fontSize:"26px",fontWeight:900,color:CA}}>{wx.data.temp}</div>
+                <div style={{fontSize:"17px",color:CB,marginTop:"2px"}}>{wx.data.cond}</div>
               </div>
             </div>
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"4px"}}>
               {[["FEELS",wx.data.feels],["HUMID",wx.data.humidity],["WIND",wx.data.wind],["H/L",wx.data.high+"/"+wx.data.low]].map(function(r){return (
                 <div key={r[0]} style={{background:BG,padding:"5px 8px",border:"1px solid #141020"}}>
-                  <div style={{fontSize:"9px",color:CD}}>{r[0]}</div>
-                  <div style={{fontSize:"12px",color:CB,marginTop:"1px"}}>{r[1]}</div>
+                  <div style={{fontSize:"15px",color:CD}}>{r[0]}</div>
+                  <div style={{fontSize:"15px",color:CB,marginTop:"1px"}}>{r[1]}</div>
                 </div>
               );})}
             </div>
@@ -594,15 +594,15 @@ function TabBriefing({alf,onAlf,wx,city,setCity,onWx,fg,enriched,totP,eod,onEod}
       </Panel>
 
       <Panel label={isMonday?"◈ MARCUS — WEEKLY REPORT":"◈ MARCUS — PORTFOLIO SNAPSHOT"}>
-        <div style={{fontSize:"11px",color:CB,lineHeight:1.8,fontStyle:"italic",marginBottom:"8px"}}>"{report}"</div>
-        <div style={{fontSize:"9px",color:CD,letterSpacing:"2px"}}>— MARCUS {isMonday?"▪ MONDAY REVIEW":""}</div>
+        <div style={{fontSize:"17px",color:CB,lineHeight:1.8,fontStyle:"italic",marginBottom:"8px"}}>"{report}"</div>
+        <div style={{fontSize:"15px",color:CD,letterSpacing:"2px"}}>— MARCUS {isMonday?"▪ MONDAY REVIEW":""}</div>
       </Panel>
 
       <Panel label={"◈ SYSTEM STATUS"}>
         {[["MARCUS","ONLINE",CG],["PORTFOLIO","LIVE",CG],["WEATHER","LIVE",CG],["INTEL","LIVE",CG],["SOUN OPS","LIVE",CG],["PARLAYS","LIVE",CG],["EARNINGS","LIVE",CG],["BENCHMARKS","LIVE",CG],["JOURNAL","LIVE",CG],["PWA","READY",CG]].map(function(r){return (
           <div key={r[0]} style={{display:"flex",justifyContent:"space-between",padding:"5px 0",borderBottom:"1px solid #0c0a14"}}>
-            <span style={{fontSize:"10px",letterSpacing:"1px"}}>{r[0]}</span>
-            <span style={{fontFamily:"Orbitron",fontSize:"9px",color:r[2],padding:"2px 6px",background:r[2]+"18",border:"1px solid "+r[2]+"33"}}>{r[1]}</span>
+            <span style={{fontSize:"19px",letterSpacing:"1px"}}>{r[0]}</span>
+            <span style={{fontFamily:"Orbitron",fontSize:"15px",color:r[2],padding:"2px 6px",background:r[2]+"18",border:"1px solid "+r[2]+"33"}}>{r[1]}</span>
           </div>
         );})}
       </Panel>
@@ -627,8 +627,8 @@ function TabPortfolio({enriched,totCost,totMkt,totGain,totP,leaps,status,live,on
       <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"8px"}}>
         {[["TOTAL COST","$"+totCost.toFixed(2),CC],["MKT VALUE","$"+totMkt.toFixed(2),CA],["TOTAL GAIN",(up?"+":"-")+"$"+Math.abs(totGain).toFixed(2),up?CG:CR],["RETURN",(up?"+":"")+totP.toFixed(2)+"%",up?CG:CR]].map(function(r){return (
           <div key={r[0]} style={{background:BP,border:"1px solid #141020",padding:"10px"}}>
-            <div style={{fontSize:"9px",letterSpacing:"2px",color:CD,marginBottom:"3px"}}>{r[0]}</div>
-            <div style={{fontFamily:"Orbitron",fontSize:"13px",fontWeight:700,color:r[2],textShadow:"0 0 8px "+r[2]+"66"}}>{r[1]}</div>
+            <div style={{fontSize:"15px",letterSpacing:"2px",color:CD,marginBottom:"3px"}}>{r[0]}</div>
+            <div style={{fontFamily:"Orbitron",fontSize:"19px",fontWeight:700,color:r[2],textShadow:"0 0 8px "+r[2]+"66"}}>{r[1]}</div>
           </div>
         );})}
       </div>
@@ -639,32 +639,32 @@ function TabPortfolio({enriched,totCost,totMkt,totGain,totP,leaps,status,live,on
           <div key={p.ticker} className="pr si" style={{animationDelay:i*30+"ms"}}>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
               <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
-                <span style={{fontFamily:"Orbitron",fontSize:"13px",fontWeight:800,color:CA,minWidth:"44px",letterSpacing:"2px",textShadow:"0 0 6px rgba(240,163,10,.4)"}}>{p.ticker}</span>
-                <span style={{fontSize:"10px",color:CD}}>{p.shares}sh</span>
+                <span style={{fontFamily:"Orbitron",fontSize:"19px",fontWeight:800,color:CA,minWidth:"44px",letterSpacing:"2px",textShadow:"0 0 6px rgba(240,163,10,.4)"}}>{p.ticker}</span>
+                <span style={{fontSize:"19px",color:CD}}>{p.shares}sh</span>
               </div>
               <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
                 <div style={{textAlign:"right"}}>
-                  <div style={{fontSize:"9px",color:CD}}>COST</div>
-                  <div style={{fontSize:"11px",color:CC}}>{usd(p.avgCost)}</div>
+                  <div style={{fontSize:"15px",color:CD}}>COST</div>
+                  <div style={{fontSize:"17px",color:CC}}>{usd(p.avgCost)}</div>
                 </div>
                 {p.cur&&(
                   <div style={{textAlign:"right"}}>
-                    <div style={{fontSize:"9px",color:CD}}>PRICE</div>
-                    <div style={{fontSize:"11px",color:CB}}>{usd(p.cur)}</div>
+                    <div style={{fontSize:"15px",color:CD}}>PRICE</div>
+                    <div style={{fontSize:"17px",color:CB}}>{usd(p.cur)}</div>
                   </div>
                 )}
                 {p.gain!==null&&(
                   <div style={{textAlign:"right",minWidth:"72px"}}>
-                    <div style={{fontSize:"9px",color:CD}}>P&L</div>
-                    <div style={{fontSize:"12px",fontWeight:700,color:p.gain>=0?CG:CR}}>
-                      {p.gain>=0?"+":"-"}{usd(p.gain)} <span style={{fontSize:"10px"}}>({p.gain>=0?"+":""}{p.gainP.toFixed(1)}%)</span>
+                    <div style={{fontSize:"15px",color:CD}}>P&L</div>
+                    <div style={{fontSize:"15px",fontWeight:700,color:p.gain>=0?CG:CR}}>
+                      {p.gain>=0?"+":"-"}{usd(p.gain)} <span style={{fontSize:"19px"}}>({p.gain>=0?"+":""}{p.gainP.toFixed(1)}%)</span>
                     </div>
                   </div>
                 )}
                 {p.chg!==null&&(
                   <div style={{textAlign:"right",minWidth:"38px"}}>
-                    <div style={{fontSize:"9px",color:CD}}>DAY</div>
-                    <div style={{fontSize:"9px",color:p.chg>=0?CG:CR}}>{p.chg>=0?"+":""}{p.chg}%</div>
+                    <div style={{fontSize:"15px",color:CD}}>DAY</div>
+                    <div style={{fontSize:"15px",color:p.chg>=0?CG:CR}}>{p.chg>=0?"+":""}{p.chg}%</div>
                   </div>
                 )}
               </div>
@@ -692,7 +692,7 @@ function TabPortfolio({enriched,totCost,totMkt,totGain,totP,leaps,status,live,on
           var tops=enriched.filter(function(px){return px.chgP!=null;}).slice().sort(function(a,bx){return (bx.chgP||0)-(a.chgP||0);}).slice(0,4);
           setTgtR("Need $"+need.toFixed(2)+" over "+d+" days: "+tops.map(function(px){return px.ticker+" "+(need*0.25/(parseFloat(px.price)||px.avgCost)).toFixed(2)+"sh";}).join(", "));
         }}>CALCULATE</button>
-        {tgtR&&<div style={{fontSize:"10px",color:CA,lineHeight:1.7}}>{tgtR}</div>}
+        {tgtR&&<div style={{fontSize:"19px",color:CA,lineHeight:1.7}}>{tgtR}</div>}
       </Panel>
 <Panel label={"◈ SOUN LEAPS — OPTIONS POSITIONS"}>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
@@ -702,42 +702,42 @@ function TabPortfolio({enriched,totCost,totMkt,totGain,totP,leaps,status,live,on
             return (
               <div key={i} style={{background:BD,border:"1px solid #1a1520",padding:"10px",position:"relative"}}>
                 
-                <div style={{fontFamily:"Orbitron",fontSize:"10px",color:CA,letterSpacing:"2px",marginBottom:"8px"}}>{l.label}</div>
+                <div style={{fontFamily:"Orbitron",fontSize:"19px",color:CA,letterSpacing:"2px",marginBottom:"8px"}}>{l.label}</div>
                 {[["CONTRACTS",l.contracts+"x"],["AVG COST","$"+l.avgCost],["MKT VALUE","$"+(l.contracts*100*l.avgCost).toFixed(0)],["BREAKEVEN","$"+l.breakeven],["SOUN NOW","$"+l.sounNow],["NEEDS +",needs+"%"]].map(function(r){return (
                   <div key={r[0]} style={{display:"flex",justifyContent:"space-between",marginBottom:"3px"}}>
-                    <span style={{fontSize:"9px",color:CD}}>{r[0]}</span>
-                    <span style={{fontSize:"11px",color:CB}}>{r[1]}</span>
+                    <span style={{fontSize:"15px",color:CD}}>{r[0]}</span>
+                    <span style={{fontSize:"17px",color:CB}}>{r[1]}</span>
                   </div>
                 );})}
                 <div style={{marginTop:"8px",height:"3px",background:"#0c0a18",borderRadius:"1px"}}>
                   <div style={{height:"100%",width:pct+"%",background:CY,borderRadius:"1px"}}/>
                 </div>
-                <div style={{fontSize:"9px",color:CD,marginTop:"3px",textAlign:"right"}}>{pct}% TO BREAKEVEN</div>
+                <div style={{fontSize:"15px",color:CD,marginTop:"3px",textAlign:"right"}}>{pct}% TO BREAKEVEN</div>
               </div>
             );
           })}
         </div>
-        <div style={{marginTop:"8px",fontSize:"9px",color:CD,letterSpacing:"1px"}}>▸ Full Greeks, theta clock & probability → SOUN OPS tab</div>
+        <div style={{marginTop:"8px",fontSize:"15px",color:CD,letterSpacing:"1px"}}>▸ Full Greeks, theta clock & probability → SOUN OPS tab</div>
       </Panel>
 
       <Panel label={"◈ EARNINGS CALENDAR — NEXT 60 DAYS"}>
-        {upcoming.length===0&&<div style={{fontSize:"10px",color:CD}}>No earnings in next 60 days.</div>}
+        {upcoming.length===0&&<div style={{fontSize:"19px",color:CD}}>No earnings in next 60 days.</div>}
         {upcoming.map(function(e){var daysAway=Math.ceil((new Date(e.date)-now2)/(1000*60*60*24));var color=daysAway<=7?CR:daysAway<=21?CY:CG;return(
           <div key={e.ticker} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"7px 0",borderBottom:"1px solid #0c0a14"}}>
             <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
-              <span style={{fontFamily:"Orbitron",fontSize:"11px",fontWeight:800,color:CA,minWidth:"44px"}}>{e.ticker}</span>
-              <div><div style={{fontSize:"10px",color:CB}}>{e.est}</div><div style={{fontSize:"9px",color:CD}}>{e.note}</div></div>
+              <span style={{fontFamily:"Orbitron",fontSize:"17px",fontWeight:800,color:CA,minWidth:"44px"}}>{e.ticker}</span>
+              <div><div style={{fontSize:"19px",color:CB}}>{e.est}</div><div style={{fontSize:"15px",color:CD}}>{e.note}</div></div>
             </div>
             <div style={{textAlign:"right"}}>
-              <div style={{fontFamily:"Orbitron",fontSize:"10px",color:color}}>{daysAway<=0?"REPORTED":daysAway+"d"}</div>
-              <div style={{fontSize:"9px",color:CD}}>{e.date}</div>
+              <div style={{fontFamily:"Orbitron",fontSize:"19px",color:color}}>{daysAway<=0?"REPORTED":daysAway+"d"}</div>
+              <div style={{fontSize:"15px",color:CD}}>{e.date}</div>
             </div>
           </div>
         );})}
         {EARNINGS.filter(function(e){return !e.date;}).map(function(e){return(
           <div key={e.ticker} style={{display:"flex",justifyContent:"space-between",padding:"5px 0",borderBottom:"1px solid #0c0a14"}}>
-            <span style={{fontFamily:"Orbitron",fontSize:"11px",color:CD}}>{e.ticker}</span>
-            <span style={{fontSize:"9px",color:CD}}>{e.note}</span>
+            <span style={{fontFamily:"Orbitron",fontSize:"17px",color:CD}}>{e.ticker}</span>
+            <span style={{fontSize:"15px",color:CD}}>{e.note}</span>
           </div>
         );})}
       </Panel>
@@ -748,9 +748,9 @@ function TabPortfolio({enriched,totCost,totMkt,totGain,totP,leaps,status,live,on
             var val=r[1];var col=val===null?CD:val>=0?CG:CR;var str=val===null?"--":(val>=0?"+":"")+val.toFixed(2)+"%";
             return(
               <div key={r[0]} style={{background:r[2]?BP:BD,border:"1px solid "+(r[2]?CA+"33":"#1a1520"),padding:"10px",textAlign:"center"}}>
-                <div style={{fontSize:"8px",color:CD,marginBottom:"4px"}}>{r[0]}</div>
-                <div style={{fontFamily:"Orbitron",fontSize:"13px",fontWeight:700,color:col}}>{str}</div>
-                {r[2]&&spyRet!==null&&<div style={{fontSize:"8px",color:totP>=spyRet?CG:CR,marginTop:"3px"}}>{totP>=spyRet?"BEATING SPY":"LAGGING SPY"}</div>}
+                <div style={{fontSize:"17px",color:CD,marginBottom:"4px"}}>{r[0]}</div>
+                <div style={{fontFamily:"Orbitron",fontSize:"19px",fontWeight:700,color:col}}>{str}</div>
+                {r[2]&&spyRet!==null&&<div style={{fontSize:"17px",color:totP>=spyRet?CG:CR,marginTop:"3px"}}>{totP>=spyRet?"BEATING SPY":"LAGGING SPY"}</div>}
               </div>
             );
           })}
@@ -821,7 +821,7 @@ function explainFiling(filing, enriched) {
   var gainP=pos?(pos.gainP||0).toFixed(1):null;
   var exps={
     "8-K":{what:"Something material just happened at "+ticker+" — the SEC required immediate disclosure. Could be surprise earnings, a merger, leadership change, or serious bad news.",why:"8-Ks must be filed within 4 business days of a major event. The market reacts fast.",impact:"UNKNOWN",reason:"Read the actual filing — 8-Ks range from highly bullish (buyout) to catastrophic (bankruptcy). Click VIEW to see what it is."},
-    "4":{what:function(txDir){var dir=txDir==="BUY"?"BOUGHT":txDir==="SELL"?"SOLD":txDir==="MIXED"?"both bought and sold":"traded";return "An insider at "+ticker+" — an executive, director, or major shareholder — just "+dir+" company stock and had to report it by law.";}(filing.txDir),why:"Insiders must report within 2 business days. "+((filing.txDir==="BUY")?"When executives buy their own stock with personal money, it's one of the strongest bullish signals possible — they only buy when they're confident.":filing.txDir==="SELL"?"Insider selling is less meaningful on its own — executives often sell for taxes, diversification, or personal reasons. Check the size relative to their holdings.":"Check the filing to see transaction direction."),impact:filing.txDir==="BUY"?"BULLISH":filing.txDir==="SELL"?"BEARISH":"WATCH",reason:filing.txDir==="BUY"?"Insider PURCHASE detected. Executives buying their own stock with personal money is historically a strong bullish indicator. They rarely buy unless they expect the price to go up.":filing.txDir==="SELL"?"Insider SALE detected. Not necessarily bad — could be taxes or diversification. Check the size vs their total holdings before reacting.":"Could not auto-detect direction. Click VIEW on SEC.GOV to check if it was a purchase (code P) or sale (code S)."},
+    "4":{what:(filing.txDir==="BUY"?"Insider PURCHASED shares of "+ticker+". An executive or major shareholder bought company stock with their own money and was required to report it within 2 business days.":filing.txDir==="SELL"?"Insider SOLD shares of "+ticker+". An executive or major shareholder reduced their position and was required to report it within 2 business days.":filing.txDir==="MIXED"?"Insider made mixed transactions in "+ticker+" — both buying and selling shares, required by law to be disclosed.":"An insider at "+ticker+" filed a Form 4, disclosing a stock transaction that must be reported within 2 business days. Click VIEW to see the exact buy/sell direction and amount."),why:"Insiders must report within 2 business days. "+((filing.txDir==="BUY")?"When executives buy their own stock with personal money, it's one of the strongest bullish signals possible — they only buy when they're confident.":filing.txDir==="SELL"?"Insider selling is less meaningful on its own — executives often sell for taxes, diversification, or personal reasons. Check the size relative to their holdings.":"Check the filing to see transaction direction."),impact:filing.txDir==="BUY"?"BULLISH":filing.txDir==="SELL"?"BEARISH":"WATCH",reason:filing.txDir==="BUY"?"Insider PURCHASE detected. Executives buying their own stock with personal money is historically a strong bullish indicator. They rarely buy unless they expect the price to go up.":filing.txDir==="SELL"?"Insider SALE detected. Not necessarily bad — could be taxes or diversification. Check the size vs their total holdings before reacting.":"Could not auto-detect direction. Click VIEW on SEC.GOV to check if it was a purchase (code P) or sale (code S)."},
     "SC 13D":{what:"A large activist investor revealed they own 5%+ of "+ticker+" and plan to push for changes — new CEO, sale of company, spinoff, or major restructuring.",why:"Activists don't buy quietly. They want to shake things up to force the stock higher. Many companies get acquired after a 13D.",impact:"BULLISH",reason:"Activist investors taking 5%+ stakes historically cause 10-30% price jumps. They pressure management to create shareholder value."},
     "SC 13G":{what:"A large passive fund disclosed they now own 5%+ of "+ticker+". Unlike activists, they don't plan to interfere with management.",why:"Big institutions owning large stakes is generally stabilizing but not a trading signal.",impact:"NEUTRAL",reason:"Passive institutional ownership. Positive for long-term stability but no near-term catalyst."},
     "10-Q":{what:ticker+" filed their quarterly earnings report with full financial details — revenue, profit, debt levels, and forward guidance.",why:"10-Qs show how the business is actually doing vs Wall Street expectations. Details the earnings call skipped.",impact:"NEUTRAL",reason:"Routine quarterly filing. Your current position: "+(gainP?gainP+"% total return.":"check portfolio.")},
@@ -861,29 +861,29 @@ function FilingCard({filing,enriched}){
       <div style={{padding:"10px",cursor:"pointer"}} onClick={function(){setExpanded(!expanded);}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"6px"}}>
           <div style={{display:"flex",gap:"8px",alignItems:"center"}}>
-            <span style={{fontFamily:"Orbitron",fontSize:"13px",fontWeight:900,color:CA}}>{filing.ticker}</span>
-            <span style={{fontFamily:"Orbitron",fontSize:"8px",padding:"2px 7px",background:ic+"22",color:ic,border:"1px solid "+ic+"55"}}>{exp.impact}</span>
-            {filing.urgent&&<span style={{fontFamily:"Orbitron",fontSize:"8px",color:CR}}>URGENT</span>}
-              {(filing.count||1)>1&&<span style={{fontFamily:"Orbitron",fontSize:"8px",padding:"1px 6px",background:"#1a1a2e22",color:CC,border:"1px solid #1a1a2e33"}}>{filing.count} FILINGS</span>}
-              {filing.form==="4"&&filing.txDir&&<span style={{fontFamily:"Orbitron",fontSize:"9px",fontWeight:900,padding:"2px 8px",background:(filing.txDir==="BUY"?CG:filing.txDir==="SELL"?CR:CY)+"33",color:filing.txDir==="BUY"?CG:filing.txDir==="SELL"?CR:CY,border:"1px solid "+(filing.txDir==="BUY"?CG:filing.txDir==="SELL"?CR:CY)+"66"}}>INSIDER {filing.txDir}</span>}
+            <span style={{fontFamily:"Orbitron",fontSize:"19px",fontWeight:900,color:CA}}>{filing.ticker}</span>
+            <span style={{fontFamily:"Orbitron",fontSize:"17px",padding:"2px 7px",background:ic+"22",color:ic,border:"1px solid "+ic+"55"}}>{exp.impact}</span>
+            {filing.urgent&&<span style={{fontFamily:"Orbitron",fontSize:"17px",color:CR}}>URGENT</span>}
+              {(filing.count||1)>1&&<span style={{fontFamily:"Orbitron",fontSize:"17px",padding:"1px 6px",background:"#1a1a2e22",color:CC,border:"1px solid #1a1a2e33"}}>{filing.count} FILINGS</span>}
+              {filing.form==="4"&&filing.txDir&&<span style={{fontFamily:"Orbitron",fontSize:"15px",fontWeight:900,padding:"2px 8px",background:(filing.txDir==="BUY"?CG:filing.txDir==="SELL"?CR:CY)+"33",color:filing.txDir==="BUY"?CG:filing.txDir==="SELL"?CR:CY,border:"1px solid "+(filing.txDir==="BUY"?CG:filing.txDir==="SELL"?CR:CY)+"66"}}>INSIDER {filing.txDir}</span>}
           </div>
           <div style={{display:"flex",gap:"8px",alignItems:"center"}}>
-            <span style={{fontSize:"9px",color:CD}}>{filing.date}</span>
-            <span style={{fontFamily:"Orbitron",fontSize:"9px",color:CC}}>{filing.form}</span>
+            <span style={{fontSize:"15px",color:CD}}>{filing.date}</span>
+            <span style={{fontFamily:"Orbitron",fontSize:"15px",color:CC}}>{filing.form}</span>
             <span style={{color:CD}}>{expanded?"▲":"▼"}</span>
           </div>
         </div>
-        <div style={{fontSize:"10px",color:CB,lineHeight:1.6}}>{exp.what}</div>
+        <div style={{fontSize:"19px",color:CB,lineHeight:1.6}}>{exp.what}</div>
       </div>
       {expanded&&(
         <div style={{padding:"0 10px 10px 10px",borderTop:"1px solid #1a1520"}}>
           <div style={{marginTop:"10px",marginBottom:"8px"}}>
-            <div style={{fontSize:"8px",color:CD,letterSpacing:"2px",marginBottom:"4px"}}>WHY IT MATTERS</div>
-            <div style={{fontSize:"10px",color:CC,lineHeight:1.7}}>{exp.why}</div>
+            <div style={{fontSize:"17px",color:CD,letterSpacing:"2px",marginBottom:"4px"}}>WHY IT MATTERS</div>
+            <div style={{fontSize:"19px",color:CC,lineHeight:1.7}}>{exp.why}</div>
           </div>
           <div style={{padding:"8px",background:ic+"11",border:"1px solid "+ic+"33",marginBottom:"8px"}}>
-            <div style={{fontSize:"8px",color:ic,letterSpacing:"2px",marginBottom:"3px"}}>IMPACT: {exp.impact}</div>
-            <div style={{fontSize:"10px",color:CB,lineHeight:1.6}}>{exp.reason}</div>
+            <div style={{fontSize:"17px",color:ic,letterSpacing:"2px",marginBottom:"3px"}}>IMPACT: {exp.impact}</div>
+            <div style={{fontSize:"19px",color:CB,lineHeight:1.6}}>{exp.reason}</div>
           </div>
           {!aiAnalysis&&(
             <button className="btn" style={{width:"100%",marginBottom:"8px",color:CA,borderColor:CA+"66"}} onClick={function(e){e.stopPropagation();getAI();}}>
@@ -892,11 +892,11 @@ function FilingCard({filing,enriched}){
           )}
           {aiAnalysis&&(
             <div style={{padding:"10px",background:"rgba(240,163,10,.06)",border:"1px solid "+CA+"33",marginBottom:"8px"}}>
-              <div style={{fontSize:"8px",color:CA,letterSpacing:"2px",marginBottom:"6px"}}>MARCUS SAYS</div>
-              <div style={{fontSize:"10px",color:CC,lineHeight:1.8}}>{aiAnalysis}</div>
+              <div style={{fontSize:"17px",color:CA,letterSpacing:"2px",marginBottom:"6px"}}>MARCUS SAYS</div>
+              <div style={{fontSize:"19px",color:CC,lineHeight:1.8}}>{aiAnalysis}</div>
             </div>
           )}
-          <a href={filing.url} target="_blank" rel="noreferrer" style={{display:"block",textAlign:"center",fontSize:"9px",color:CA,textDecoration:"none",padding:"6px",border:"1px solid "+CA+"33"}}>VIEW ACTUAL FILING ON SEC.GOV</a>
+          <a href={filing.url} target="_blank" rel="noreferrer" style={{display:"block",textAlign:"center",fontSize:"15px",color:CA,textDecoration:"none",padding:"6px",border:"1px solid "+CA+"33"}}>VIEW ACTUAL FILING ON SEC.GOV</a>
         </div>
       )}
     </div>
@@ -910,9 +910,9 @@ function TabAlerts({filings,loading,onScan,enriched}){
     <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
       <Panel label={"EDGAR SCANNER"}>
         <button className="btn" style={{width:"100%",marginBottom:"10px"}} onClick={onScan}>{loading?"SCANNING...":"SCAN SEC EDGAR — ALL POSITIONS"}</button>
-        <div style={{fontSize:"9px",color:CD,lineHeight:1.7}}>Scans 8-K material events, Form 4 insider trades, SC 13D activist filings across all positions. Each alert explains what happened and what it means for your stock. GitHub Actions also runs every 5 min with ntfy push alerts.</div>
+        <div style={{fontSize:"15px",color:CD,lineHeight:1.7}}>Scans 8-K material events, Form 4 insider trades, SC 13D activist filings across all positions. Each alert explains what happened and what it means for your stock. GitHub Actions also runs every 5 min with ntfy push alerts.</div>
       </Panel>
-      {loading&&<div style={{padding:"20px",textAlign:"center",fontFamily:"Orbitron",fontSize:"10px",color:CD}}>SCANNING EDGAR...</div>}
+      {loading&&<div style={{padding:"20px",textAlign:"center",fontFamily:"Orbitron",fontSize:"19px",color:CD}}>SCANNING EDGAR...</div>}
       {!loading&&urgent.length>0&&(
         <Panel label={"URGENT — ACTION MAY BE REQUIRED ("+urgent.length+")"}>
           {urgent.map(function(f,i){return <FilingCard key={f.ticker+f.form+i} filing={f} enriched={enriched||[]}/>;})}
@@ -921,12 +921,12 @@ function TabAlerts({filings,loading,onScan,enriched}){
       {!loading&&filings.length>0&&(
         <Panel label={"ALL FILINGS — LAST 7 DAYS ("+filings.length+")"}>
           {normal.map(function(f,i){return <FilingCard key={f.ticker+f.form+i} filing={f} enriched={enriched||[]}/>;})}
-          {normal.length===0&&<div style={{fontSize:"10px",color:CD}}>No routine filings this week.</div>}
+          {normal.length===0&&<div style={{fontSize:"19px",color:CD}}>No routine filings this week.</div>}
         </Panel>
       )}
       {!loading&&filings.length===0&&(
         <Panel label={"NO RECENT FILINGS"}>
-          <div style={{fontSize:"10px",color:CD,lineHeight:1.7}}>Hit SCAN to check all positions for SEC filings. The monitor also runs every 5 minutes and sends ntfy push alerts for urgent events.</div>
+          <div style={{fontSize:"19px",color:CD,lineHeight:1.7}}>Hit SCAN to check all positions for SEC filings. The monitor also runs every 5 minutes and sends ntfy push alerts for urgent events.</div>
         </Panel>
       )}
     </div>
@@ -949,13 +949,13 @@ function TabMission({tasks,newTask,setNewTask,onAdd,onToggle,onDel,wl,newWl,setN
         <div style={{maxHeight:"260px",overflow:"auto"}}>
           {tasks.map(function(t){return (
             <div key={t.id} style={{display:"flex",alignItems:"flex-start",gap:"8px",padding:"7px 0",borderBottom:"1px solid #0c0a14",opacity:t.done?.3:1,transition:"opacity .3s"}}>
-              <button onClick={function(){onToggle(t.id);}} style={{marginTop:"2px",width:"14px",height:"14px",border:"1px solid "+(t.done?CA:"#2e2210"),background:t.done?CA:"transparent",color:BG,fontSize:"9px",cursor:"pointer",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center"}}>{t.done?"✓":""}</button>
-              <span style={{flex:1,fontSize:"11px",color:t.done?CD:CB,textDecoration:t.done?"line-through":"none",lineHeight:1.5}}>{t.text}</span>
+              <button onClick={function(){onToggle(t.id);}} style={{marginTop:"2px",width:"14px",height:"14px",border:"1px solid "+(t.done?CA:"#2e2210"),background:t.done?CA:"transparent",color:BG,fontSize:"15px",cursor:"pointer",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center"}}>{t.done?"✓":""}</button>
+              <span style={{flex:1,fontSize:"17px",color:t.done?CD:CB,textDecoration:t.done?"line-through":"none",lineHeight:1.5}}>{t.text}</span>
               <button className="xbtn" onClick={function(){onDel(t.id);}}>×</button>
             </div>
           );})}
         </div>
-        <div style={{marginTop:"10px",fontFamily:"Orbitron",fontSize:"9px",letterSpacing:"2px",color:CD}}>{tasks.length-done} ACTIVE ▪ {done} COMPLETE ▪ SAVED ✓</div>
+        <div style={{marginTop:"10px",fontFamily:"Orbitron",fontSize:"15px",letterSpacing:"2px",color:CD}}>{tasks.length-done} ACTIVE ▪ {done} COMPLETE ▪ SAVED ✓</div>
       </Panel>
 
       <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
@@ -964,11 +964,11 @@ function TabMission({tasks,newTask,setNewTask,onAdd,onToggle,onDel,wl,newWl,setN
             <input className="inp" value={newWl} onChange={function(e){setNewWl(e.target.value);}} onKeyDown={function(e){if(e.key==="Enter")onAddWl();}} placeholder="ADD TICKER..."/>
             <button className="btn" onClick={onAddWl} style={{padding:"6px 10px"}}>+</button>
           </div>
-          {!wl.length&&<div style={{fontSize:"10px",color:CD}}>▸ Add tickers to monitor</div>}
+          {!wl.length&&<div style={{fontSize:"19px",color:CD}}>▸ Add tickers to monitor</div>}
           <div style={{display:"flex",flexWrap:"wrap",gap:"6px"}}>
             {wl.map(function(w){return (
               <div key={w.id} style={{display:"flex",alignItems:"center",gap:"4px",padding:"4px 8px",background:BD,border:"1px solid #1a1520"}}>
-                <span style={{fontFamily:"Orbitron",fontSize:"10px",color:CA,letterSpacing:"2px"}}>{w.t}</span>
+                <span style={{fontFamily:"Orbitron",fontSize:"19px",color:CA,letterSpacing:"2px"}}>{w.t}</span>
                 <button className="xbtn" onClick={function(){onDelWl(w.id);}}>×</button>
               </div>
             );})}
@@ -979,27 +979,27 @@ function TabMission({tasks,newTask,setNewTask,onAdd,onToggle,onDel,wl,newWl,setN
           {PARLAYS.map(function(p,i){return (
             <div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"7px 0",borderBottom:"1px solid #0c0a14"}}>
               <div>
-                <div style={{fontFamily:"Orbitron",fontSize:"11px",color:CA,letterSpacing:"1px"}}>{p.odds}</div>
-                <div style={{fontSize:"10px",color:CD,marginTop:"2px"}}>{p.legs} LEGS ▪ ${p.stake} STAKE</div>
+                <div style={{fontFamily:"Orbitron",fontSize:"17px",color:CA,letterSpacing:"1px"}}>{p.odds}</div>
+                <div style={{fontSize:"19px",color:CD,marginTop:"2px"}}>{p.legs} LEGS ▪ ${p.stake} STAKE</div>
               </div>
               <div style={{textAlign:"right"}}>
-                <div style={{fontSize:"9px",color:CG}}>PAYS ${p.payout.toLocaleString()}</div>
+                <div style={{fontSize:"15px",color:CG}}>PAYS ${p.payout.toLocaleString()}</div>
               </div>
             </div>
           );})}
-          <div style={{marginTop:"8px",fontSize:"9px",color:CD,letterSpacing:"1px"}}>AT RISK: $112 ▪ MAX PAYOUT: $13,008.93 ▪ SETTLES OCT 31</div>
+          <div style={{marginTop:"8px",fontSize:"15px",color:CD,letterSpacing:"1px"}}>AT RISK: $112 ▪ MAX PAYOUT: $13,008.93 ▪ SETTLES OCT 31</div>
         </Panel>
       </div>
 
       <Panel label={"◈ TRADE JOURNAL — "+((journal&&journal.length)||0)+" ENTRIES"} right={<button className="btn bsm" onClick={function(){setShowJournal(function(v){return !v;});}}>{showJournal?"HIDE":"SHOW"}</button>}>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 2fr",gap:"6px",marginBottom:"8px"}}>
           <input className="inp" value={newEntry.ticker} onChange={function(ev){setNewEntry(function(p){return Object.assign({},p,{ticker:ev.target.value});});}} placeholder="TICKER"/>
-          <select value={newEntry.action} onChange={function(ev){setNewEntry(function(p){return Object.assign({},p,{action:ev.target.value});});}} style={{background:"#080812",border:"1px solid #1a1520",color:CA,fontFamily:"monospace",fontSize:"11px",padding:"6px",outline:"none"}}>{["BUY","SELL","HOLD","WATCH","ADD","TRIM"].map(function(a){return <option key={a}>{a}</option>;})}</select>
+          <select value={newEntry.action} onChange={function(ev){setNewEntry(function(p){return Object.assign({},p,{action:ev.target.value});});}} style={{background:"#080812",border:"1px solid #1a1520",color:CA,fontFamily:"monospace",fontSize:"17px",padding:"6px",outline:"none"}}>{["BUY","SELL","HOLD","WATCH","ADD","TRIM"].map(function(a){return <option key={a}>{a}</option>;})}</select>
           <input className="inp" value={newEntry.price} onChange={function(ev){setNewEntry(function(p){return Object.assign({},p,{price:ev.target.value});});}} placeholder="PRICE"/>
           <input className="inp" value={newEntry.notes} onChange={function(ev){setNewEntry(function(p){return Object.assign({},p,{notes:ev.target.value});});}} onKeyDown={function(ev){if(ev.key==="Enter")addJournalEntry();}} placeholder="REASONING..."/>
         </div>
         <button className="btn" onClick={addJournalEntry} style={{marginBottom:"10px",width:"100%"}}>+ LOG ENTRY</button>
-        {showJournal&&(<div style={{maxHeight:"260px",overflow:"auto"}}>{(!journal||journal.length===0)&&<div style={{fontSize:"10px",color:CD}}>No entries yet.</div>}{(journal||[]).map(function(jentry){var ac=jentry.action==="BUY"||jentry.action==="ADD"?CG:jentry.action==="SELL"||jentry.action==="TRIM"?CR:CY;return(<div key={jentry.id} style={{padding:"8px 0",borderBottom:"1px solid #0c0a14"}}><div style={{display:"flex",justifyContent:"space-between",marginBottom:"3px"}}><div style={{display:"flex",gap:"8px",alignItems:"center"}}><span style={{fontFamily:"Orbitron",fontSize:"11px",color:CA,fontWeight:700}}>{jentry.ticker}</span><span style={{fontFamily:"Orbitron",fontSize:"9px",padding:"2px 6px",background:ac+"22",color:ac,border:"1px solid "+ac+"44"}}>{jentry.action}</span>{jentry.price&&<span style={{fontSize:"9px",color:CC}}>${jentry.price}</span>}</div><div style={{display:"flex",gap:"8px",alignItems:"center"}}><span style={{fontSize:"9px",color:CD}}>{jentry.date}</span><button className="xbtn" onClick={function(){setJournal(function(p){return p.filter(function(j){return j.id!==jentry.id;});});}}>x</button></div></div><div style={{fontSize:"10px",color:CB,lineHeight:1.6}}>{jentry.notes}</div></div>);})}</div>)}
+        {showJournal&&(<div style={{maxHeight:"260px",overflow:"auto"}}>{(!journal||journal.length===0)&&<div style={{fontSize:"19px",color:CD}}>No entries yet.</div>}{(journal||[]).map(function(jentry){var ac=jentry.action==="BUY"||jentry.action==="ADD"?CG:jentry.action==="SELL"||jentry.action==="TRIM"?CR:CY;return(<div key={jentry.id} style={{padding:"8px 0",borderBottom:"1px solid #0c0a14"}}><div style={{display:"flex",justifyContent:"space-between",marginBottom:"3px"}}><div style={{display:"flex",gap:"8px",alignItems:"center"}}><span style={{fontFamily:"Orbitron",fontSize:"17px",color:CA,fontWeight:700}}>{jentry.ticker}</span><span style={{fontFamily:"Orbitron",fontSize:"15px",padding:"2px 6px",background:ac+"22",color:ac,border:"1px solid "+ac+"44"}}>{jentry.action}</span>{jentry.price&&<span style={{fontSize:"15px",color:CC}}>${jentry.price}</span>}</div><div style={{display:"flex",gap:"8px",alignItems:"center"}}><span style={{fontSize:"15px",color:CD}}>{jentry.date}</span><button className="xbtn" onClick={function(){setJournal(function(p){return p.filter(function(j){return j.id!==jentry.id;});});}}>x</button></div></div><div style={{fontSize:"19px",color:CB,lineHeight:1.6}}>{jentry.notes}</div></div>);})}</div>)}
       </Panel>
     </div>
   );
@@ -1011,12 +1011,12 @@ function TabSoon({icon,label,items,phase}) {
     <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",height:"80%",gap:"20px",padding:"20px"}}>
       <div style={{textAlign:"center",opacity:.4}}>
         <div style={{fontSize:"48px",marginBottom:"10px"}}>{icon}</div>
-        <div style={{fontFamily:"Orbitron",fontSize:"14px",color:CA,letterSpacing:"4px"}}>{label}</div>
-        <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CD,marginTop:"6px",letterSpacing:"3px"}}>DEPLOYING IN {phase}</div>
+        <div style={{fontFamily:"Orbitron",fontSize:"17px",color:CA,letterSpacing:"4px"}}>{label}</div>
+        <div style={{fontFamily:"Orbitron",fontSize:"15px",color:CD,marginTop:"6px",letterSpacing:"3px"}}>DEPLOYING IN {phase}</div>
       </div>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px",maxWidth:"480px",width:"100%"}}>
         {items.map(function(it){return (
-          <div key={it} style={{padding:"7px 10px",background:BP,border:"1px solid #141020",fontSize:"9px",color:CD,letterSpacing:"1px"}}>
+          <div key={it} style={{padding:"7px 10px",background:BP,border:"1px solid #141020",fontSize:"15px",color:CD,letterSpacing:"1px"}}>
             <span style={{color:CA}}>▸ </span>{it}
           </div>
         );})}
@@ -1111,35 +1111,35 @@ function TabIntel({enriched, status, totP, fg}) {
         {status !== "loading" && signals.map(function(s, si) {
           return (
             <div key={si} style={{display:"flex",alignItems:"center",gap:"8px",padding:"8px 0",borderBottom:"1px solid #0c0a14",cursor:"pointer"}} onClick={function() { setDbTicker(s.ticker); setDbMode(true); }}>
-              <span style={{fontFamily:"Orbitron",fontSize:"12px",fontWeight:900,color:CA,minWidth:"46px"}}>{s.ticker}</span>
-              <span style={{fontFamily:"Orbitron",fontSize:"9px",padding:"2px 9px",background:sc(s.signal)+"22",color:sc(s.signal),border:"1px solid "+sc(s.signal)+"55",minWidth:"40px",textAlign:"center"}}>{s.signal}</span>
+              <span style={{fontFamily:"Orbitron",fontSize:"15px",fontWeight:900,color:CA,minWidth:"46px"}}>{s.ticker}</span>
+              <span style={{fontFamily:"Orbitron",fontSize:"15px",padding:"2px 9px",background:sc(s.signal)+"22",color:sc(s.signal),border:"1px solid "+sc(s.signal)+"55",minWidth:"40px",textAlign:"center"}}>{s.signal}</span>
               <div style={{flex:1,height:"5px",background:"#0c0a14",borderRadius:"3px"}}>
                 <div style={{height:"100%",width:s.conf+"%",background:sc(s.signal),borderRadius:"3px"}}></div>
               </div>
-              <span style={{fontFamily:"Orbitron",fontSize:"9px",color:sc(s.signal),minWidth:"34px",textAlign:"right"}}>{s.conf}%</span>
-              <span style={{fontFamily:"Orbitron",fontSize:"8px",color:rc(s.rsi),minWidth:"52px",textAlign:"right"}}>RSI {s.rsi}</span>
-              <span style={{fontSize:"9px",color:parseFloat(s.chg)>0?CG:CR,minWidth:"54px",textAlign:"right"}}>{parseFloat(s.chg)>0?"+":""}{s.chg.toFixed(1)}% today</span>
+              <span style={{fontFamily:"Orbitron",fontSize:"15px",color:sc(s.signal),minWidth:"34px",textAlign:"right"}}>{s.conf}%</span>
+              <span style={{fontFamily:"Orbitron",fontSize:"17px",color:rc(s.rsi),minWidth:"52px",textAlign:"right"}}>RSI {s.rsi}</span>
+              <span style={{fontSize:"15px",color:parseFloat(s.chg)>0?CG:CR,minWidth:"54px",textAlign:"right"}}>{parseFloat(s.chg)>0?"+":""}{s.chg.toFixed(1)}% today</span>
             </div>
           );
         })}
-        <div style={{marginTop:"8px",fontSize:"9px",color:CD,lineHeight:1.6}}>
+        <div style={{marginTop:"8px",fontSize:"15px",color:CD,lineHeight:1.6}}>
           RSI below 30 = oversold (potential BUY). Above 70 = overbought (potential SELL). Strong BUY signals auto-send to your phone via ntfy. Tap any ticker for Bull vs Bear debate.
         </div>
       </Panel>
       {buys.length > 0 && (
-        <Panel label={"BUY SIGNALS ("+buys.length+")"} right={<span style={{fontFamily:"Orbitron",fontSize:"8px",color:CG}}>NTFY ALERT SENT</span>}>
+        <Panel label={"BUY SIGNALS ("+buys.length+")"} right={<span style={{fontFamily:"Orbitron",fontSize:"17px",color:CG}}>NTFY ALERT SENT</span>}>
           {buys.map(function(s, i) {
             return (
               <div key={i} style={{padding:"10px",marginBottom:"6px",background:"rgba(24,201,58,.06)",border:"1px solid "+CG+"44"}}>
                 <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"5px"}}>
                   <div style={{display:"flex",gap:"8px",alignItems:"center"}}>
-                    <span style={{fontFamily:"Orbitron",fontSize:"14px",fontWeight:900,color:CA}}>{s.ticker}</span>
-                    <span style={{fontFamily:"Orbitron",fontSize:"9px",color:CG}}>${s.price.toFixed(2)}</span>
-                    <span style={{fontFamily:"Orbitron",fontSize:"8px",color:CG}}>RSI {s.rsi}</span>
+                    <span style={{fontFamily:"Orbitron",fontSize:"17px",fontWeight:900,color:CA}}>{s.ticker}</span>
+                    <span style={{fontFamily:"Orbitron",fontSize:"15px",color:CG}}>${s.price.toFixed(2)}</span>
+                    <span style={{fontFamily:"Orbitron",fontSize:"17px",color:CG}}>RSI {s.rsi}</span>
                   </div>
-                  <span style={{fontFamily:"Orbitron",fontSize:"12px",fontWeight:900,color:CG}}>{s.conf}% CONF</span>
+                  <span style={{fontFamily:"Orbitron",fontSize:"15px",fontWeight:900,color:CG}}>{s.conf}% CONF</span>
                 </div>
-                <div style={{fontSize:"10px",color:CC,lineHeight:1.7}}>{s.reason}</div>
+                <div style={{fontSize:"19px",color:CC,lineHeight:1.7}}>{s.reason}</div>
                 <button className="btn" style={{marginTop:"8px",width:"100%",color:CG,borderColor:CG+"66"}} onClick={function(){sendBuyAlert(s);}}>
                   SEND BUY ALERT TO PHONE
                 </button>
@@ -1153,9 +1153,9 @@ function TabIntel({enriched, status, totP, fg}) {
           {[["BUY", buys, CG], ["HOLD", holds, CY], ["SELL", sells, CR]].map(function(row, ri) {
             return (
               <div key={ri} style={{background:row[2]+"11",border:"1px solid "+row[2]+"33",padding:"12px",textAlign:"center"}}>
-                <div style={{fontFamily:"Orbitron",fontSize:"28px",fontWeight:900,color:row[2]}}>{row[1].length}</div>
-                <div style={{fontFamily:"Orbitron",fontSize:"9px",color:row[2],letterSpacing:"1px",marginTop:"2px"}}>{row[0]}</div>
-                <div style={{fontSize:"9px",color:CD,marginTop:"4px"}}>{row[1].slice(0,3).map(function(s){return s.ticker;}).join(", ")||"—"}</div>
+                <div style={{fontFamily:"Orbitron",fontSize:"32px",fontWeight:900,color:row[2]}}>{row[1].length}</div>
+                <div style={{fontFamily:"Orbitron",fontSize:"15px",color:row[2],letterSpacing:"1px",marginTop:"2px"}}>{row[0]}</div>
+                <div style={{fontSize:"15px",color:CD,marginTop:"4px"}}>{row[1].slice(0,3).map(function(s){return s.ticker;}).join(", ")||"—"}</div>
               </div>
             );
           })}
@@ -1183,15 +1183,15 @@ function DebateView({ticker,enriched,onClose}) {
   return (
     <div className="fi" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
       <div style={{background:"#001408",border:"1px solid "+CG+"33",padding:"10px"}}>
-        <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CG,letterSpacing:"2px",marginBottom:"8px"}}>🐂 BULL CASE</div>
-        {bullPoints.map(function(pt,i){return <div key={i} style={{fontSize:"11px",color:CB,lineHeight:1.65,marginBottom:"5px"}}>▸ {pt}</div>;})}
+        <div style={{fontFamily:"Orbitron",fontSize:"15px",color:CG,letterSpacing:"2px",marginBottom:"8px"}}>🐂 BULL CASE</div>
+        {bullPoints.map(function(pt,i){return <div key={i} style={{fontSize:"17px",color:CB,lineHeight:1.65,marginBottom:"5px"}}>▸ {pt}</div>;})}
       </div>
       <div style={{background:"#140000",border:"1px solid "+CR+"33",padding:"10px"}}>
-        <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CR,letterSpacing:"2px",marginBottom:"8px"}}>🐻 BEAR CASE</div>
-        {bearPoints.map(function(pt,i){return <div key={i} style={{fontSize:"11px",color:CB,lineHeight:1.65,marginBottom:"5px"}}>▸ {pt}</div>;})}
+        <div style={{fontFamily:"Orbitron",fontSize:"15px",color:CR,letterSpacing:"2px",marginBottom:"8px"}}>🐻 BEAR CASE</div>
+        {bearPoints.map(function(pt,i){return <div key={i} style={{fontSize:"17px",color:CB,lineHeight:1.65,marginBottom:"5px"}}>▸ {pt}</div>;})}
       </div>
       <div style={{gridColumn:"1/-1",padding:"8px",background:sig.color+"11",border:"1px solid "+sig.color+"33",textAlign:"center"}}>
-        <span style={{fontFamily:"Orbitron",fontSize:"10px",color:sig.color,letterSpacing:"2px"}}>MARCUS VERDICT: {sig.sig} ▪ CONVICTION {sig.score}/10</span>
+        <span style={{fontFamily:"Orbitron",fontSize:"19px",color:sig.color,letterSpacing:"2px"}}>MARCUS VERDICT: {sig.sig} ▪ CONVICTION {sig.score}/10</span>
       </div>
     </div>
   );
@@ -1232,19 +1232,19 @@ function TabSoun({port}) {
       {/* SOUN Header */}
       <div style={{background:BP,border:"1px solid "+CA+"33",padding:"12px 14px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
         <div>
-          <div style={{fontFamily:"Orbitron",fontSize:"16px",fontWeight:900,color:CA,letterSpacing:"4px"}}>SOUN</div>
-          <div style={{fontSize:"10px",color:CC,marginTop:"2px",letterSpacing:"1px"}}>SOUNDHOUND AI ▪ {SOUN_DATA.sector}</div>
+          <div style={{fontFamily:"Orbitron",fontSize:"19px",fontWeight:900,color:CA,letterSpacing:"4px"}}>SOUN</div>
+          <div style={{fontSize:"19px",color:CC,marginTop:"2px",letterSpacing:"1px"}}>SOUNDHOUND AI ▪ {SOUN_DATA.sector}</div>
         </div>
         <div style={{textAlign:"right"}}>
-          <div style={{fontFamily:"Orbitron",fontSize:"22px",fontWeight:900,color:CB}}>${sounPrice.toFixed(2)}</div>
-          <div style={{fontSize:"10px",color:CD,marginTop:"2px"}}>BREAKEVEN GAP: +{((l1.breakeven-sounPrice)/sounPrice*100).toFixed(1)}% — +{((l2.breakeven-sounPrice)/sounPrice*100).toFixed(1)}%</div>
+          <div style={{fontFamily:"Orbitron",fontSize:"26px",fontWeight:900,color:CB}}>${sounPrice.toFixed(2)}</div>
+          <div style={{fontSize:"19px",color:CD,marginTop:"2px"}}>BREAKEVEN GAP: +{((l1.breakeven-sounPrice)/sounPrice*100).toFixed(1)}% — +{((l2.breakeven-sounPrice)/sounPrice*100).toFixed(1)}%</div>
         </div>
       </div>
 
       {/* Section Nav */}
       <div style={{display:"flex",gap:"4px"}}>
         {sections.map(function(s){return (
-          <button key={s[0]} onClick={function(){setActiveSection(s[0]);}} className="btn bsm" style={{flex:1,padding:"5px 4px",fontSize:"9px",borderColor:activeSection===s[0]?CA:"#2a1e08",color:activeSection===s[0]?CA:CC}}>
+          <button key={s[0]} onClick={function(){setActiveSection(s[0]);}} className="btn bsm" style={{flex:1,padding:"5px 4px",fontSize:"15px",borderColor:activeSection===s[0]?CA:"#2a1e08",color:activeSection===s[0]?CA:CC}}>
             {s[1]}
           </button>
         );})}
@@ -1256,7 +1256,7 @@ function TabSoun({port}) {
           {[{l:l1,days:days1,theta:theta1,pct:pct1,prob:prob1},{l:l2,days:days2,theta:theta2,pct:pct2,prob:prob2}].map(function(item,i){return (
             <div key={i} style={{background:BD,border:"1px solid #1a1520",padding:"12px",position:"relative"}}>
               
-              <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CA,letterSpacing:"2px",marginBottom:"10px"}}>{item.l.label}</div>
+              <div style={{fontFamily:"Orbitron",fontSize:"15px",color:CA,letterSpacing:"2px",marginBottom:"10px"}}>{item.l.label}</div>
               {[
                 ["CONTRACTS",item.l.contracts+"x"],
                 ["AVG COST","$"+item.l.avgCost],
@@ -1268,14 +1268,14 @@ function TabSoun({port}) {
                 ["HIT PROB","~"+item.prob+"%"],
               ].map(function(r){return (
                 <div key={r[0]} style={{display:"flex",justifyContent:"space-between",marginBottom:"4px"}}>
-                  <span style={{fontSize:"9px",color:CD}}>{r[0]}</span>
-                  <span style={{fontSize:"11px",color:CB,fontFamily:"Orbitron"}}>{r[1]}</span>
+                  <span style={{fontSize:"15px",color:CD}}>{r[0]}</span>
+                  <span style={{fontSize:"17px",color:CB,fontFamily:"Orbitron"}}>{r[1]}</span>
                 </div>
               );})}
               <div style={{marginTop:"8px",height:"4px",background:"#0c0a18",borderRadius:"2px"}}>
                 <div style={{height:"100%",width:item.pct+"%",background:CY,borderRadius:"2px",boxShadow:"0 0 4px "+CY}}/>
               </div>
-              <div style={{fontSize:"9px",color:CD,marginTop:"3px",textAlign:"right"}}>{item.pct}% TO BREAKEVEN</div>
+              <div style={{fontSize:"15px",color:CD,marginTop:"3px",textAlign:"right"}}>{item.pct}% TO BREAKEVEN</div>
             </div>
           );})}
         </div>
@@ -1285,19 +1285,19 @@ function TabSoun({port}) {
       {activeSection==="theta"&&(
         <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
           <Panel label={"◈ THETA DECAY CLOCK — DAILY PREMIUM BLEED"}>
-            <div style={{fontSize:"10px",color:CD,marginBottom:"12px",letterSpacing:"1px"}}>Every day that passes, your options lose value from time decay. This is theta — your cost of holding.</div>
+            <div style={{fontSize:"19px",color:CD,marginBottom:"12px",letterSpacing:"1px"}}>Every day that passes, your options lose value from time decay. This is theta — your cost of holding.</div>
             {[{l:l1,theta:theta1,days:days1,label:"1/15/27 LEAPS"},{l:l2,theta:theta2,days:days2,label:"1/21/28 LEAPS"}].map(function(item,i){return (
               <div key={i} style={{background:BD,border:"1px solid #1a1520",padding:"12px",marginBottom:"8px"}}>
-                <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CA,marginBottom:"8px"}}>{item.label}</div>
+                <div style={{fontFamily:"Orbitron",fontSize:"15px",color:CA,marginBottom:"8px"}}>{item.label}</div>
                 <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"8px",marginBottom:"10px"}}>
                   {[["DAILY BLEED","$"+item.theta.dailyDecay,CR],["WEEKLY BLEED","$"+item.theta.weeklyDecay,CY],["DAYS REMAIN",item.days+" days",CG]].map(function(r){return (
                     <div key={r[0]} style={{textAlign:"center",background:BP,padding:"8px",border:"1px solid #141020"}}>
-                      <div style={{fontSize:"9px",color:CD,marginBottom:"3px"}}>{r[0]}</div>
-                      <div style={{fontFamily:"Orbitron",fontSize:"13px",fontWeight:700,color:r[2],textShadow:"0 0 8px "+r[2]+"66"}}>{r[1]}</div>
+                      <div style={{fontSize:"15px",color:CD,marginBottom:"3px"}}>{r[0]}</div>
+                      <div style={{fontFamily:"Orbitron",fontSize:"19px",fontWeight:700,color:r[2],textShadow:"0 0 8px "+r[2]+"66"}}>{r[1]}</div>
                     </div>
                   );})}
                 </div>
-                <div style={{fontSize:"10px",color:CD,lineHeight:1.6}}>
+                <div style={{fontSize:"19px",color:CD,lineHeight:1.6}}>
                   At current decay rate, you lose approximately <span style={{color:CY}}>${(item.theta.dailyDecay*30).toFixed(0)}/month</span> on this position while waiting for SOUN to move. The 2028 LEAPS bleeds slower per day — better for long-duration holds.
                 </div>
               </div>
@@ -1313,22 +1313,22 @@ function TabSoun({port}) {
             {SOUN_DATA.sentiment.map(function(s){return (
               <div key={s.label} style={{background:BD,border:"1px solid #1a1520",padding:"10px"}}>
                 <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"6px"}}>
-                  <span style={{fontSize:"12px",color:CB,letterSpacing:"1px"}}>{s.label}</span>
-                  <span style={{fontFamily:"Orbitron",fontSize:"11px",fontWeight:700,color:s.color}}>{s.score}/100</span>
+                  <span style={{fontSize:"15px",color:CB,letterSpacing:"1px"}}>{s.label}</span>
+                  <span style={{fontFamily:"Orbitron",fontSize:"17px",fontWeight:700,color:s.color}}>{s.score}/100</span>
                 </div>
                 <div style={{height:"4px",background:"#0c0a18",borderRadius:"2px",marginBottom:"5px"}}>
                   <div style={{height:"100%",width:s.score+"%",background:s.color,borderRadius:"2px"}}/>
                 </div>
-                <div style={{fontSize:"10px",color:CD}}>{s.note}</div>
+                <div style={{fontSize:"19px",color:CD}}>{s.note}</div>
               </div>
             );})}
             <div style={{padding:"10px",background:"#001808",border:"1px solid "+CG+"22"}}>
-              <div style={{fontFamily:"Orbitron",fontSize:"10px",color:CG,letterSpacing:"2px",marginBottom:"6px"}}>🐂 BULL THESIS</div>
-              <div style={{fontSize:"11px",color:CB,lineHeight:1.7}}>{SOUN_DATA.bull}</div>
+              <div style={{fontFamily:"Orbitron",fontSize:"19px",color:CG,letterSpacing:"2px",marginBottom:"6px"}}>🐂 BULL THESIS</div>
+              <div style={{fontSize:"17px",color:CB,lineHeight:1.7}}>{SOUN_DATA.bull}</div>
             </div>
             <div style={{padding:"10px",background:"#180000",border:"1px solid "+CR+"22"}}>
-              <div style={{fontFamily:"Orbitron",fontSize:"10px",color:CR,letterSpacing:"2px",marginBottom:"6px"}}>🐻 BEAR THESIS</div>
-              <div style={{fontSize:"11px",color:CB,lineHeight:1.7}}>{SOUN_DATA.bear}</div>
+              <div style={{fontFamily:"Orbitron",fontSize:"19px",color:CR,letterSpacing:"2px",marginBottom:"6px"}}>🐻 BEAR THESIS</div>
+              <div style={{fontSize:"17px",color:CB,lineHeight:1.7}}>{SOUN_DATA.bear}</div>
             </div>
           </div>
         </Panel>
@@ -1340,8 +1340,8 @@ function TabSoun({port}) {
           <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
             {SOUN_DATA.catalysts.map(function(c,i){return (
               <div key={i} style={{display:"flex",gap:"10px",padding:"10px",background:BD,border:"1px solid #1a1520"}}>
-                <div style={{fontFamily:"Orbitron",fontSize:"10px",color:CA,letterSpacing:"1px",minWidth:"60px",flexShrink:0}}>{c.date}</div>
-                <div style={{fontSize:"11px",color:CB,lineHeight:1.6}}>{c.event}</div>
+                <div style={{fontFamily:"Orbitron",fontSize:"19px",color:CA,letterSpacing:"1px",minWidth:"60px",flexShrink:0}}>{c.date}</div>
+                <div style={{fontSize:"17px",color:CB,lineHeight:1.6}}>{c.event}</div>
               </div>
             );})}
           </div>
@@ -1354,14 +1354,14 @@ function TabSoun({port}) {
           <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
             {SOUN_DATA.risks.map(function(r,i){return (
               <div key={i} style={{display:"flex",gap:"10px",padding:"10px",background:"#140000",border:"1px solid "+CR+"22"}}>
-                <span style={{color:CR,fontSize:"12px",flexShrink:0}}>⚠</span>
-                <div style={{fontSize:"11px",color:CB,lineHeight:1.6}}>{r}</div>
+                <span style={{color:CR,fontSize:"15px",flexShrink:0}}>⚠</span>
+                <div style={{fontSize:"17px",color:CB,lineHeight:1.6}}>{r}</div>
               </div>
             );})}
           </div>
           <div style={{marginTop:"10px",padding:"10px",background:BD,border:"1px solid #1a1520"}}>
-            <div style={{fontFamily:"Orbitron",fontSize:"10px",color:CY,letterSpacing:"2px",marginBottom:"6px"}}>MARCUS ASSESSMENT</div>
-            <div style={{fontSize:"11px",color:CB,lineHeight:1.7}}>The two-LEAPS structure reflects disciplined conviction. The 2028 contract gives ample runway for the AI voice market to mature. The primary risk is theta decay during extended sideways movement. Monitor the quarterly earnings catalyst as the highest-probability re-rating event.</div>
+            <div style={{fontFamily:"Orbitron",fontSize:"19px",color:CY,letterSpacing:"2px",marginBottom:"6px"}}>MARCUS ASSESSMENT</div>
+            <div style={{fontSize:"17px",color:CB,lineHeight:1.7}}>The two-LEAPS structure reflects disciplined conviction. The 2028 contract gives ample runway for the AI voice market to mature. The primary risk is theta decay during extended sideways movement. Monitor the quarterly earnings catalyst as the highest-probability re-rating event.</div>
           </div>
         </Panel>
       )}
@@ -1449,7 +1449,7 @@ function VoiceMode({alf,enriched,fg,onClose}) {
 
   return (
     <div style={{position:"fixed",inset:0,zIndex:500,background:"rgba(0,0,0,.9)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"20px",padding:"24px"}}>
-      <div style={{fontFamily:"Orbitron",fontSize:"14px",color:CA,letterSpacing:"5px"}}>MARCUS — VOICE INTERFACE</div>
+      <div style={{fontFamily:"Orbitron",fontSize:"17px",color:CA,letterSpacing:"5px"}}>MARCUS — VOICE INTERFACE</div>
 
       {/* Mic button */}
       <button onClick={status==="idle"||status==="response"?startListening:stopSpeaking}
@@ -1457,21 +1457,21 @@ function VoiceMode({alf,enriched,fg,onClose}) {
         {status==="listening"?"🔴":status==="speaking"?"🔊":"🎙"}
       </button>
 
-      <div style={{fontFamily:"Orbitron",fontSize:"9px",letterSpacing:"3px",color:status==="listening"?CR:status==="speaking"?CG:CD}}>
+      <div style={{fontFamily:"Orbitron",fontSize:"15px",letterSpacing:"3px",color:status==="listening"?CR:status==="speaking"?CG:CD}}>
         {status==="idle"?"TAP TO SPEAK":status==="listening"?"LISTENING...":status==="speaking"?"MARCUS SPEAKING...":"TAP TO SPEAK AGAIN"}
       </div>
 
       {transcript&&<div style={{background:BP,border:"1px solid #141020",padding:"10px 16px",maxWidth:"320px",width:"100%",textAlign:"center"}}>
-        <div style={{fontSize:"9px",color:CD,letterSpacing:"2px",marginBottom:"4px"}}>YOU SAID</div>
-        <div style={{fontSize:"11px",color:CB,fontStyle:"italic"}}>"{transcript}"</div>
+        <div style={{fontSize:"15px",color:CD,letterSpacing:"2px",marginBottom:"4px"}}>YOU SAID</div>
+        <div style={{fontSize:"17px",color:CB,fontStyle:"italic"}}>"{transcript}"</div>
       </div>}
 
       {response&&<div style={{background:BP,border:"1px solid "+CA+"33",padding:"12px 16px",maxWidth:"320px",width:"100%"}}>
-        <div style={{fontSize:"9px",color:CD,letterSpacing:"2px",marginBottom:"6px"}}>— MARCUS ▪ APEX</div>
-        <div style={{fontSize:"11px",color:CB,lineHeight:1.8,fontStyle:"italic"}}>"{response}"</div>
+        <div style={{fontSize:"15px",color:CD,letterSpacing:"2px",marginBottom:"6px"}}>— MARCUS ▪ APEX</div>
+        <div style={{fontSize:"17px",color:CB,lineHeight:1.8,fontStyle:"italic"}}>"{response}"</div>
       </div>}
 
-      <div style={{fontSize:"10px",color:CD,letterSpacing:"1px",textAlign:"center",maxWidth:"280px"}}>
+      <div style={{fontSize:"19px",color:CD,letterSpacing:"1px",textAlign:"center",maxWidth:"280px"}}>
         Try asking: "How's my portfolio?", "Tell me about SOUN", "What are my parlays?", "Give me today's briefing", "Any alerts?"
       </div>
 
@@ -1754,21 +1754,21 @@ function TabParlays(){
       <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"6px"}}>
         {[["AT RISK","$112",CR],["MAX PAYOUT","$13,009",CG],["DAYS LEFT",daysLeft,CY],["SETTLES","OCT 31",CA]].map(function(r){return(
           <div key={r[0]} style={{background:BP,border:"1px solid #1a1520",padding:"8px",textAlign:"center"}}>
-            <div style={{fontSize:"9px",color:CD,marginBottom:"2px"}}>{r[0]}</div>
-            <div style={{fontFamily:"Orbitron",fontSize:"12px",fontWeight:700,color:r[2]}}>{r[1]}</div>
+            <div style={{fontSize:"15px",color:CD,marginBottom:"2px"}}>{r[0]}</div>
+            <div style={{fontFamily:"Orbitron",fontSize:"15px",fontWeight:700,color:r[2]}}>{r[1]}</div>
           </div>
         );})}
       </div>
 
-      {mlbLoading&&<div style={{background:"#08080f",border:"1px solid "+CA+"33",padding:"8px 12px",fontSize:"9px",color:CY,fontFamily:"Orbitron",letterSpacing:"2px",display:"flex",alignItems:"center",gap:"8px"}}><div className="spinA" style={{width:"8px",height:"8px",border:"1px solid #4a3408",borderTopColor:CA,borderRadius:"50%"}}/> FETCHING LIVE MLB STANDINGS...</div>}
-      {!mlbLoading&&<div style={{background:"#08080f",border:"1px solid "+CG+"33",padding:"6px 12px",fontSize:"9px",color:CG,fontFamily:"Orbitron",letterSpacing:"1px"}}>◈ LIVE STANDINGS — UPDATED NOW ▪ MLB STATS API</div>}
+      {mlbLoading&&<div style={{background:"#08080f",border:"1px solid "+CA+"33",padding:"8px 12px",fontSize:"15px",color:CY,fontFamily:"Orbitron",letterSpacing:"2px",display:"flex",alignItems:"center",gap:"8px"}}><div className="spinA" style={{width:"8px",height:"8px",border:"1px solid #4a3408",borderTopColor:CA,borderRadius:"50%"}}/> FETCHING LIVE MLB STANDINGS...</div>}
+      {!mlbLoading&&<div style={{background:"#08080f",border:"1px solid "+CG+"33",padding:"6px 12px",fontSize:"15px",color:CG,fontFamily:"Orbitron",letterSpacing:"1px"}}>◈ LIVE STANDINGS — UPDATED NOW ▪ MLB STATS API</div>}
 
       {/* Universal legs */}
       <div style={{background:"#08080f",border:"1px solid "+CA+"44",padding:"10px 12px"}}>
-        <div style={{fontSize:"9px",color:CA,fontFamily:"Orbitron",letterSpacing:"2px",marginBottom:"8px"}}>⚡ UNIVERSAL LEGS — IN ALL 4 PARLAYS</div>
+        <div style={{fontSize:"15px",color:CA,fontFamily:"Orbitron",letterSpacing:"2px",marginBottom:"8px"}}>⚡ UNIVERSAL LEGS — IN ALL 4 PARLAYS</div>
         <div style={{display:"flex",gap:"6px",flexWrap:"wrap"}}>
-          {uMake.map(function(t){var st=getLegSt(t,"make",mlbData);return(<div key={t} style={{padding:"5px 10px",background:st.color+"15",border:"1px solid "+st.color+"44",fontFamily:"Orbitron",fontSize:"10px",color:st.color}}>{st.icon} {t} MAKE</div>);})}
-          {uMiss.map(function(t){var st=getLegSt(t,"miss",mlbData);return(<div key={t} style={{padding:"5px 10px",background:st.color+"15",border:"1px solid "+st.color+"44",fontFamily:"Orbitron",fontSize:"10px",color:st.color}}>{st.icon} {t} MISS</div>);})}
+          {uMake.map(function(t){var st=getLegSt(t,"make",mlbData);return(<div key={t} style={{padding:"5px 10px",background:st.color+"15",border:"1px solid "+st.color+"44",fontFamily:"Orbitron",fontSize:"19px",color:st.color}}>{st.icon} {t} MAKE</div>);})}
+          {uMiss.map(function(t){var st=getLegSt(t,"miss",mlbData);return(<div key={t} style={{padding:"5px 10px",background:st.color+"15",border:"1px solid "+st.color+"44",fontFamily:"Orbitron",fontSize:"19px",color:st.color}}>{st.icon} {t} MISS</div>);})}
         </div>
       </div>
 
@@ -1778,9 +1778,9 @@ function TabParlays(){
           var pr=calcProb(pd);
           return(
             <button key={i} onClick={function(){setAp(i);}} style={{flex:1,background:"transparent",border:"1px solid "+(ap===i?CA:"#2a1e08"),padding:"8px 4px",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:"2px",transition:"all .2s"}}>
-              <span style={{fontFamily:"Orbitron",fontSize:"10px",color:ap===i?CA:CC,fontWeight:700}}>{pd.odds}</span>
-              <span style={{fontSize:"9px",color:CD}}>${pd.stake}→${pd.payout.toLocaleString()}</span>
-              <span style={{fontSize:"9px",color:pr>5?CG:CY,fontFamily:"Orbitron"}}>{pr.toFixed(3)}%</span>
+              <span style={{fontFamily:"Orbitron",fontSize:"19px",color:ap===i?CA:CC,fontWeight:700}}>{pd.odds}</span>
+              <span style={{fontSize:"15px",color:CD}}>${pd.stake}→${pd.payout.toLocaleString()}</span>
+              <span style={{fontSize:"15px",color:pr>5?CG:CY,fontFamily:"Orbitron"}}>{pr.toFixed(3)}%</span>
             </button>
           );
         })}
@@ -1789,7 +1789,7 @@ function TabParlays(){
       {/* View nav */}
       <div style={{display:"flex",gap:"4px"}}>
         {[["overview","OVERVIEW"],["legs","LEGS"],["standings","STANDINGS"],["calc","CALCULATOR"],["scout","SCOUT"]].map(function(v){return(
-          <button key={v[0]} onClick={function(){setView(v[0]);}} className="btn bsm" style={{flex:1,fontSize:"9px",borderColor:view===v[0]?CA:"#2a1e08",color:view===v[0]?CA:CC}}>{v[1]}</button>
+          <button key={v[0]} onClick={function(){setView(v[0]);}} className="btn bsm" style={{flex:1,fontSize:"15px",borderColor:view===v[0]?CA:"#2a1e08",color:view===v[0]?CA:CC}}>{v[1]}</button>
         );})}
       </div>
 
@@ -1799,20 +1799,20 @@ function TabParlays(){
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px",marginBottom:"12px"}}>
             {[["STAKE","$"+p.stake,CC],["PAYOUT","$"+p.payout.toLocaleString(),CG],["LEGS",p.legs,CA],["MAKE LEGS",p.make.length,CG],["MISS LEGS",p.miss.length,CR],["PLACED",p.placed,CC],["SETTLES",p.settles,CY],["STATUS","OPEN",CG]].map(function(r){return(
               <div key={r[0]} style={{background:BD,padding:"7px 10px",border:"1px solid #1a1520"}}>
-                <div style={{fontSize:"9px",color:CD,marginBottom:"2px"}}>{r[0]}</div>
-                <div style={{fontFamily:"Orbitron",fontSize:"11px",color:r[2]}}>{r[1]}</div>
+                <div style={{fontSize:"15px",color:CD,marginBottom:"2px"}}>{r[0]}</div>
+                <div style={{fontFamily:"Orbitron",fontSize:"17px",color:r[2]}}>{r[1]}</div>
               </div>
             );})}
           </div>
           <div style={{background:BD,border:"1px solid #1a1520",padding:"14px",textAlign:"center",marginBottom:"10px"}}>
-            <div style={{fontSize:"9px",color:CD,letterSpacing:"2px",marginBottom:"8px"}}>ESTIMATED WIN PROBABILITY</div>
+            <div style={{fontSize:"15px",color:CD,letterSpacing:"2px",marginBottom:"8px"}}>ESTIMATED WIN PROBABILITY</div>
             <div style={{fontFamily:"Orbitron",fontSize:"36px",fontWeight:900,color:prob>5?CG:prob>1?CY:CR,textShadow:"0 0 14px "+(prob>5?CG:CY)+"55"}}>{prob.toFixed(3)}%</div>
             <div style={{margin:"10px auto",width:"80%",height:"6px",background:"#0c0a18",borderRadius:"3px"}}>
               <div style={{height:"100%",width:Math.min(100,prob*8)+"%",background:prob>5?CG:CY,borderRadius:"3px",transition:"width .5s"}}/>
             </div>
-            <div style={{fontSize:"9px",color:CD}}>Calculated from {p.legs} individual leg confidence scores</div>
+            <div style={{fontSize:"15px",color:CD}}>Calculated from {p.legs} individual leg confidence scores</div>
           </div>
-          <div style={{fontSize:"9px",color:CD,lineHeight:1.7}}>⚠ Parlays 2 & 4 have conflicting CIN legs — an intentional hedge ensuring at least one parlay survives either outcome.</div>
+          <div style={{fontSize:"15px",color:CD,lineHeight:1.7}}>⚠ Parlays 2 & 4 have conflicting CIN legs — an intentional hedge ensuring at least one parlay survives either outcome.</div>
         </Panel>
       )}
 
@@ -1820,36 +1820,36 @@ function TabParlays(){
       {view==="legs"&&(
         <Panel label={"◈ "+p.odds+" — ALL "+p.legs+" LEGS"}>
           <div style={{marginBottom:"12px"}}>
-            <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CG,letterSpacing:"2px",marginBottom:"8px"}}>✓ MAKE PLAYOFFS ({p.make.length})</div>
+            <div style={{fontFamily:"Orbitron",fontSize:"15px",color:CG,letterSpacing:"2px",marginBottom:"8px"}}>✓ MAKE PLAYOFFS ({p.make.length})</div>
             <div style={{display:"flex",flexWrap:"wrap",gap:"5px"}}>
               {p.make.map(function(t){
                 var st=getLegSt(t,"make",mlbData);
                 return(
                   <div key={t} style={{padding:"6px 10px",background:st.color+"12",border:"1px solid "+st.color+"44",minWidth:"76px"}}>
                     <div style={{display:"flex",justifyContent:"space-between"}}>
-                      <span style={{fontFamily:"Orbitron",fontSize:"11px",color:st.color,fontWeight:700}}>{t}</span>
-                      <span style={{fontSize:"11px",color:st.color}}>{st.icon}</span>
+                      <span style={{fontFamily:"Orbitron",fontSize:"17px",color:st.color,fontWeight:700}}>{t}</span>
+                      <span style={{fontSize:"17px",color:st.color}}>{st.icon}</span>
                     </div>
-                    <div style={{fontSize:"9px",color:CD,marginTop:"2px"}}>{st.w}-{st.l} ▪ {st.conf}%</div>
-                    <div style={{fontSize:"9px",color:st.color}}>{st.label}</div>
+                    <div style={{fontSize:"15px",color:CD,marginTop:"2px"}}>{st.w}-{st.l} ▪ {st.conf}%</div>
+                    <div style={{fontSize:"15px",color:st.color}}>{st.label}</div>
                   </div>
                 );
               })}
             </div>
           </div>
           <div>
-            <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CR,letterSpacing:"2px",marginBottom:"8px"}}>✗ MISS PLAYOFFS ({p.miss.length})</div>
+            <div style={{fontFamily:"Orbitron",fontSize:"15px",color:CR,letterSpacing:"2px",marginBottom:"8px"}}>✗ MISS PLAYOFFS ({p.miss.length})</div>
             <div style={{display:"flex",flexWrap:"wrap",gap:"5px"}}>
               {p.miss.map(function(t){
                 var st=getLegSt(t,"miss",mlbData);
                 return(
                   <div key={t} style={{padding:"6px 10px",background:st.color+"12",border:"1px solid "+st.color+"44",minWidth:"76px"}}>
                     <div style={{display:"flex",justifyContent:"space-between"}}>
-                      <span style={{fontFamily:"Orbitron",fontSize:"11px",color:st.color,fontWeight:700}}>{t}</span>
-                      <span style={{fontSize:"11px",color:st.color}}>{st.icon}</span>
+                      <span style={{fontFamily:"Orbitron",fontSize:"17px",color:st.color,fontWeight:700}}>{t}</span>
+                      <span style={{fontSize:"17px",color:st.color}}>{st.icon}</span>
                     </div>
-                    <div style={{fontSize:"9px",color:CD,marginTop:"2px"}}>{st.w}-{st.l} ▪ {st.conf}%</div>
-                    <div style={{fontSize:"9px",color:st.color}}>{st.label}</div>
+                    <div style={{fontSize:"15px",color:CD,marginTop:"2px"}}>{st.w}-{st.l} ▪ {st.conf}%</div>
+                    <div style={{fontSize:"15px",color:st.color}}>{st.label}</div>
                   </div>
                 );
               })}
@@ -1861,7 +1861,7 @@ function TabParlays(){
       {/* STANDINGS */}
       {view==="standings"&&(
         <Panel label={"◈ 2026 MLB STANDINGS — PLAYOFF PROJECTION"}>
-          <div style={{fontSize:"9px",color:CD,marginBottom:"10px"}}>Teams in your parlays are highlighted. Confidence = estimated playoff probability.</div>
+          <div style={{fontSize:"15px",color:CD,marginBottom:"10px"}}>Teams in your parlays are highlighted. Confidence = estimated playoff probability.</div>
           {["AL East","AL Central","AL West","NL East","NL Central","NL West"].map(function(div){
             var teams=mlbData.filter(function(t){return t.div===div;}).sort(function(a,b){return b.w-a.w;});
             var inAny=function(t){return PARLAY_DATA.some(function(pd){return pd.make.includes(t)||pd.miss.includes(t);});};
@@ -1872,22 +1872,22 @@ function TabParlays(){
             };
             return(
               <div key={div} style={{marginBottom:"12px"}}>
-                <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CA,letterSpacing:"2px",borderBottom:"1px solid #1a1520",paddingBottom:"4px",marginBottom:"6px"}}>{div}</div>
+                <div style={{fontFamily:"Orbitron",fontSize:"15px",color:CA,letterSpacing:"2px",borderBottom:"1px solid #1a1520",paddingBottom:"4px",marginBottom:"6px"}}>{div}</div>
                 {teams.map(function(t){
                   var mine=inAny(t.t);
                   var mt=myType(t.t);
                   return(
                     <div key={t.t} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"5px 4px",borderBottom:"1px solid #0c0a14",background:mine?"rgba(240,163,10,.03)":"transparent"}}>
                       <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
-                        <span style={{fontFamily:"Orbitron",fontSize:"11px",fontWeight:700,color:mine?CA:CC,minWidth:"36px"}}>{t.t}</span>
-                        <span style={{fontSize:"9px",color:CD}}>{t.w}-{t.l}</span>
+                        <span style={{fontFamily:"Orbitron",fontSize:"17px",fontWeight:700,color:mine?CA:CC,minWidth:"36px"}}>{t.t}</span>
+                        <span style={{fontSize:"15px",color:CD}}>{t.w}-{t.l}</span>
                       </div>
                       <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
-                        {mine&&<span style={{fontSize:"9px",padding:"2px 6px",background:(mt==="make"?CG:CR)+"18",border:"1px solid "+(mt==="make"?CG:CR)+"44",color:mt==="make"?CG:CR,fontFamily:"Orbitron"}}>{mt==="make"?"MAKE":"MISS"}</span>}
+                        {mine&&<span style={{fontSize:"15px",padding:"2px 6px",background:(mt==="make"?CG:CR)+"18",border:"1px solid "+(mt==="make"?CG:CR)+"44",color:mt==="make"?CG:CR,fontFamily:"Orbitron"}}>{mt==="make"?"MAKE":"MISS"}</span>}
                         <div style={{width:"50px",height:"4px",background:"#0c0a18",borderRadius:"2px"}}>
                           <div style={{height:"100%",width:t.conf+"%",background:t.conf>=70?CG:t.conf>=50?CY:CR,borderRadius:"2px"}}/>
                         </div>
-                        <span style={{fontSize:"9px",color:t.conf>=70?CG:t.conf>=50?CY:CR,minWidth:"28px",textAlign:"right"}}>{t.conf}%</span>
+                        <span style={{fontSize:"15px",color:t.conf>=70?CG:t.conf>=50?CY:CR,minWidth:"28px",textAlign:"right"}}>{t.conf}%</span>
                       </div>
                     </div>
                   );
@@ -1903,7 +1903,7 @@ function TabParlays(){
       {view==="scout"&&(
         <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
 
-          {mlbLoading&&<div style={{display:"flex",alignItems:"center",gap:"10px",padding:"14px",background:BP,border:"1px solid #1a1520"}}><div className="spinA" style={{width:"10px",height:"10px",border:"1px solid #4a3408",borderTopColor:CA,borderRadius:"50%"}}/><span style={{fontFamily:"Orbitron",fontSize:"10px",color:CD,letterSpacing:"2px"}}>FETCHING LIVE DATA...</span></div>}
+          {mlbLoading&&<div style={{display:"flex",alignItems:"center",gap:"10px",padding:"14px",background:BP,border:"1px solid #1a1520"}}><div className="spinA" style={{width:"10px",height:"10px",border:"1px solid #4a3408",borderTopColor:CA,borderRadius:"50%"}}/><span style={{fontFamily:"Orbitron",fontSize:"19px",color:CD,letterSpacing:"2px"}}>FETCHING LIVE DATA...</span></div>}
 
           {!mlbLoading&&(function(){
             var ranked = scoutData;
@@ -1930,23 +1930,23 @@ function TabParlays(){
               return (
                 <div key={t.t} style={{padding:"8px 10px",marginBottom:"4px",background:inP?"rgba(240,163,10,.05)":BD,border:"1px solid "+(inP?CA+"55":"#1a1520")}}>
                   <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
-                    <span style={{fontFamily:"Orbitron",fontSize:"9px",color:CD,minWidth:"16px"}}>{idx+1}</span>
-                    <span style={{fontFamily:"Orbitron",fontSize:"12px",fontWeight:800,color:inP?CA:CB,minWidth:"38px"}}>{t.t}</span>
+                    <span style={{fontFamily:"Orbitron",fontSize:"15px",color:CD,minWidth:"16px"}}>{idx+1}</span>
+                    <span style={{fontFamily:"Orbitron",fontSize:"15px",fontWeight:800,color:inP?CA:CB,minWidth:"38px"}}>{t.t}</span>
                     <div style={{flex:1,height:"5px",background:"#0c0a14",borderRadius:"3px"}}>
                       <div style={{height:"100%",width:displayScore+"%",background:col,borderRadius:"3px"}}/>
                     </div>
-                    <span style={{fontFamily:"Orbitron",fontSize:"11px",fontWeight:700,color:col,minWidth:"78px",textAlign:"right"}}>{pctLabel}</span>
+                    <span style={{fontFamily:"Orbitron",fontSize:"17px",fontWeight:700,color:col,minWidth:"78px",textAlign:"right"}}>{pctLabel}</span>
                   </div>
                   <div style={{display:"flex",gap:"8px",marginTop:"4px",flexWrap:"wrap"}}>
-                    {t.simMakePct!=null&&<span style={{fontSize:"9px",color:CD}}>SIM: <span style={{color:CB}}>{side==="miss"?t.simMissPct:t.simMakePct}%</span></span>}
-                    {t.bookMakePct!=null&&<span style={{fontSize:"9px",color:CD}}>BOOK: <span style={{color:CB}}>{side==="miss"?t.bookMissPct:t.bookMakePct}%</span></span>}
-                    {edgeVal!=null&&<span style={{fontSize:"9px",color:CD}}>EDGE: <span style={{color:edgeCol,fontWeight:700}}>{edgeVal>0?"+":""}{edgeVal}%</span></span>}
-                    <span style={{fontSize:"9px",color:CD}}>REC: <span style={{color:CB}}>{t.w}-{t.l}</span></span>
-                    <span style={{fontSize:"9px",color:CD}}>VEGAS: <span style={{color:CC}}>{t.vegasWins||"--"}W</span></span>
-                    <span style={{fontSize:"9px",color:CD}}>RD/G: <span style={{color:rdColor}}>{parseFloat(t.rdPerGame)>0?"+":""}{t.rdPerGame}</span></span>
-                    <span style={{fontSize:"9px",color:t.hot?CG:t.cold?CR:CD}}>L10: {t.l10}{t.hot?" HOT":t.cold?" COLD":""}</span>
-                    <span style={{fontSize:"9px",color:t.streakLabel&&t.streakLabel[0]==="W"?CG:CR}}>STK: {t.streakLabel}</span>
-                    {inP&&<span style={{fontFamily:"Orbitron",fontSize:"8px",padding:"1px 6px",background:pMatch?CG+"22":CR+"22",color:pMatch?CG:CR,border:"1px solid "+(pMatch?CG:CR)+"44"}}>{pType} {pMatch?"ON TRACK":"AT RISK"}</span>}
+                    {t.simMakePct!=null&&<span style={{fontSize:"15px",color:CD}}>SIM: <span style={{color:CB}}>{side==="miss"?t.simMissPct:t.simMakePct}%</span></span>}
+                    {t.bookMakePct!=null&&<span style={{fontSize:"15px",color:CD}}>BOOK: <span style={{color:CB}}>{side==="miss"?t.bookMissPct:t.bookMakePct}%</span></span>}
+                    {edgeVal!=null&&<span style={{fontSize:"15px",color:CD}}>EDGE: <span style={{color:edgeCol,fontWeight:700}}>{edgeVal>0?"+":""}{edgeVal}%</span></span>}
+                    <span style={{fontSize:"15px",color:CD}}>REC: <span style={{color:CB}}>{t.w}-{t.l}</span></span>
+                    <span style={{fontSize:"15px",color:CD}}>VEGAS: <span style={{color:CC}}>{t.vegasWins||"--"}W</span></span>
+                    <span style={{fontSize:"15px",color:CD}}>RD/G: <span style={{color:rdColor}}>{parseFloat(t.rdPerGame)>0?"+":""}{t.rdPerGame}</span></span>
+                    <span style={{fontSize:"15px",color:t.hot?CG:t.cold?CR:CD}}>L10: {t.l10}{t.hot?" HOT":t.cold?" COLD":""}</span>
+                    <span style={{fontSize:"15px",color:t.streakLabel&&t.streakLabel[0]==="W"?CG:CR}}>STK: {t.streakLabel}</span>
+                    {inP&&<span style={{fontFamily:"Orbitron",fontSize:"17px",padding:"1px 6px",background:pMatch?CG+"22":CR+"22",color:pMatch?CG:CR,border:"1px solid "+(pMatch?CG:CR)+"44"}}>{pType} {pMatch?"ON TRACK":"AT RISK"}</span>}
                   </div>
                 </div>
               );
@@ -1954,7 +1954,7 @@ function TabParlays(){
 
             return (
               <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-                <div style={{padding:"8px 12px",background:"#08080f",border:"1px solid #1a1520",fontSize:"9px",color:CD,lineHeight:1.7}}>
+                <div style={{padding:"8px 12px",background:"#08080f",border:"1px solid #1a1520",fontSize:"15px",color:CD,lineHeight:1.7}}>
                   <span style={{color:CA,fontFamily:"Orbitron"}}>HOW SCORES WORK: </span>
                   Vegas O/U (40%) + Pythagorean expected wins (25%) + Run differential/game (15%) + Division standing (10%) + Last-10 streak (10%).
                   Early season = Vegas projection weighted heavily since W-L is too small a sample.
@@ -1964,48 +1964,48 @@ function TabParlays(){
                 </div>
 
                 <Panel label={"◈ MOST LIKELY TO MAKE PLAYOFFS — TOP "+makeTeams.length+" TEAMS"}>
-                  <div style={{fontSize:"9px",color:CD,marginBottom:"8px"}}>Ranked #1 = most likely to make playoffs. Score 50-97%.</div>
+                  <div style={{fontSize:"15px",color:CD,marginBottom:"8px"}}>Ranked #1 = most likely to make playoffs. Score 50-97%.</div>
                   {makeTeams.map(function(t,i){return renderTeam(t,i,"make",t.simMakePct!=null?t.simMakePct:t.score);})}
                 </Panel>
 
                 <Panel label={"◈ MOST LIKELY TO MISS PLAYOFFS — BOTTOM "+missTeams.length+" TEAMS"}>
-                  <div style={{fontSize:"9px",color:CD,marginBottom:"8px"}}>Ranked #1 = most certain to miss playoffs. Score 3-49%.</div>
+                  <div style={{fontSize:"15px",color:CD,marginBottom:"8px"}}>Ranked #1 = most certain to miss playoffs. Score 3-49%.</div>
                   {missTeams.map(function(t,i){return renderTeam(t,i,"miss",t.simMissPct!=null?t.simMissPct:100-t.score);})}
                 </Panel>
 
                 <Panel label={"◈ MARCUS — RECOMMENDED NEXT PARLAY LEGS"}>
-                  <div style={{fontSize:"9px",color:CD,marginBottom:"10px",lineHeight:1.7}}>
+                  <div style={{fontSize:"15px",color:CD,marginBottom:"10px",lineHeight:1.7}}>
                     Top 3 MAKE legs + top 3 MISS legs by composite score. These are the highest-conviction picks today.
                   </div>
                   <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px",marginBottom:"12px"}}>
                     <div>
-                      <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CG,letterSpacing:"2px",marginBottom:"6px"}}>TOP MAKE LEGS</div>
+                      <div style={{fontFamily:"Orbitron",fontSize:"15px",color:CG,letterSpacing:"2px",marginBottom:"6px"}}>TOP MAKE LEGS</div>
                       {makeTeams.slice(0,4).map(function(t){return(
                         <div key={t.t+"m"} style={{display:"flex",justifyContent:"space-between",padding:"6px 8px",marginBottom:"3px",background:"rgba(24,201,58,.06)",border:"1px solid "+CG+"22"}}>
                           <div>
-                            <span style={{fontFamily:"Orbitron",fontSize:"11px",color:CA,fontWeight:700}}>{t.t}</span>
-                            <span style={{fontSize:"9px",color:CD,marginLeft:"6px"}}>{t.w}-{t.l} ▪ {t.vegasWins}W O/U</span>
+                            <span style={{fontFamily:"Orbitron",fontSize:"17px",color:CA,fontWeight:700}}>{t.t}</span>
+                            <span style={{fontSize:"15px",color:CD,marginLeft:"6px"}}>{t.w}-{t.l} ▪ {t.vegasWins}W O/U</span>
                           </div>
-                          <span style={{fontFamily:"Orbitron",fontSize:"10px",color:CG}}>{t.score}%</span>
+                          <span style={{fontFamily:"Orbitron",fontSize:"19px",color:CG}}>{t.score}%</span>
                         </div>
                       );})}
                     </div>
                     <div>
-                      <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CR,letterSpacing:"2px",marginBottom:"6px"}}>TOP MISS LEGS</div>
+                      <div style={{fontFamily:"Orbitron",fontSize:"15px",color:CR,letterSpacing:"2px",marginBottom:"6px"}}>TOP MISS LEGS</div>
                       {missTeams.slice(0,4).map(function(t){return(
                         <div key={t.t+"ms"} style={{display:"flex",justifyContent:"space-between",padding:"6px 8px",marginBottom:"3px",background:"rgba(224,48,16,.06)",border:"1px solid "+CR+"22"}}>
                           <div>
-                            <span style={{fontFamily:"Orbitron",fontSize:"11px",color:CA,fontWeight:700}}>{t.t}</span>
-                            <span style={{fontSize:"9px",color:CD,marginLeft:"6px"}}>{t.w}-{t.l} ▪ {t.vegasWins}W O/U</span>
+                            <span style={{fontFamily:"Orbitron",fontSize:"17px",color:CA,fontWeight:700}}>{t.t}</span>
+                            <span style={{fontSize:"15px",color:CD,marginLeft:"6px"}}>{t.w}-{t.l} ▪ {t.vegasWins}W O/U</span>
                           </div>
-                          <span style={{fontFamily:"Orbitron",fontSize:"10px",color:CR}}>{t.score}%</span>
+                          <span style={{fontFamily:"Orbitron",fontSize:"19px",color:CR}}>{t.score}%</span>
                         </div>
                       );})}
                     </div>
                   </div>
                   <div style={{padding:"10px",background:"#08080f",border:"1px solid "+CA+"33"}}>
-                    <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CA,letterSpacing:"2px",marginBottom:"6px"}}>MARCUS — CONSTRUCTION ADVICE</div>
-                    <div style={{fontSize:"10px",color:CB,lineHeight:1.8}}>
+                    <div style={{fontFamily:"Orbitron",fontSize:"15px",color:CA,letterSpacing:"2px",marginBottom:"6px"}}>MARCUS — CONSTRUCTION ADVICE</div>
+                    <div style={{fontSize:"19px",color:CB,lineHeight:1.8}}>
                       Stack your highest-score MAKE legs with your lowest-score MISS legs. Legs above 80% are your anchors — build around them.
                       Legs 60-79% are strong value adds. Avoid legs 50-60% — too close to call this early.
                       Watch the run differential column: teams winning with poor RD are due for regression. Teams with strong RD but losing are due to bounce back.
@@ -2021,7 +2021,7 @@ function TabParlays(){
       {/* CALCULATOR */}
       {view==="calc"&&(
         <Panel label={"◈ CASH OUT CALCULATOR — ALL 4 PARLAYS"}>
-          <div style={{fontSize:"9px",color:CD,marginBottom:"12px"}}>Season is ~3% complete. Cash out values are estimates based on current win probability.</div>
+          <div style={{fontSize:"15px",color:CD,marginBottom:"12px"}}>Season is ~3% complete. Cash out values are estimates based on current win probability.</div>
           {PARLAY_DATA.map(function(pd){
             var pr=calcProb(pd);
             var estCo=(pd.payout*(pr/100)*0.06).toFixed(2);
@@ -2029,30 +2029,30 @@ function TabParlays(){
             return(
               <div key={pd.id} style={{background:BD,border:"1px solid #1a1520",padding:"12px",marginBottom:"8px"}}>
                 <div style={{display:"flex",justifyContent:"space-between",marginBottom:"8px"}}>
-                  <span style={{fontFamily:"Orbitron",fontSize:"12px",color:CA,fontWeight:800}}>{pd.odds}</span>
-                  <span style={{fontSize:"9px",color:CD}}>{pd.legs} legs</span>
+                  <span style={{fontFamily:"Orbitron",fontSize:"15px",color:CA,fontWeight:800}}>{pd.odds}</span>
+                  <span style={{fontSize:"15px",color:CD}}>{pd.legs} legs</span>
                 </div>
                 <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:"5px",marginBottom:"8px"}}>
                   {[["STAKE","$"+pd.stake,CC],["PAYOUT","$"+pd.payout.toLocaleString(),CG],["PROB",pr.toFixed(2)+"%",pr>5?CG:CY],["ROI",roi+"%",CG]].map(function(r){return(
                     <div key={r[0]} style={{textAlign:"center",background:BP,padding:"6px",border:"1px solid #141020"}}>
-                      <div style={{fontSize:"8px",color:CD,marginBottom:"2px"}}>{r[0]}</div>
-                      <div style={{fontFamily:"Orbitron",fontSize:"10px",color:r[2],fontWeight:700}}>{r[1]}</div>
+                      <div style={{fontSize:"17px",color:CD,marginBottom:"2px"}}>{r[0]}</div>
+                      <div style={{fontFamily:"Orbitron",fontSize:"19px",color:r[2],fontWeight:700}}>{r[1]}</div>
                     </div>
                   );})}
                 </div>
                 <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 10px",background:"rgba(240,163,10,.05)",border:"1px solid "+CA+"22"}}>
-                  <span style={{fontSize:"9px",color:CD}}>EST. CASH OUT NOW</span>
-                  <span style={{fontFamily:"Orbitron",fontSize:"13px",color:CA,fontWeight:800}}>${estCo}</span>
+                  <span style={{fontSize:"15px",color:CD}}>EST. CASH OUT NOW</span>
+                  <span style={{fontFamily:"Orbitron",fontSize:"19px",color:CA,fontWeight:800}}>${estCo}</span>
                 </div>
-                <div style={{fontSize:"9px",color:CD,marginTop:"5px"}}>
+                <div style={{fontSize:"15px",color:CD,marginTop:"5px"}}>
                   Verdict: <span style={{color:pr>2?CY:CR}}>{pr>2?"HOLD — season too early to cash out":"MONITOR — assess leg risk mid-season"}</span>
                 </div>
               </div>
             );
           })}
           <div style={{padding:"10px",background:"#08080f",border:"1px solid "+CA+"33"}}>
-            <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CA,letterSpacing:"2px",marginBottom:"6px"}}>MARCUS — PARLAY ASSESSMENT</div>
-            <div style={{fontSize:"10px",color:CB,lineHeight:1.8}}>$112 at risk against a $13,009 maximum return. The CIN hedge across parlays 2 and 4 is rational construction. Your five universal legs — Yankees, Mariners, Braves making playoffs; Angels and Astros missing — are the critical path. Monitor those above all others. It is early. Patience is the correct posture.</div>
+            <div style={{fontFamily:"Orbitron",fontSize:"15px",color:CA,letterSpacing:"2px",marginBottom:"6px"}}>MARCUS — PARLAY ASSESSMENT</div>
+            <div style={{fontSize:"19px",color:CB,lineHeight:1.8}}>$112 at risk against a $13,009 maximum return. The CIN hedge across parlays 2 and 4 is rational construction. Your five universal legs — Yankees, Mariners, Braves making playoffs; Angels and Astros missing — are the critical path. Monitor those above all others. It is early. Patience is the correct posture.</div>
           </div>
         </Panel>
       )}
@@ -2105,7 +2105,7 @@ function StockChart({ticker,price,chg}){
     setPts(arr);
   },[ticker]);
   var up=parseFloat(chg||0)>=0,col=up?CG:CR;
-  if(pts.length<2) return <div style={{height:"56px",fontSize:"9px",color:CD,display:"flex",alignItems:"center",paddingLeft:"4px"}}>LOADING...</div>;
+  if(pts.length<2) return <div style={{height:"56px",fontSize:"15px",color:CD,display:"flex",alignItems:"center",paddingLeft:"4px"}}>LOADING...</div>;
   var mn=Math.min.apply(null,pts),mx=Math.max.apply(null,pts),rng=mx-mn||0.01;
   var linePoints=pts.map(function(v,k){return [(k/(pts.length-1)*300).toFixed(1),(50-((v-mn)/rng)*45).toFixed(1)];});
   var lineD="M "+linePoints.map(function(p){return p[0]+","+p[1];}).join(" L ");
@@ -2116,7 +2116,7 @@ function StockChart({ticker,price,chg}){
         <path d={areaD} fill={col+"33"} stroke="none"/>
         <path d={lineD} fill="none" stroke={col} strokeWidth="1.5"/>
       </svg>
-      <div style={{position:"absolute",top:"2px",right:"4px",fontFamily:"Orbitron",fontSize:"8px",color:col}}>{up?"+":""}{parseFloat(chg||0).toFixed(2)}%</div>
+      <div style={{position:"absolute",top:"2px",right:"4px",fontFamily:"Orbitron",fontSize:"17px",color:col}}>{up?"+":""}{parseFloat(chg||0).toFixed(2)}%</div>
     </div>
   );
 }
@@ -2130,25 +2130,25 @@ function StockPopup({ticker,price,cost,shares,gainP,chgP,onClose}){
     <div style={{position:"fixed",top:0,left:0,right:0,bottom:0,background:"rgba(3,3,8,.93)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center"}} onClick={onClose}>
       <div style={{background:BP,border:"2px solid "+CA+"55",padding:"20px",maxWidth:"460px",width:"92%",maxHeight:"82vh",overflowY:"auto"}} onClick={function(e){e.stopPropagation();}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"12px"}}>
-          <div><div style={{fontFamily:"Orbitron",fontSize:"24px",fontWeight:900,color:CA}}>{ticker}</div><div style={{fontSize:"10px",color:CD,letterSpacing:"2px",marginTop:"2px"}}>POSITION ANALYSIS</div></div>
+          <div><div style={{fontFamily:"Orbitron",fontSize:"24px",fontWeight:900,color:CA}}>{ticker}</div><div style={{fontSize:"19px",color:CD,letterSpacing:"2px",marginTop:"2px"}}>POSITION ANALYSIS</div></div>
           <button style={{background:"transparent",border:"none",color:CD,cursor:"pointer",fontSize:"20px"}} onClick={onClose}>x</button>
         </div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"6px",marginBottom:"8px"}}>
-          <div style={{background:BD,padding:"10px",textAlign:"center"}}><div style={{fontSize:"8px",color:CD}}>PRICE</div><div style={{fontFamily:"Orbitron",fontSize:"13px",color:CB}}>${parseFloat(price).toFixed(2)}</div></div>
-          <div style={{background:BD,padding:"10px",textAlign:"center"}}><div style={{fontSize:"8px",color:CD}}>TODAY</div><div style={{fontFamily:"Orbitron",fontSize:"13px",color:tUp?CG:CR}}>{tUp?"+":""}{parseFloat(chgP).toFixed(2)}%</div></div>
-          <div style={{background:BD,padding:"10px",textAlign:"center"}}><div style={{fontSize:"8px",color:CD}}>TOTAL</div><div style={{fontFamily:"Orbitron",fontSize:"13px",color:up?CG:CR}}>{up?"+":""}{parseFloat(gainP).toFixed(2)}%</div></div>
+          <div style={{background:BD,padding:"10px",textAlign:"center"}}><div style={{fontSize:"17px",color:CD}}>PRICE</div><div style={{fontFamily:"Orbitron",fontSize:"19px",color:CB}}>${parseFloat(price).toFixed(2)}</div></div>
+          <div style={{background:BD,padding:"10px",textAlign:"center"}}><div style={{fontSize:"17px",color:CD}}>TODAY</div><div style={{fontFamily:"Orbitron",fontSize:"19px",color:tUp?CG:CR}}>{tUp?"+":""}{parseFloat(chgP).toFixed(2)}%</div></div>
+          <div style={{background:BD,padding:"10px",textAlign:"center"}}><div style={{fontSize:"17px",color:CD}}>TOTAL</div><div style={{fontFamily:"Orbitron",fontSize:"19px",color:up?CG:CR}}>{up?"+":""}{parseFloat(gainP).toFixed(2)}%</div></div>
         </div>
         <StockChart ticker={ticker} price={price} chg={chgP}/>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px",marginBottom:"8px",marginTop:"8px"}}>
-          <div style={{background:BD,padding:"8px"}}><div style={{fontSize:"9px",color:CD}}>SHARES</div><div style={{fontFamily:"Orbitron",fontSize:"11px",color:CB}}>{parseFloat(shares).toFixed(3)}</div></div>
-          <div style={{background:BD,padding:"8px"}}><div style={{fontSize:"9px",color:CD}}>AVG COST</div><div style={{fontFamily:"Orbitron",fontSize:"11px",color:CB}}>${parseFloat(cost).toFixed(2)}</div></div>
-          <div style={{background:BD,padding:"8px"}}><div style={{fontSize:"9px",color:CD}}>MKT VALUE</div><div style={{fontFamily:"Orbitron",fontSize:"11px",color:CB}}>${mv.toFixed(2)}</div></div>
-          <div style={{background:BD,padding:"8px"}}><div style={{fontSize:"9px",color:CD}}>P&L</div><div style={{fontFamily:"Orbitron",fontSize:"11px",color:up?CG:CR}}>{tg>=0?"+$":"-$"}{Math.abs(tg).toFixed(2)}</div></div>
+          <div style={{background:BD,padding:"8px"}}><div style={{fontSize:"15px",color:CD}}>SHARES</div><div style={{fontFamily:"Orbitron",fontSize:"17px",color:CB}}>{parseFloat(shares).toFixed(3)}</div></div>
+          <div style={{background:BD,padding:"8px"}}><div style={{fontSize:"15px",color:CD}}>AVG COST</div><div style={{fontFamily:"Orbitron",fontSize:"17px",color:CB}}>${parseFloat(cost).toFixed(2)}</div></div>
+          <div style={{background:BD,padding:"8px"}}><div style={{fontSize:"15px",color:CD}}>MKT VALUE</div><div style={{fontFamily:"Orbitron",fontSize:"17px",color:CB}}>${mv.toFixed(2)}</div></div>
+          <div style={{background:BD,padding:"8px"}}><div style={{fontSize:"15px",color:CD}}>P&L</div><div style={{fontFamily:"Orbitron",fontSize:"17px",color:up?CG:CR}}>{tg>=0?"+$":"-$"}{Math.abs(tg).toFixed(2)}</div></div>
         </div>
         <div style={{padding:"12px",background:"rgba(240,163,10,.06)",border:"1px solid "+CA+"33"}}>
-          <div style={{fontSize:"8px",color:CD,marginBottom:"4px"}}>RSI: {ts.rsi} — {ts.rsi<30?"OVERSOLD":ts.rsi>70?"OVERBOUGHT":"NEUTRAL"}</div>
-          <div style={{fontFamily:"Orbitron",fontSize:"9px",color:CA,letterSpacing:"2px",marginBottom:"6px"}}>MARCUS — {recMap[ts.signal]}</div>
-          <div style={{fontSize:"10px",color:CC,lineHeight:1.8}}>{noteMap[ts.signal]}</div>
+          <div style={{fontSize:"17px",color:CD,marginBottom:"4px"}}>RSI: {ts.rsi} — {ts.rsi<30?"OVERSOLD":ts.rsi>70?"OVERBOUGHT":"NEUTRAL"}</div>
+          <div style={{fontFamily:"Orbitron",fontSize:"15px",color:CA,letterSpacing:"2px",marginBottom:"6px"}}>MARCUS — {recMap[ts.signal]}</div>
+          <div style={{fontSize:"19px",color:CC,lineHeight:1.8}}>{noteMap[ts.signal]}</div>
         </div>
       </div>
     </div>
@@ -2160,7 +2160,7 @@ function Panel({label,right,children}){
     <div style={{background:"rgba(255,255,255,0.65)",backdropFilter:"blur(12px)",WebkitBackdropFilter:"blur(12px)",border:"1px solid rgba(255,255,255,0.85)",borderRadius:"16px",padding:"14px 16px",marginBottom:"10px",boxShadow:"0 2px 20px rgba(99,102,241,0.07)"}}>
       {label&&(
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"10px",paddingBottom:"8px",borderBottom:"1px solid rgba(99,102,241,0.1)"}}>
-          <span style={{fontFamily:"Orbitron",fontSize:"9px",fontWeight:700,color:"#6366f1",letterSpacing:"2px"}}>{label}</span>
+          <span style={{fontFamily:"Orbitron",fontSize:"15px",fontWeight:700,color:"#6366f1",letterSpacing:"2px"}}>{label}</span>
           {right&&<span>{right}</span>}
         </div>
       )}
@@ -2195,7 +2195,7 @@ function Gauge({score,label}) {
         <line x1="70" y1="75" x2="70" y2="28" stroke={color} strokeWidth="2" strokeLinecap="round" transform={"rotate("+rot+",70,75)"}/>
         <circle cx="70" cy="75" r="4" fill={color}/>
       </svg>
-      <div style={{fontFamily:"Orbitron",fontSize:"10px",color:color,letterSpacing:"3px"}}>{(label||"").toUpperCase()}</div>
+      <div style={{fontFamily:"Orbitron",fontSize:"19px",color:color,letterSpacing:"3px"}}>{(label||"").toUpperCase()}</div>
     </div>
   );
 }
@@ -2209,11 +2209,11 @@ function Spinner({label}) {
   return (
     <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
       <div className="spinA" style={{width:"10px",height:"10px",border:"1px solid #4a3408",borderTopColor:CA,borderRadius:"50%"}}/>
-      <span style={{fontFamily:"Orbitron",fontSize:"10px",letterSpacing:"2px",color:"#4a3408"}}>{label}{".".repeat(d)}</span>
+      <span style={{fontFamily:"Orbitron",fontSize:"19px",letterSpacing:"2px",color:"#4a3408"}}>{label}{".".repeat(d)}</span>
     </div>
   );
 }
 
 function ErrMsg({text}) {
-  return <div style={{color:CR,fontSize:"10px",letterSpacing:"1px"}}>⚠ {text}</div>;
+  return <div style={{color:CR,fontSize:"19px",letterSpacing:"1px"}}>⚠ {text}</div>;
 }
