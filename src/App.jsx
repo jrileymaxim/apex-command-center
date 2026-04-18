@@ -798,7 +798,23 @@ async function fetchEdgarFilings(){
       }
     }catch(e){}
   }));
-    // Deduplicate: one card per ticker+form+date (multiple same-day Form 4s become one)
+    // Fetch txDir for all Form 4s in parallel via /api/txdir
+  var form4s = all.filter(function(f){return f.form==="4"&&f.acc&&f.cik&&f.xmlFile;});
+  if(form4s.length>0){
+    var txdirResults = await Promise.all(form4s.map(function(f){
+      return fetch("/api/txdir",{
+        method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({cik:f.cik,acc:f.acc,xmlFile:f.xmlFile})
+      }).then(function(r){return r.json();}).catch(function(){return {txDir:null};});
+    }));
+    form4s.forEach(function(f,i){
+      f.txDir = txdirResults[i].txDir||null;
+      // Re-evaluate urgency: sells are not urgent
+      if(f.txDir==="SELL") f.urgent=false;
+    });
+  }
+
+  // Deduplicate: one card per ticker+form+date (multiple same-day Form 4s become one)
   var seen={};
   var deduped=[];
   all.forEach(function(f){
