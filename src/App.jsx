@@ -328,6 +328,27 @@ export default function App() {
   function speakReply(text,onDone){
     if(!text){if(onDone)onDone();return;}
     window.speechSynthesis.cancel();
+    // Try ElevenLabs first, fall back to browser TTS
+    fetch("/api/tts",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text:text})})
+    .then(function(r){
+      var ct=r.headers.get("content-type")||"";
+      if(ct.includes("audio")){
+        return r.blob().then(function(blob){
+          var url=URL.createObjectURL(blob);
+          var audio=new Audio(url);
+          audio.onended=function(){URL.revokeObjectURL(url);if(onDone)onDone();};
+          audio.onerror=function(){URL.revokeObjectURL(url);browserSpeak(text,onDone);};
+          audio.play().catch(function(){browserSpeak(text,onDone);});
+        });
+      } else {
+        // fallback:true or error — use browser
+        browserSpeak(text,onDone);
+      }
+    })
+    .catch(function(){browserSpeak(text,onDone);});
+  }
+
+  function browserSpeak(text,onDone){
     var utt=new SpeechSynthesisUtterance(text);
     utt.rate=0.92; utt.pitch=1.0; utt.volume=1.0;
     function doSpeak(){
