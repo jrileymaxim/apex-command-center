@@ -33,7 +33,7 @@
     {
       "id": "aviation",
       "name": "Aviation",
-      "thesis": "AAL recovery play Ã¢ÂÂ merger speculation, Strait of Hormuz oil tailwind, and travel demand resilience.",
+      "thesis": "AAL recovery play ÃÂ¢ÃÂÃÂ merger speculation, Strait of Hormuz oil tailwind, and travel demand resilience.",
       "color": "#60A5FA"
     },
     {
@@ -284,7 +284,7 @@
       "type": "earnings",
       "date": "2026-04-24",
       "importance": 3,
-      "notes": "Q1 2026 Ã¢ÂÂ revenue ~$13.5B est",
+      "notes": "Q1 2026 ÃÂ¢ÃÂÃÂ revenue ~$13.5B est",
       "autoPopulated": false
     },
     {
@@ -311,7 +311,7 @@
       "type": "earnings",
       "date": "2026-05-06",
       "importance": 4,
-      "notes": "Q1 2026 Ã¢ÂÂ AI networking growth 20%+ est",
+      "notes": "Q1 2026 ÃÂ¢ÃÂÃÂ AI networking growth 20%+ est",
       "autoPopulated": false
     },
     {
@@ -329,7 +329,7 @@
       "type": "earnings",
       "date": "2026-05-07",
       "importance": 5,
-      "notes": "Q1 2026 earnings Ã¢ÂÂ LEAPS exposure",
+      "notes": "Q1 2026 earnings ÃÂ¢ÃÂÃÂ LEAPS exposure",
       "autoPopulated": false
     },
     {
@@ -338,7 +338,7 @@
       "type": "earnings",
       "date": "2026-05-12",
       "importance": 4,
-      "notes": "First earnings as public Ã¢ÂÂ revenue trajectory",
+      "notes": "First earnings as public ÃÂ¢ÃÂÃÂ revenue trajectory",
       "autoPopulated": false
     },
     {
@@ -347,7 +347,7 @@
       "type": "earnings",
       "date": "2026-05-14",
       "importance": 3,
-      "notes": "Q1 2026 Ã¢ÂÂ revenue growth + cash burn",
+      "notes": "Q1 2026 ÃÂ¢ÃÂÃÂ revenue growth + cash burn",
       "autoPopulated": false
     },
     {
@@ -365,7 +365,7 @@
       "type": "earnings",
       "date": "2026-05-28",
       "importance": 5,
-      "notes": "Q1 FY27 Ã¢ÂÂ Blackwell ramp, $43B+ rev est",
+      "notes": "Q1 FY27 ÃÂ¢ÃÂÃÂ Blackwell ramp, $43B+ rev est",
       "autoPopulated": false
     },
     {
@@ -374,8 +374,90 @@
       "type": "earnings",
       "date": "2026-06-25",
       "importance": 4,
-      "notes": "Q3 FY26 Ã¢ÂÂ HBM3E for AI, guidance key",
+      "notes": "Q3 FY26 ÃÂ¢ÃÂÃÂ HBM3E for AI, guidance key",
       "autoPopulated": false
     }
-  ]
+  ],
+  "rhActuals": {
+    "updatedAt": "2026-04-19",
+    "positions": {
+      "AAL": {
+        "gainAmt": 17.24,
+        "gainPct": 12.01
+      },
+      "MNTS": {
+        "gainAmt": 6.17,
+        "gainPct": 2.8
+      },
+      "ANET": {
+        "gainAmt": 42.43,
+        "gainPct": 14.81
+      },
+      "TSM": {
+        "gainAmt": -20.29,
+        "gainPct": -0.8
+      },
+      "MU": {
+        "gainAmt": 39.68,
+        "gainPct": 9.52
+      },
+      "NVDA": {
+        "gainAmt": 48.57,
+        "gainPct": 5.42
+      },
+      "SOUN": {
+        "gainAmt": -0.23,
+        "gainPct": -0.94
+      },
+      "VTI": {
+        "gainAmt": 36.16,
+        "gainPct": 3.56
+      },
+      "CRWV": {
+        "gainAmt": 55.89,
+        "gainPct": 4.58
+      },
+      "GLD": {
+        "gainAmt": 1.86,
+        "gainPct": 1.06
+      },
+      "BBAI": {
+        "gainAmt": 17.5,
+        "gainPct": 9.83
+      },
+      "XYL": {
+        "gainAmt": -0.01,
+        "gainPct": -0.84
+      },
+      "PNR": {
+        "gainAmt": -0.72,
+        "gainPct": -0.78
+      },
+      "AWK": {
+        "gainAmt": 1.11,
+        "gainPct": 0.85
+      },
+      "VLTO": {
+        "gainAmt": -0.36,
+        "gainPct": -0.77
+      },
+      "GWRS": {
+        "gainAmt": 0.2,
+        "gainPct": 0.26
+      },
+      "CDZI": {
+        "gainAmt": -0.36,
+        "gainPct": -0.82
+      },
+      "GRC": {
+        "gainAmt": -0.05,
+        "gainPct": -1.67
+      }
+    },
+    "leaps": {
+      "gainAmt": 132,
+      "gainPct": 36.46,
+      "costBasis": 362.04
+    }
+  }
 }
