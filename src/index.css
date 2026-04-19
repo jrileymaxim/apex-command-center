@@ -5,7 +5,7 @@
 body {
   margin: 0;
   font-family: 'Courier New', monospace;
-  background: #010a08;
+  background: #000c0a;
   color: #b0ece4;
   height: 100vh;
   overflow: hidden;
@@ -57,18 +57,19 @@ body {
 }
 
 .panel {
-  background: #010e0c;
+  background: rgba(0,229,204,0.07);
   background-image:
-    linear-gradient(rgba(0,229,204,0.015) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,229,204,0.015) 1px, transparent 1px);
-  background-size: 24px 24px;
-  border: 1px solid #003d30;
-  border-top: 2px solid rgba(0,229,204,0.35);
+    linear-gradient(rgba(0,229,204,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,229,204,0.04) 1px, transparent 1px);
+  background-size: 22px 22px;
+  border: 1px solid rgba(0,229,204,0.2);
+  border-top: 2px solid rgba(0,229,204,0.5);
   border-radius: 2px;
   padding: 14px 16px;
   margin-bottom: 8px;
-  box-shadow: 0 0 16px rgba(0,229,204,0.07), inset 0 0 60px rgba(0,229,204,0.02);
+  box-shadow: 0 0 20px rgba(0,229,204,0.1), 0 0 60px rgba(0,229,204,0.04), inset 0 0 30px rgba(0,229,204,0.04);
   position: relative;
+  backdrop-filter: blur(2px);
 }
 
 .panel::before {
