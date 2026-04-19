@@ -511,22 +511,19 @@ export default function App() {
       fetch('/api/tts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:'Hello Mr. Witcomb'})})
       .then(function(r){return r.arrayBuffer();})
       .then(function(buf){
-        try{
-          var ac=window._apexAC||new (window.AudioContext||window.webkitAudioContext)();
-          ac.resume().then(function(){
-            ac.decodeAudioData(buf,function(decoded){
-              var src=ac.createBufferSource();
-              src.buffer=decoded;src.connect(ac.destination);src.start(0);
-            },function(){
-              var u=new SpeechSynthesisUtterance('Hello Mr. Witcomb');
-              window.speechSynthesis.speak(u);
-            });
+        var ac=new (window.AudioContext||window.webkitAudioContext)();
+        ac.resume().then(function(){
+          ac.decodeAudioData(buf.slice(0),function(decoded){
+            var src=ac.createBufferSource();
+            src.buffer=decoded;src.connect(ac.destination);src.start(0);
+          },function(){
+            var u=new SpeechSynthesisUtterance('Hello Mr. Witcomb');
+            window.speechSynthesis.speak(u);
           });
-        }catch(e){
-          var u=new SpeechSynthesisUtterance('Hello Mr. Witcomb');
-          window.speechSynthesis.speak(u);
-        }
-      }).catch(function(){});
+        });
+      }).catch(function(){
+        try{var u=new SpeechSynthesisUtterance('Hello Mr. Witcomb');window.speechSynthesis.speak(u);}catch(e){}
+      });
     },2900);
     return function(){[t1,t2,t3,t4,t5,t6].forEach(clearTimeout);};
   },[entering]);
