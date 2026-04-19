@@ -53,7 +53,7 @@ function DebatePanel({ ticker }) {
   }, [ticker]);
   if (loading) return (
     <div style={{padding:'12px 16px',background:'rgba(0,0,0,0.3)',fontSize:11,color:Y,letterSpacing:1}}>
-      RESEARCHING {ticker} — SCANNING WEB FOR REAL DATA...
+      RESEARCHING {ticker} â SCANNING WEB FOR REAL DATA...
     </div>
   );
   if (!data) return null;
@@ -82,7 +82,7 @@ function TopPickCard() {
   }, []);
   if (loading) return (
     <div style={{background:'rgba(255,215,0,0.04)',border:'1px solid rgba(255,215,0,0.2)',borderRadius:8,padding:'12px 16px',marginBottom:12}}>
-      <div style={{fontSize:9,color:Y,letterSpacing:2,marginBottom:4}}>AI TOP PICK — SCANNING MARKET...</div>
+      <div style={{fontSize:9,color:Y,letterSpacing:2,marginBottom:4}}>AI TOP PICK â SCANNING MARKET...</div>
       <div style={{height:3,background:'rgba(255,215,0,0.1)',borderRadius:2,overflow:'hidden'}}>
         <div style={{height:'100%',width:'60%',background:Y,animation:'none',opacity:0.5}}/>
       </div>
@@ -93,7 +93,7 @@ function TopPickCard() {
     <div style={{background:'rgba(255,215,0,0.04)',border:'1px solid rgba(255,215,0,0.3)',borderLeft:'4px solid '+Y,borderRadius:8,padding:'14px 16px',marginBottom:12}}>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:10}}>
         <div>
-          <div style={{fontSize:9,color:Y,letterSpacing:3,marginBottom:4}}>AI TOP PICK — HIDDEN GEM</div>
+          <div style={{fontSize:9,color:Y,letterSpacing:3,marginBottom:4}}>AI TOP PICK â HIDDEN GEM</div>
           <div style={{display:'flex',alignItems:'center',gap:10}}>
             <span style={{fontSize:20,fontWeight:700,color:'#fff',fontFamily:'JetBrains Mono,monospace'}}>{pick.ticker}</span>
             <span style={{fontSize:12,color:DIM}}>{pick.name}</span>
@@ -107,7 +107,7 @@ function TopPickCard() {
           {pick.timeframe && <div style={{fontSize:9,color:DIM,marginTop:4}}>{pick.timeframe}</div>}
         </div>
       </div>
-      {pick.catalyst && <div style={{fontSize:11,color:Y,marginBottom:6,fontWeight:700}}>⚡ {pick.catalyst}</div>}
+      {pick.catalyst && <div style={{fontSize:11,color:Y,marginBottom:6,fontWeight:700}}>â¡ {pick.catalyst}</div>}
       {pick.thesis && <div style={{fontSize:11,color:'rgba(255,255,255,0.85)',lineHeight:1.7,marginBottom:6}}>{pick.thesis}</div>}
       {pick.risk && <div style={{fontSize:10,color:'rgba(255,68,78,0.7)'}}>RISK: {pick.risk}</div>}
     </div>
@@ -120,7 +120,7 @@ function PosRow({ pos, quote, rhPnl, analyst, insider }) {
   const dayPct = quote?.chgPct ?? null;
   const gainAmt = rhPnl?rhPnl.gainAmt:(price&&pos.avgCost?(price-pos.avgCost)*pos.shares:null);
   const gainPct = rhPnl?rhPnl.gainPct:(pos.avgCost&&gainAmt!==null?gainAmt/(pos.avgCost*pos.shares)*100:null);
-  const theme = THEME_META[pos.themeIds?.[0]]||{label:'—',color:'#888'};
+  const theme = THEME_META[pos.themeIds?.[0]]||{label:'â',color:'#888'};
   const upside = analyst?.mean&&price?((analyst.mean-price)/price*100):null;
   const signal = getSignal(dayPct, analyst?{...analyst,price}:null, insider);
   const isAlert = dayPct!==null&&Math.abs(dayPct)>=3;
@@ -141,15 +141,15 @@ function PosRow({ pos, quote, rhPnl, analyst, insider }) {
           <span style={{fontSize:9,padding:'2px 5px',background:theme.color+'22',color:theme.color,borderRadius:3}}>{theme.label}</span>
           <span style={{fontSize:10,color:DIM}}>{pos.shares}sh</span>
         </div>
-        <span style={{fontSize:11,color:DIM,textAlign:'right'}}>{price?'$'+price.toFixed(2):'—'}</span>
-        <span style={{fontSize:11,color:col(dayPct||0),textAlign:'right',fontFamily:'JetBrains Mono,monospace'}}>{dayPct!==null?(sgn(dayPct)+dayPct.toFixed(2)+'%'):'—'}</span>
-        <span style={{fontSize:11,color:gainAmt!==null?col(gainAmt):DIM,textAlign:'right',fontFamily:'JetBrains Mono,monospace'}}>{gainAmt!==null?(sgn(gainAmt)+'$'+Math.abs(gainAmt).toFixed(2)):'—'}</span>
+        <span style={{fontSize:11,color:DIM,textAlign:'right'}}>{price?'$'+price.toFixed(2):'â'}</span>
+        <span style={{fontSize:11,color:col(dayPct||0),textAlign:'right',fontFamily:'JetBrains Mono,monospace'}}>{dayPct!==null?(sgn(dayPct)+dayPct.toFixed(2)+'%'):'â'}</span>
+        <span style={{fontSize:11,color:gainAmt!==null?col(gainAmt):DIM,textAlign:'right',fontFamily:'JetBrains Mono,monospace'}}>{gainAmt!==null?(sgn(gainAmt)+'$'+Math.abs(gainAmt).toFixed(2)):'â'}</span>
         <div style={{textAlign:'right'}}>
-          <div style={{fontSize:11,color:gainPct!==null?col(gainPct):DIM,fontFamily:'JetBrains Mono,monospace'}}>{gainPct!==null?(sgn(gainPct)+gainPct.toFixed(2)+'%'):'—'}</div>
+          <div style={{fontSize:11,color:gainPct!==null?col(gainPct):DIM,fontFamily:'JetBrains Mono,monospace'}}>{gainPct!==null?(sgn(gainPct)+gainPct.toFixed(2)+'%'):'â'}</div>
           {upside!==null&&<div style={{fontSize:9,color:upside>0?G:R}}>{sgn(upside)+upside.toFixed(0)}% to tgt</div>}
         </div>
         <span style={{fontSize:9,padding:'2px 6px',background:signal.color+'18',color:signal.color,border:'1px solid '+signal.color+'44',borderRadius:3,textAlign:'center',fontWeight:700,letterSpacing:0.5}}>{signal.label}</span>
-        <span style={{fontSize:10,color:DIM,textAlign:'center'}}>{expanded?'▲':'▼'}</span>
+        <span style={{fontSize:10,color:DIM,textAlign:'center'}}>{expanded?'â²':'â¼'}</span>
       </div>
       {expanded&&(
         <div style={{borderBottom:'1px solid rgba(255,255,255,0.05)'}}>
@@ -174,10 +174,10 @@ function SyncModal({ onSave, onClose, current }) {
     <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.88)',zIndex:1000,display:'flex',alignItems:'center',justifyContent:'center'}} onClick={onClose}>
       <div style={{background:'#0e0e1a',border:'1px solid rgba(255,255,255,0.12)',borderRadius:12,padding:28,width:380,maxWidth:'90vw'}} onClick={e=>e.stopPropagation()}>
         <div style={{fontSize:11,color:'#B84AFF',letterSpacing:3,marginBottom:4}}>ROBINHOOD SYNC</div>
-        <div style={{fontSize:12,color:DIM,marginBottom:20,lineHeight:1.6}}>Open Robinhood → Portfolio screen. 3 numbers. 10 seconds.</div>
+        <div style={{fontSize:12,color:DIM,marginBottom:20,lineHeight:1.6}}>Open Robinhood â Portfolio screen. 3 numbers. 10 seconds.</div>
         {[
           ['Portfolio Value','Total account value at top',val,setVal,'e.g. 8420.15'],
-          ['Total Return $','Green/red P&L (all time)',ret,setRet,'e.g. +376.79'],
+          ['Total Return $','Green/red P&amp;L (all time)',ret,setRet,'e.g. +376.79'],
           ['Amount Deposited','Your net cash in (not margin)',dep,setDep,'e.g. 7500.00'],
         ].map(([label,hint,v,set,ph])=>(
           <div key={label} style={{marginBottom:14}}>
@@ -195,7 +195,7 @@ function SyncModal({ onSave, onClose, current }) {
         )}
         <div style={{display:'flex',gap:10}}>
           <button onClick={onClose} style={{flex:1,padding:'10px',background:'transparent',border:'1px solid rgba(255,255,255,0.12)',borderRadius:6,color:DIM,cursor:'pointer',fontSize:11}}>Cancel</button>
-          <button onClick={save} disabled={!pv||!ad} style={{flex:2,padding:'10px',background:pv&&ad?'rgba(184,74,255,0.2)':'rgba(255,255,255,0.04)',border:'1px solid '+(pv&&ad?'#B84AFF':'rgba(255,255,255,0.08)'),borderRadius:6,color:pv&&ad?'#B84AFF':DIM,cursor:pv&&ad?'pointer':'default',fontSize:11,fontWeight:700,letterSpacing:2}}>SYNC →</button>
+          <button onClick={save} disabled={!pv||!ad} style={{flex:2,padding:'10px',background:pv&&ad?'rgba(184,74,255,0.2)':'rgba(255,255,255,0.04)',border:'1px solid '+(pv&&ad?'#B84AFF':'rgba(255,255,255,0.08)'),borderRadius:6,color:pv&&ad?'#B84AFF':DIM,cursor:pv&&ad?'pointer':'default',fontSize:11,fontWeight:700,letterSpacing:2}}>SYNC â</button>
         </div>
       </div>
     </div>
@@ -204,7 +204,7 @@ function SyncModal({ onSave, onClose, current }) {
 
 function StatCard({label,value,valueColor,sub}){return(<div style={{background:'rgba(255,255,255,0.04)',border:'1px solid rgba(255,255,255,0.08)',borderRadius:8,padding:'12px 14px'}}><div style={{fontSize:10,color:DIM,letterSpacing:2,marginBottom:4}}>{label}</div><div style={{fontSize:20,fontWeight:700,color:valueColor||'#fff',fontFamily:'JetBrains Mono,monospace',lineHeight:1}}>{value}</div>{sub&&<div style={{fontSize:11,color:DIM,marginTop:3}}>{sub}</div>}</div>);}
 
-function LeapsMini({onData}){const[data,setData]=useState(null);useEffect(()=>{fetch('/api/options').then(r=>r.json()).then(d=>{setData(d);onData&&onData(d);}).catch(()=>{});},[]);if(!data)return null;const{combined,leaps}=data;return(<div style={{background:'rgba(184,74,255,0.06)',border:'1px solid rgba(184,74,255,0.25)',borderRadius:8,padding:'12px 16px',marginBottom:12}}><div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:10}}><div><div style={{fontSize:10,color:'#B84AFF',letterSpacing:2,marginBottom:2}}>SOUN LEAPS</div><div style={{fontSize:11,color:DIM}}>2 contracts · $10C · SOUN @ ${data.spot.toFixed(2)}</div></div><div style={{textAlign:'right'}}><div style={{fontSize:22,fontWeight:700,color:combined.totalPnl>=0?G:R,fontFamily:'JetBrains Mono,monospace'}}>{combined.totalPnl>=0?'+':''}${Math.abs(combined.totalPnl).toFixed(0)}</div><div style={{fontSize:11,color:combined.totalPnl>=0?G:R}}>{((combined.totalPnl/combined.totalCost)*100).toFixed(1)}% · cost ${combined.totalCost.toFixed(0)}</div></div></div><div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:10}}>{leaps.map((l,i)=>{const bePct=Math.min(100,(data.spot/l.breakeven)*100);return(<div key={i} style={{background:'rgba(0,0,0,0.2)',borderRadius:6,padding:'8px 10px'}}><div style={{fontSize:10,color:'#B84AFF',marginBottom:4}}>{l.expiry.slice(2).replace(/-/g,'/')}</div><div style={{display:'flex',justifyContent:'space-between',fontSize:11,marginBottom:6}}><span style={{color:DIM}}>Δ {l.delta.toFixed(3)}</span><span style={{color:DIM}}>Θ ${Math.abs(l.dailyTheta).toFixed(2)}/d</span><span style={{color:l.pnl>=0?G:R}}>{l.pnl>=0?'+':''}${Math.abs(l.pnl).toFixed(0)}</span></div><div style={{height:3,background:'rgba(255,255,255,0.08)',borderRadius:2}}><div style={{height:'100%',width:bePct+'%',background:'#B84AFF',borderRadius:2}}/></div><div style={{fontSize:9,color:DIM,marginTop:2,textAlign:'right'}}>BE ${l.breakeven} · {bePct.toFixed(0)}%</div></div>);})}</div><div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}><div style={{display:'flex',gap:16,fontSize:10,color:DIM}}><span>ΣΔ {combined.combinedDelta.toFixed(3)}</span><span>Θ ${Math.abs(combined.dailyThetaTotal).toFixed(2)}/day</span></div><Link to="/theme/options" style={{fontSize:10,color:'#B84AFF',textDecoration:'none',letterSpacing:1}}>FULL GREEKS →</Link></div></div>);}
+function LeapsMini({onData}){const[data,setData]=useState(null);useEffect(()=>{fetch('/api/options').then(r=>r.json()).then(d=>{setData(d);onData&&onData(d);}).catch(()=>{});},[]);if(!data)return null;const{combined,leaps}=data;return(<div style={{background:'rgba(184,74,255,0.06)',border:'1px solid rgba(184,74,255,0.25)',borderRadius:8,padding:'12px 16px',marginBottom:12}}><div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:10}}><div><div style={{fontSize:10,color:'#B84AFF',letterSpacing:2,marginBottom:2}}>SOUN LEAPS</div><div style={{fontSize:11,color:DIM}}>2 contracts Â· $10C Â· SOUN @ ${data.spot.toFixed(2)}</div></div><div style={{textAlign:'right'}}><div style={{fontSize:22,fontWeight:700,color:combined.totalPnl>=0?G:R,fontFamily:'JetBrains Mono,monospace'}}>{combined.totalPnl>=0?'+':''}${Math.abs(combined.totalPnl).toFixed(0)}</div><div style={{fontSize:11,color:combined.totalPnl>=0?G:R}}>{((combined.totalPnl/combined.totalCost)*100).toFixed(1)}% Â· cost ${combined.totalCost.toFixed(0)}</div></div></div><div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:10}}>{leaps.map((l,i)=>{const bePct=Math.min(100,(data.spot/l.breakeven)*100);return(<div key={i} style={{background:'rgba(0,0,0,0.2)',borderRadius:6,padding:'8px 10px'}}><div style={{fontSize:10,color:'#B84AFF',marginBottom:4}}>{l.expiry.slice(2).replace(/-/g,'/')}</div><div style={{display:'flex',justifyContent:'space-between',fontSize:11,marginBottom:6}}><span style={{color:DIM}}>Î {l.delta.toFixed(3)}</span><span style={{color:DIM}}>Î ${Math.abs(l.dailyTheta).toFixed(2)}/d</span><span style={{color:l.pnl>=0?G:R}}>{l.pnl>=0?'+':''}${Math.abs(l.pnl).toFixed(0)}</span></div><div style={{height:3,background:'rgba(255,255,255,0.08)',borderRadius:2}}><div style={{height:'100%',width:bePct+'%',background:'#B84AFF',borderRadius:2}}/></div><div style={{fontSize:9,color:DIM,marginTop:2,textAlign:'right'}}>BE ${l.breakeven} Â· {bePct.toFixed(0)}%</div></div>);})}</div><div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}><div style={{display:'flex',gap:16,fontSize:10,color:DIM}}><span>Î£Î {combined.combinedDelta.toFixed(3)}</span><span>Î ${Math.abs(combined.dailyThetaTotal).toFixed(2)}/day</span></div><Link to="/theme/options" style={{fontSize:10,color:'#B84AFF',textDecoration:'none',letterSpacing:1}}>FULL GREEKS â</Link></div></div>);}
 
 export default function Home() {
   const { positions, catalysts: seedCatalysts } = usePortfolio();
@@ -258,9 +258,9 @@ export default function Home() {
           <span style={{fontSize:10,color:DIM,letterSpacing:2}}>COMMAND CENTER</span>
         </div>
         <div style={{display:'flex',alignItems:'center',gap:12}}>
-          {alerts>0&&<span style={{fontSize:10,color:Y,padding:'2px 8px',border:'1px solid '+Y+'44',borderRadius:4}}>⚡ {alerts} MOVERS</span>}
+          {alerts>0&&<span style={{fontSize:10,color:Y,padding:'2px 8px',border:'1px solid '+Y+'44',borderRadius:4}}>â¡ {alerts} MOVERS</span>}
           {insiderAlerts>0&&<span style={{fontSize:10,color:'#B84AFF',padding:'2px 8px',border:'1px solid #B84AFF44',borderRadius:4}}>SEC {insiderAlerts} FILINGS</span>}
-          <button onClick={()=>setShowSync(true)} style={{fontSize:10,padding:'4px 12px',background:sync?'rgba(0,255,136,0.08)':'rgba(184,74,255,0.12)',border:'1px solid '+(sync?'#2AFF8F44':'#B84AFF66'),borderRadius:5,color:sync?G:'#B84AFF',cursor:'pointer',letterSpacing:1}}>{sync?('● SYNCED · '+syncAge):'↻ SYNC RH'}</button>
+          <button onClick={()=>setShowSync(true)} style={{fontSize:10,padding:'4px 12px',background:sync?'rgba(0,255,136,0.08)':'rgba(184,74,255,0.12)',border:'1px solid '+(sync?'#2AFF8F44':'#B84AFF66'),borderRadius:5,color:sync?G:'#B84AFF',cursor:'pointer',letterSpacing:1}}>{sync?('â SYNCED Â· '+syncAge):'â» SYNC RH'}</button>
           <span style={{fontSize:14,fontWeight:700,color:'#fff',fontFamily:'JetBrains Mono,monospace'}}>{timeStr}</span>
         </div>
       </div>
@@ -268,7 +268,7 @@ export default function Home() {
         <ClusterBanner catalysts={catalysts}/>
         <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:10,margin:'14px 0'}}>
           <StatCard label="PORTFOLIO VALUE" value={'$'+portfolioValue.toFixed(2)} sub={sync?'as of '+syncAge:'estimated'}/>
-          <StatCard label="DAY P&L" value={(dayPnl>=0?'+':'')+'$'+Math.abs(dayPnl).toFixed(2)} valueColor={col(dayPnl)} sub={loading?'loading…':'live · today only'}/>
+          <StatCard label="DAY P&L" value={(dayPnl>=0?'+':'')+'$'+Math.abs(dayPnl).toFixed(2)} valueColor={col(dayPnl)} sub={loading?'loadingâ¦':'live Â· today only'}/>
           <StatCard label="TOTAL RETURN" value={(totalReturn>=0?'+':'')+'$'+Math.abs(totalReturn).toFixed(2)} valueColor={col(totalReturn)} sub={sync?'realized + unrealized':'stocks + LEAPS est.'}/>
           <StatCard label="RETURN %" value={returnPct!==null?((returnPct>=0?'+':'')+returnPct.toFixed(2)+'%'):'SYNC FOR %'} valueColor={returnPct!==null?col(returnPct):'#B84AFF'} sub={marginUsed>0?'margin: $'+marginUsed.toFixed(0):sync?('deposited $'+amountDeposited.toFixed(0)):null}/>
         </div>
@@ -282,7 +282,7 @@ export default function Home() {
             <div style={{display:'flex',alignItems:'center',gap:8,padding:'5px 12px',background:'rgba(255,255,255,0.02)',borderRadius:'6px 6px 0 0',borderBottom:'1px solid '+grp.meta.color+'33'}}>
               <div style={{width:6,height:6,borderRadius:'50%',background:grp.meta.color}}/>
               <span style={{fontSize:10,color:grp.meta.color,letterSpacing:2}}>{grp.meta.label.toUpperCase()}</span>
-              <span style={{fontSize:9,color:DIM,marginLeft:'auto'}}>{grp.positions.length} positions · ${grp.positions.reduce((a,p)=>{const px=quotes[p.ticker]?.price??p.avgCost;return a+px*p.shares;},0).toFixed(2)}</span>
+              <span style={{fontSize:9,color:DIM,marginLeft:'auto'}}>{grp.positions.length} positions Â· ${grp.positions.reduce((a,p)=>{const px=quotes[p.ticker]?.price??p.avgCost;return a+px*p.shares;},0).toFixed(2)}</span>
             </div>
             <div style={{border:'1px solid rgba(255,255,255,0.06)',borderTop:'none',borderRadius:'0 0 6px 6px',overflow:'hidden'}}>
               {grp.positions.map(p=>(<PosRow key={p.id||p.ticker} pos={p} quote={quotes[p.ticker]} rhPnl={RH_ACTUALS[p.ticker]??null} analyst={analysts[p.ticker]?{...analysts[p.ticker],price:quotes[p.ticker]?.price}:null} insider={insiders[p.ticker]??null}/>))}
@@ -293,7 +293,7 @@ export default function Home() {
           <div style={{marginTop:8}}>
             <div style={{fontSize:10,color:DIM,letterSpacing:2,marginBottom:8}}>UPCOMING CATALYSTS</div>
             <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
-              {catalysts.filter(c=>new Date(c.date)>=new Date()).sort((a,b)=>new Date(a.date)-new Date(b.date)).map(c=>{const days=Math.ceil((new Date(c.date)-new Date())/(1000*60*60*24));const urgCol=days<=7?R:days<=14?Y:G;return(<div key={c.id||c.ticker+c.date} style={{background:'rgba(255,255,255,0.03)',border:'1px solid rgba(255,255,255,0.08)',borderLeft:'3px solid '+urgCol,borderRadius:5,padding:'6px 10px',minWidth:90}}><div style={{fontSize:11,fontWeight:700,color:'#fff'}}>{c.ticker}</div><div style={{fontSize:9,color:urgCol,marginTop:1}}>{days}d · {c.date.slice(5)}</div><div style={{fontSize:9,color:DIM,marginTop:2}}>{c.type}</div></div>);})}
+              {catalysts.filter(c=>new Date(c.date)>=new Date()).sort((a,b)=>new Date(a.date)-new Date(b.date)).map(c=>{const days=Math.ceil((new Date(c.date)-new Date())/(1000*60*60*24));const urgCol=days<=7?R:days<=14?Y:G;return(<div key={c.id||c.ticker+c.date} style={{background:'rgba(255,255,255,0.03)',border:'1px solid rgba(255,255,255,0.08)',borderLeft:'3px solid '+urgCol,borderRadius:5,padding:'6px 10px',minWidth:90}}><div style={{fontSize:11,fontWeight:700,color:'#fff'}}>{c.ticker}</div><div style={{fontSize:9,color:urgCol,marginTop:1}}>{days}d Â· {c.date.slice(5)}</div><div style={{fontSize:9,color:DIM,marginTop:2}}>{c.type}</div></div>);})}
             </div>
           </div>
         )}
