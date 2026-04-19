@@ -33,7 +33,7 @@
     {
       "id": "aviation",
       "name": "Aviation",
-      "thesis": "AAL recovery play — merger speculation, Strait of Hormuz oil tailwind, and travel demand resilience.",
+      "thesis": "AAL recovery play â merger speculation, Strait of Hormuz oil tailwind, and travel demand resilience.",
       "color": "#60A5FA"
     },
     {
@@ -263,14 +263,53 @@
       },
       "greeksUpdatedAt": "2026-04-16T00:00:00Z",
       "notes": "Breakeven ~$10.14. May 7 earnings key catalyst."
+    },
+    {
+      "id": "ionq-001",
+      "ticker": "IONQ",
+      "type": "equity",
+      "shares": 0.01,
+      "avgCost": 46.09,
+      "account": "investing",
+      "themeIds": [
+        "ai-power"
+      ]
+    },
+    {
+      "id": "vrt-001",
+      "ticker": "VRT",
+      "type": "equity",
+      "shares": 0.01,
+      "avgCost": 307.34,
+      "account": "investing",
+      "themeIds": [
+        "ai-power"
+      ]
+    },
+    {
+      "id": "ccj-001",
+      "ticker": "CCJ",
+      "type": "equity",
+      "shares": 0.01,
+      "avgCost": 120.66,
+      "account": "investing",
+      "themeIds": [
+        "ai-power"
+      ]
+    },
+    {
+      "id": "oklo-001",
+      "ticker": "OKLO",
+      "type": "equity",
+      "shares": 0.01,
+      "avgCost": 66.81,
+      "account": "investing",
+      "themeIds": [
+        "ai-power"
+      ]
     }
   ],
-  "watchlist": [
-    "IONQ",
-    "VRT",
-    "CCJ",
-    "OKLO"
-  ],
+  "watchlist": [],
   "catalysts": [
     {
       "id": "aal-q1-26",
@@ -278,7 +317,7 @@
       "type": "earnings",
       "date": "2026-04-24",
       "importance": 3,
-      "notes": "Q1 2026 — revenue ~$13.5B est",
+      "notes": "Q1 2026 â revenue ~$13.5B est",
       "autoPopulated": false
     },
     {
@@ -305,7 +344,7 @@
       "type": "earnings",
       "date": "2026-05-06",
       "importance": 4,
-      "notes": "Q1 2026 — AI networking growth 20%+ est",
+      "notes": "Q1 2026 â AI networking growth 20%+ est",
       "autoPopulated": false
     },
     {
@@ -323,7 +362,7 @@
       "type": "earnings",
       "date": "2026-05-05",
       "importance": 3,
-      "notes": "Q1 2026 — oil price sensitivity",
+      "notes": "Q1 2026 â oil price sensitivity",
       "autoPopulated": false
     },
     {
@@ -332,7 +371,7 @@
       "type": "earnings",
       "date": "2026-05-07",
       "importance": 5,
-      "notes": "Q1 2026 earnings — LEAPS exposure",
+      "notes": "Q1 2026 earnings â LEAPS exposure",
       "autoPopulated": false
     },
     {
@@ -341,7 +380,7 @@
       "type": "earnings",
       "date": "2026-05-12",
       "importance": 4,
-      "notes": "First earnings as public — revenue trajectory",
+      "notes": "First earnings as public â revenue trajectory",
       "autoPopulated": false
     },
     {
@@ -350,7 +389,7 @@
       "type": "earnings",
       "date": "2026-05-14",
       "importance": 3,
-      "notes": "Q1 2026 — revenue growth + cash burn",
+      "notes": "Q1 2026 â revenue growth + cash burn",
       "autoPopulated": false
     },
     {
@@ -368,7 +407,7 @@
       "type": "earnings",
       "date": "2026-05-28",
       "importance": 5,
-      "notes": "Q1 FY27 — Blackwell ramp, $43B+ rev est",
+      "notes": "Q1 FY27 â Blackwell ramp, $43B+ rev est",
       "autoPopulated": false
     },
     {
@@ -377,7 +416,7 @@
       "type": "earnings",
       "date": "2026-06-25",
       "importance": 4,
-      "notes": "Q3 FY26 — HBM3E for AI, guidance key",
+      "notes": "Q3 FY26 â HBM3E for AI, guidance key",
       "autoPopulated": false
     }
   ]
