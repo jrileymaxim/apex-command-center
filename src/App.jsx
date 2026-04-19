@@ -692,7 +692,8 @@ function TabBriefing({alf,onAlf,wx,city,setCity,onWx,fg,enriched,totP,eod,onEod}
   var sorted=pos.slice().sort(function(a,b){return (b.gainP||0)-(a.gainP||0);});
   var maxAbs=Math.max.apply(null,sorted.map(function(p){return Math.abs(p.gainP||0);}));
   if(!maxAbs||maxAbs===0) maxAbs=30;
-  var briefText=alf||'"The afternoon demands focus. Today is Saturday, April 18, 2026. Eleven positions, two SOUN LEAPS, four MLB futures settling October 31st — all require your attention. Markets are indifferent to emotion. Your edge is preparation."';
+  var alfText=(alf&&typeof alf==='object')?(alf.text||alf.s||""):((alf&&typeof alf==='string')?alf:"");
+  var briefText=alfText||'"The afternoon demands focus. Today is Saturday, April 18, 2026. Eleven positions, two SOUN LEAPS, four MLB futures settling October 31st — all require your attention. Markets are indifferent to emotion. Your edge is preparation."';
   var panelSt={
     background:"rgba(0,140,255,0.09)",
     backgroundImage:"linear-gradient(rgba(0,150,255,0.07) 1px,transparent 1px),linear-gradient(90deg,rgba(0,150,255,0.07) 1px,transparent 1px)",
