@@ -114,8 +114,8 @@
       "id": "nvda-001",
       "ticker": "NVDA",
       "type": "equity",
-      "shares": 3.9,
-      "avgCost": 188.64,
+      "shares": 4.7,
+      "avgCost": 190.65,
       "account": "investing",
       "themeIds": [
         "ai-infra"
@@ -144,17 +144,6 @@
       ]
     },
     {
-      "id": "smci-001",
-      "ticker": "SMCI",
-      "type": "equity",
-      "shares": 13.71,
-      "avgCost": 23.24,
-      "account": "investing",
-      "themeIds": [
-        "ai-infra"
-      ]
-    },
-    {
       "id": "crwv-001",
       "ticker": "CRWV",
       "type": "equity",
@@ -169,8 +158,8 @@
       "id": "tsm-001",
       "ticker": "TSM",
       "type": "equity",
-      "shares": 5.8,
-      "avgCost": 372.13,
+      "shares": 6.8,
+      "avgCost": 372.1,
       "account": "investing",
       "themeIds": [
         "ai-infra"
@@ -224,8 +213,8 @@
       "id": "mnts-001",
       "ticker": "MNTS",
       "type": "equity",
-      "shares": 40,
-      "avgCost": 5.5,
+      "shares": 30,
+      "avgCost": 7.36,
       "account": "investing",
       "themeIds": [
         "speculative"
@@ -311,15 +300,6 @@
       "autoPopulated": false
     },
     {
-      "id": "smci-q3-26",
-      "ticker": "SMCI",
-      "type": "earnings",
-      "date": "2026-05-06",
-      "importance": 4,
-      "notes": "Q3 FY26 — server demand, margin watch",
-      "autoPopulated": false
-    },
-    {
       "id": "anet-q1-26",
       "ticker": "ANET",
       "type": "earnings",
@@ -352,7 +332,7 @@
       "type": "earnings",
       "date": "2026-05-07",
       "importance": 5,
-      "notes": "Q1 2026 earnings. LEAPS exposure.",
+      "notes": "Q1 2026 earnings — LEAPS exposure",
       "autoPopulated": false
     },
     {
