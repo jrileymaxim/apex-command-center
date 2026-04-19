@@ -683,7 +683,7 @@ function TabBriefing({alf,onAlf,wx,city,setCity,onWx,fg,enriched,totP,eod,onEod}
     {i:12,v:7.8},{i:13,v:8.0},{i:14,v:7.9},{i:15,v:8.1},{i:16,v:8.0},{i:17,v:8.2},
     {i:18,v:8.1},{i:19,v:8.06}
   ];
-  var pos=enriched&&enriched.length>0?enriched:POSITIONS.map(function(p){return Object.assign({},p,{gainP:null,price:null,mkt:null,cost:p.sh*p.avg});});
+  var pos=enriched&&enriched.length>0?enriched.map(function(p){return Object.assign({},p,{price:p.price?parseFloat(p.price):null,gainP:p.gainP!=null?parseFloat(p.gainP):null});}):POSITIONS.map(function(p){return Object.assign({},p,{gainP:null,price:null,mkt:null,cost:p.sh*p.avg});});
   var totCost=pos.reduce(function(a,p){return a+(p.cost||p.sh*p.avg||0);},0);
   var totMkt=pos.reduce(function(a,p){return a+(p.mkt||0);},0);
   var totGain=totMkt-totCost;
@@ -777,7 +777,7 @@ function TabBriefing({alf,onAlf,wx,city,setCity,onWx,fg,enriched,totP,eod,onEod}
                     {hasLive?(isGain?"+":"")+pct.toFixed(1)+"%":"—"}
                   </div>
                   <div style={{width:"54px",color:CC,fontFamily:"Courier New",fontSize:"9px",textAlign:"right",flexShrink:0}}>
-                    {p.price?"$"+p.price.toFixed(2):"$"+(p.avg||0).toFixed(2)}
+                    {p.price?"$"+parseFloat(p.price).toFixed(2):"$"+(p.avg||0).toFixed(2)}
                   </div>
                 </div>
               );
