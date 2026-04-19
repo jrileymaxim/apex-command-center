@@ -496,31 +496,25 @@ export default function App() {
       setBooting(false);setBootPhase(0);
       // Fetch audio early, play on first click (Chrome autoplay policy)
       fetch('/api/tts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:'Hello Mr. Witcomb'})})
-      .then(function(r){return r.json();})
-      .then(function(d){
+      .then(function(r){return r.arrayBuffer();})
+      .then(function(buf){
         function playAudio(){
-          if(d&&d.audio){
-            try{
-              var bytes=atob(d.audio);
-              var buf=new Uint8Array(bytes.length);
-              for(var i=0;i<bytes.length;i++) buf[i]=bytes.charCodeAt(i);
-              var ac=new (window.AudioContext||window.webkitAudioContext)();
-              ac.resume().then(function(){
-                ac.decodeAudioData(buf.buffer,function(decoded){
-                  var src=ac.createBufferSource();
-                  src.buffer=decoded;src.connect(ac.destination);src.start(0);
-                });
+          try{
+            var ac=new (window.AudioContext||window.webkitAudioContext)();
+            ac.resume().then(function(){
+              ac.decodeAudioData(buf.slice(0),function(decoded){
+                var src=ac.createBufferSource();
+                src.buffer=decoded;src.connect(ac.destination);src.start(0);
+              },function(){
+                var u=new SpeechSynthesisUtterance('Hello Mr. Witcomb');
+                window.speechSynthesis.speak(u);
               });
-            }catch(e){
-              var u=new SpeechSynthesisUtterance('Hello Mr. Witcomb');
-              window.speechSynthesis.speak(u);
-            }
-          } else {
+            });
+          }catch(e){
             var u=new SpeechSynthesisUtterance('Hello Mr. Witcomb');
             window.speechSynthesis.speak(u);
           }
         }
-        // Play on first interaction to satisfy autoplay policy
         document.addEventListener('click',function greet(){
           document.removeEventListener('click',greet);
           playAudio();
