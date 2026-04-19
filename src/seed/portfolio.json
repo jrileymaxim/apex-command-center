@@ -7,10 +7,34 @@
       "color": "#2AFF8F"
     },
     {
+      "id": "ai-infra",
+      "name": "AI Infrastructure",
+      "thesis": "Semiconductors, networking, and cloud compute powering the AI supercycle. Blackwell ramp, HBM3E demand, hyperscaler capex.",
+      "color": "#FF9F2A"
+    },
+    {
       "id": "ai-power",
       "name": "AI Power & Compute",
       "thesis": "Data centers need electrons, cooling, and next-gen compute. Nuclear renaissance plus thermal and quantum.",
       "color": "#4AE0FF"
+    },
+    {
+      "id": "macro",
+      "name": "Macro & Commodities",
+      "thesis": "Gold as monetary hedge, broad equity exposure via VTI, and energy optionality through DVN.",
+      "color": "#FFD700"
+    },
+    {
+      "id": "speculative",
+      "name": "Speculative",
+      "thesis": "High-conviction small caps with asymmetric upside. AI defense analytics and commercial space.",
+      "color": "#FF4A6E"
+    },
+    {
+      "id": "aviation",
+      "name": "Aviation",
+      "thesis": "AAL recovery play — merger speculation, Strait of Hormuz oil tailwind, and travel demand resilience.",
+      "color": "#60A5FA"
     },
     {
       "id": "options",
@@ -20,33 +44,361 @@
     }
   ],
   "positions": [
-    { "id": "pnr-001",  "ticker": "PNR",  "type": "equity", "shares": 1,    "account": "investing", "themeIds": ["water-infra"] },
-    { "id": "awk-001",  "ticker": "AWK",  "type": "equity", "shares": 1,    "account": "investing", "themeIds": ["water-infra"] },
-    { "id": "vlto-001", "ticker": "VLTO", "type": "equity", "shares": 0.5,  "account": "investing", "themeIds": ["water-infra"] },
-    { "id": "gwrs-001", "ticker": "GWRS", "type": "equity", "shares": 10,   "account": "investing", "themeIds": ["water-infra"] },
-    { "id": "cdzi-001", "ticker": "CDZI", "type": "equity", "shares": 9,    "account": "investing", "themeIds": ["water-infra"] },
-    { "id": "grc-001",  "ticker": "GRC",  "type": "equity", "shares": 0.04, "account": "investing", "themeIds": ["water-infra"] },
+    {
+      "id": "pnr-001",
+      "ticker": "PNR",
+      "type": "equity",
+      "shares": 1,
+      "avgCost": 91.08,
+      "account": "investing",
+      "themeIds": [
+        "water-infra"
+      ]
+    },
+    {
+      "id": "awk-001",
+      "ticker": "AWK",
+      "type": "equity",
+      "shares": 1,
+      "avgCost": 131.2,
+      "account": "investing",
+      "themeIds": [
+        "water-infra"
+      ]
+    },
+    {
+      "id": "vlto-001",
+      "ticker": "VLTO",
+      "type": "equity",
+      "shares": 0.5,
+      "avgCost": 92.36,
+      "account": "investing",
+      "themeIds": [
+        "water-infra"
+      ]
+    },
+    {
+      "id": "gwrs-001",
+      "ticker": "GWRS",
+      "type": "equity",
+      "shares": 10,
+      "avgCost": 7.67,
+      "account": "investing",
+      "themeIds": [
+        "water-infra"
+      ]
+    },
+    {
+      "id": "cdzi-001",
+      "ticker": "CDZI",
+      "type": "equity",
+      "shares": 9,
+      "avgCost": 5.32,
+      "account": "investing",
+      "themeIds": [
+        "water-infra"
+      ]
+    },
+    {
+      "id": "grc-001",
+      "ticker": "GRC",
+      "type": "equity",
+      "shares": 0.04,
+      "avgCost": 61.25,
+      "account": "investing",
+      "themeIds": [
+        "water-infra"
+      ]
+    },
+    {
+      "id": "nvda-001",
+      "ticker": "NVDA",
+      "type": "equity",
+      "shares": 3.9,
+      "avgCost": 188.64,
+      "account": "investing",
+      "themeIds": [
+        "ai-infra"
+      ]
+    },
+    {
+      "id": "anet-001",
+      "ticker": "ANET",
+      "type": "equity",
+      "shares": 2,
+      "avgCost": 143.29,
+      "account": "investing",
+      "themeIds": [
+        "ai-infra"
+      ]
+    },
+    {
+      "id": "mu-001",
+      "ticker": "MU",
+      "type": "equity",
+      "shares": 1.008,
+      "avgCost": 413.38,
+      "account": "investing",
+      "themeIds": [
+        "ai-infra"
+      ]
+    },
+    {
+      "id": "smci-001",
+      "ticker": "SMCI",
+      "type": "equity",
+      "shares": 13.71,
+      "avgCost": 23.24,
+      "account": "investing",
+      "themeIds": [
+        "ai-infra"
+      ]
+    },
+    {
+      "id": "crwv-001",
+      "ticker": "CRWV",
+      "type": "equity",
+      "shares": 10.9,
+      "avgCost": 111.86,
+      "account": "investing",
+      "themeIds": [
+        "ai-infra"
+      ]
+    },
+    {
+      "id": "tsm-001",
+      "ticker": "TSM",
+      "type": "equity",
+      "shares": 5.8,
+      "avgCost": 372.13,
+      "account": "investing",
+      "themeIds": [
+        "ai-infra"
+      ]
+    },
+    {
+      "id": "vti-001",
+      "ticker": "VTI",
+      "type": "equity",
+      "shares": 3,
+      "avgCost": 338.75,
+      "account": "investing",
+      "themeIds": [
+        "macro"
+      ]
+    },
+    {
+      "id": "gld-001",
+      "ticker": "GLD",
+      "type": "equity",
+      "shares": 0.4,
+      "avgCost": 439.22,
+      "account": "investing",
+      "themeIds": [
+        "macro"
+      ]
+    },
+    {
+      "id": "dvn-001",
+      "ticker": "DVN",
+      "type": "equity",
+      "shares": 13,
+      "avgCost": 47.28,
+      "account": "investing",
+      "themeIds": [
+        "macro"
+      ]
+    },
+    {
+      "id": "bbai-001",
+      "ticker": "BBAI",
+      "type": "equity",
+      "shares": 50,
+      "avgCost": 3.56,
+      "account": "investing",
+      "themeIds": [
+        "speculative"
+      ]
+    },
+    {
+      "id": "mnts-001",
+      "ticker": "MNTS",
+      "type": "equity",
+      "shares": 40,
+      "avgCost": 5.5,
+      "account": "investing",
+      "themeIds": [
+        "speculative"
+      ]
+    },
+    {
+      "id": "aal-001",
+      "ticker": "AAL",
+      "type": "equity",
+      "shares": 12.7,
+      "avgCost": 11.3,
+      "account": "investing",
+      "themeIds": [
+        "aviation"
+      ]
+    },
     {
       "id": "soun-leaps-combo",
       "ticker": "SOUN",
       "type": "option",
       "account": "investing",
-      "themeIds": ["options"],
-      "legs": [
-        { "contracts": 1, "strike": 10, "expiration": "2027-01-15", "optionType": "call" },
-        { "contracts": 1, "strike": 10, "expiration": "2028-01-21", "optionType": "call" }
+      "themeIds": [
+        "options"
       ],
-      "combinedGreeks": { "delta": 1.20, "gamma": 0.1072, "theta": -0.002, "iv": 0.95 },
+      "legs": [
+        {
+          "contracts": 1,
+          "strike": 10,
+          "expiration": "2027-01-15",
+          "optionType": "call",
+          "avgCost": 1.24
+        },
+        {
+          "contracts": 1,
+          "strike": 10,
+          "expiration": "2028-01-21",
+          "optionType": "call",
+          "avgCost": 2.38
+        }
+      ],
+      "combinedGreeks": {
+        "delta": 1.2,
+        "gamma": 0.1072,
+        "theta": -0.002,
+        "iv": 0.95
+      },
       "greeksUpdatedAt": "2026-04-16T00:00:00Z",
       "notes": "Breakeven ~$10.14. May 7 earnings key catalyst."
     }
   ],
-  "watchlist": ["IONQ", "VRT", "CCJ", "OKLO"],
+  "watchlist": [
+    "IONQ",
+    "VRT",
+    "CCJ",
+    "OKLO"
+  ],
   "catalysts": [
-    { "id": "grc-q1-26",  "ticker": "GRC",  "type": "earnings", "date": "2026-04-23", "importance": 3, "notes": "Q1 2026 earnings", "autoPopulated": false },
-    { "id": "vlto-q1-26", "ticker": "VLTO", "type": "earnings", "date": "2026-04-29", "importance": 4, "notes": "Q1 2026 earnings", "autoPopulated": false },
-    { "id": "awk-q1-26",  "ticker": "AWK",  "type": "earnings", "date": "2026-05-06", "importance": 4, "notes": "Q1 2026 earnings", "autoPopulated": false },
-    { "id": "soun-q1-26", "ticker": "SOUN", "type": "earnings", "date": "2026-05-07", "importance": 5, "notes": "Q1 2026 earnings. LEAPS exposure.", "autoPopulated": false },
-    { "id": "oklo-q1-26", "ticker": "OKLO", "type": "earnings", "date": "2026-05-19", "importance": 3, "notes": "Q1 2026 earnings", "autoPopulated": false }
+    {
+      "id": "aal-q1-26",
+      "ticker": "AAL",
+      "type": "earnings",
+      "date": "2026-04-24",
+      "importance": 3,
+      "notes": "Q1 2026 — revenue ~$13.5B est",
+      "autoPopulated": false
+    },
+    {
+      "id": "grc-q1-26",
+      "ticker": "GRC",
+      "type": "earnings",
+      "date": "2026-04-23",
+      "importance": 3,
+      "notes": "Q1 2026 earnings",
+      "autoPopulated": false
+    },
+    {
+      "id": "vlto-q1-26",
+      "ticker": "VLTO",
+      "type": "earnings",
+      "date": "2026-04-29",
+      "importance": 4,
+      "notes": "Q1 2026 earnings",
+      "autoPopulated": false
+    },
+    {
+      "id": "smci-q3-26",
+      "ticker": "SMCI",
+      "type": "earnings",
+      "date": "2026-05-06",
+      "importance": 4,
+      "notes": "Q3 FY26 — server demand, margin watch",
+      "autoPopulated": false
+    },
+    {
+      "id": "anet-q1-26",
+      "ticker": "ANET",
+      "type": "earnings",
+      "date": "2026-05-06",
+      "importance": 4,
+      "notes": "Q1 2026 — AI networking growth 20%+ est",
+      "autoPopulated": false
+    },
+    {
+      "id": "awk-q1-26",
+      "ticker": "AWK",
+      "type": "earnings",
+      "date": "2026-05-06",
+      "importance": 4,
+      "notes": "Q1 2026 earnings",
+      "autoPopulated": false
+    },
+    {
+      "id": "dvn-q1-26",
+      "ticker": "DVN",
+      "type": "earnings",
+      "date": "2026-05-05",
+      "importance": 3,
+      "notes": "Q1 2026 — oil price sensitivity",
+      "autoPopulated": false
+    },
+    {
+      "id": "soun-q1-26",
+      "ticker": "SOUN",
+      "type": "earnings",
+      "date": "2026-05-07",
+      "importance": 5,
+      "notes": "Q1 2026 earnings. LEAPS exposure.",
+      "autoPopulated": false
+    },
+    {
+      "id": "crwv-q1-26",
+      "ticker": "CRWV",
+      "type": "earnings",
+      "date": "2026-05-12",
+      "importance": 4,
+      "notes": "First earnings as public — revenue trajectory",
+      "autoPopulated": false
+    },
+    {
+      "id": "mnts-q1-26",
+      "ticker": "MNTS",
+      "type": "earnings",
+      "date": "2026-05-14",
+      "importance": 3,
+      "notes": "Q1 2026 — revenue growth + cash burn",
+      "autoPopulated": false
+    },
+    {
+      "id": "oklo-q1-26",
+      "ticker": "OKLO",
+      "type": "earnings",
+      "date": "2026-05-19",
+      "importance": 3,
+      "notes": "Q1 2026 earnings",
+      "autoPopulated": false
+    },
+    {
+      "id": "nvda-q1-27",
+      "ticker": "NVDA",
+      "type": "earnings",
+      "date": "2026-05-28",
+      "importance": 5,
+      "notes": "Q1 FY27 — Blackwell ramp, $43B+ rev est",
+      "autoPopulated": false
+    },
+    {
+      "id": "mu-q3-26",
+      "ticker": "MU",
+      "type": "earnings",
+      "date": "2026-06-25",
+      "importance": 4,
+      "notes": "Q3 FY26 — HBM3E for AI, guidance key",
+      "autoPopulated": false
+    }
   ]
 }
