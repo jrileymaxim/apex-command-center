@@ -1,26 +1,38 @@
 import { usePortfolio } from "../hooks/usePortfolio";
 import { useQuotes } from "../hooks/useQuotes";
+import { useState, useEffect } from "react";
 import ThemeCard from "../components/ThemeCard";
 import ClusterBanner from "../components/ClusterBanner";
 import { fmtDateTime } from "../lib/format";
 
 export default function Home() {
-  const { themes, positions, catalysts } = usePortfolio();
+  const { themes, positions, catalysts: seedCatalysts } = usePortfolio();
+  const [catalysts, setCatalysts] = useState(seedCatalysts);
+  const [catalystSource, setCatalystSource] = useState('seed');
 
-  // Unique tickers across all holdings (including option underlyings for spot price)
+  // Fetch live earnings dates from /api/catalysts on mount
+  useEffect(() => {
+    fetch('/api/catalysts')
+      .then(r => r.json())
+      .then(data => {
+        if (data.catalysts?.length) {
+          setCatalysts(data.catalysts);
+          setCatalystSource(data.source || 'live');
+        }
+      })
+      .catch(() => {}); // silently keep seed data on failure
+  }, []);
+
   const tickers = [...new Set(positions.map(p => p.ticker))];
   const { quotes, loading } = useQuotes(tickers);
 
   const catalystsByTheme = (themeId) => {
     const themeTickers = new Set(
-      positions
-        .filter(p => p.themeIds?.includes(themeId))
-        .map(p => p.ticker)
+      positions.filter(p => p.themeIds?.includes(themeId)).map(p => p.ticker)
     );
     return catalysts.filter(c => {
       const inFuture = new Date(c.date) >= new Date();
-      const matchesTheme = themeTickers.has(c.ticker);
-      return inFuture && matchesTheme;
+      return inFuture && themeTickers.has(c.ticker);
     }).length;
   };
 
@@ -47,12 +59,16 @@ export default function Home() {
             positions={positions.filter(p => p.themeIds?.includes(theme.id))}
             quotes={quotes}
             catalystCount={catalystsByTheme(theme.id)}
+            quotesLive={!loading && Object.values(quotes).some(q => !q.mock)}
           />
         ))}
       </section>
 
       <footer className="hud-footer">
-        <span className="hud-footer-text">APEX · v2.0.0 · Phase 2A</span>
+        <span className="hud-footer-text">
+          APEX · v2.0.0 · Phase 2B
+          {catalystSource === 'finnhub' && ' · LIVE EARNINGS'}
+        </span>
       </footer>
     </main>
   );
