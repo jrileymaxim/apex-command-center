@@ -494,31 +494,42 @@ export default function App() {
     var t5=setTimeout(function(){setBootPhase(5);},2400);
     var t6=setTimeout(function(){
       setBooting(false);setBootPhase(0);
+      // Fetch audio early, play on first click (Chrome autoplay policy)
       fetch('/api/tts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:'Hello Mr. Witcomb'})})
       .then(function(r){return r.json();})
       .then(function(d){
-        if(d&&d.audio){
-          try{
-            var bytes=atob(d.audio);
-            var buf=new Uint8Array(bytes.length);
-            for(var i=0;i<bytes.length;i++) buf[i]=bytes.charCodeAt(i);
-            var ac=new (window.AudioContext||window.webkitAudioContext)();
-            ac.decodeAudioData(buf.buffer,function(decoded){
-              var src=ac.createBufferSource();
-              src.buffer=decoded;src.connect(ac.destination);src.start(0);
-            });
-          }catch(e){
+        function playAudio(){
+          if(d&&d.audio){
+            try{
+              var bytes=atob(d.audio);
+              var buf=new Uint8Array(bytes.length);
+              for(var i=0;i<bytes.length;i++) buf[i]=bytes.charCodeAt(i);
+              var ac=new (window.AudioContext||window.webkitAudioContext)();
+              ac.resume().then(function(){
+                ac.decodeAudioData(buf.buffer,function(decoded){
+                  var src=ac.createBufferSource();
+                  src.buffer=decoded;src.connect(ac.destination);src.start(0);
+                });
+              });
+            }catch(e){
+              var u=new SpeechSynthesisUtterance('Hello Mr. Witcomb');
+              window.speechSynthesis.speak(u);
+            }
+          } else {
             var u=new SpeechSynthesisUtterance('Hello Mr. Witcomb');
             window.speechSynthesis.speak(u);
           }
-        } else {
-          var u=new SpeechSynthesisUtterance('Hello Mr. Witcomb');
-          window.speechSynthesis.speak(u);
         }
-      }).catch(function(){
-        var u=new SpeechSynthesisUtterance('Hello Mr. Witcomb');
-        window.speechSynthesis.speak(u);
-      });
+        // Play on first interaction to satisfy autoplay policy
+        document.addEventListener('click',function greet(){
+          document.removeEventListener('click',greet);
+          playAudio();
+        },{once:true});
+        document.addEventListener('keydown',function greet(){
+          document.removeEventListener('keydown',greet);
+          playAudio();
+        },{once:true});
+      }).catch(function(){});
     },2900);
     return function(){[t1,t2,t3,t4,t5,t6].forEach(clearTimeout);};
   },[]);
