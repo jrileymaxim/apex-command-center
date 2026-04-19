@@ -786,7 +786,7 @@ function TabPortfolio({enriched,totCost,totMkt,totGain,totP,leaps,status,live,on
     <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
       <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"8px"}}>
         {[["TOTAL COST","$"+totCost.toFixed(2),CC],["MKT VALUE","$"+totMkt.toFixed(2),CA],["TOTAL GAIN",(up?"+":"-")+"$"+Math.abs(totGain).toFixed(2),up?CG:CR],["RETURN",(up?"+":"")+totP.toFixed(2)+"%",up?CG:CR]].map(function(r){return (
-          <div key={r[0]} style={{background:BP,border:"1px solid #141020",padding:"10px"}}>
+          <div key={r[0]} style={{background:"rgba(0,229,204,0.07)",border:"1px solid #141020",padding:"10px"}}>
             <div style={{fontSize:"15px",letterSpacing:"2px",color:CD,marginBottom:"3px"}}>{r[0]}</div>
             <div style={{fontFamily:"Orbitron",fontSize:"19px",fontWeight:700,color:r[2],textShadow:"0 0 8px "+r[2]+"66"}}>{r[1]}</div>
           </div>
@@ -1198,7 +1198,7 @@ function TabSoon({icon,label,items,phase}) {
       </div>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px",maxWidth:"480px",width:"100%"}}>
         {items.map(function(it){return (
-          <div key={it} style={{padding:"7px 10px",background:BP,border:"1px solid #141020",fontSize:"15px",color:CD,letterSpacing:"1px"}}>
+          <div key={it} style={{padding:"7px 10px",background:"rgba(0,229,204,0.07)",border:"1px solid #141020",fontSize:"15px",color:CD,letterSpacing:"1px"}}>
             <span style={{color:CA}}>▸ </span>{it}
           </div>
         );})}
@@ -1412,7 +1412,7 @@ function TabSoun({port}) {
     <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
 
       {/* SOUN Header */}
-      <div style={{background:BP,border:"1px solid "+CA+"33",padding:"12px 14px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+      <div style={{background:"rgba(0,229,204,0.07)",border:"1px solid "+CA+"33",padding:"12px 14px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
         <div>
           <div style={{fontFamily:"Orbitron",fontSize:"19px",fontWeight:900,color:CA,letterSpacing:"4px"}}>SOUN</div>
           <div style={{fontSize:"19px",color:"#005c7a",marginTop:"2px",letterSpacing:"1px"}}>SOUNDHOUND AI ▪ {SOUN_DATA.sector}</div>
@@ -1473,7 +1473,7 @@ function TabSoun({port}) {
                 <div style={{fontFamily:"Orbitron",fontSize:"15px",color:CA,marginBottom:"8px"}}>{item.label}</div>
                 <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"8px",marginBottom:"10px"}}>
                   {[["DAILY BLEED","$"+item.theta.dailyDecay,CR],["WEEKLY BLEED","$"+item.theta.weeklyDecay,CY],["DAYS REMAIN",item.days+" days",CG]].map(function(r){return (
-                    <div key={r[0]} style={{textAlign:"center",background:BP,padding:"8px",border:"1px solid #141020"}}>
+                    <div key={r[0]} style={{textAlign:"center",background:"rgba(0,229,204,0.07)",padding:"8px",border:"1px solid #141020"}}>
                       <div style={{fontSize:"15px",color:CD,marginBottom:"3px"}}>{r[0]}</div>
                       <div style={{fontFamily:"Orbitron",fontSize:"19px",fontWeight:700,color:r[2],textShadow:"0 0 8px "+r[2]+"66"}}>{r[1]}</div>
                     </div>
@@ -1643,12 +1643,12 @@ function VoiceMode({alf,enriched,fg,onClose}) {
         {status==="idle"?"TAP TO SPEAK":status==="listening"?"LISTENING...":status==="speaking"?"MARCUS SPEAKING...":"TAP TO SPEAK AGAIN"}
       </div>
 
-      {transcript&&<div style={{background:BP,border:"1px solid #141020",padding:"10px 16px",maxWidth:"320px",width:"100%",textAlign:"center"}}>
+      {transcript&&<div style={{background:"rgba(0,229,204,0.07)",border:"1px solid #141020",padding:"10px 16px",maxWidth:"320px",width:"100%",textAlign:"center"}}>
         <div style={{fontSize:"15px",color:CD,letterSpacing:"2px",marginBottom:"4px"}}>YOU SAID</div>
         <div style={{fontSize:"17px",color:CB,fontStyle:"italic"}}>"{transcript}"</div>
       </div>}
 
-      {response&&<div style={{background:BP,border:"1px solid "+CA+"33",padding:"12px 16px",maxWidth:"320px",width:"100%"}}>
+      {response&&<div style={{background:"rgba(0,229,204,0.07)",border:"1px solid "+CA+"33",padding:"12px 16px",maxWidth:"320px",width:"100%"}}>
         <div style={{fontSize:"15px",color:CD,letterSpacing:"2px",marginBottom:"6px"}}>— MARCUS ▪ APEX</div>
         <div style={{fontSize:"17px",color:CB,lineHeight:1.8,fontStyle:"italic"}}>"{response}"</div>
       </div>}
@@ -1935,7 +1935,7 @@ function TabParlays(){
       {/* Summary */}
       <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"6px"}}>
         {[["AT RISK","$112",CR],["MAX PAYOUT","$13,009",CG],["DAYS LEFT",daysLeft,CY],["SETTLES","OCT 31",CA]].map(function(r){return(
-          <div key={r[0]} style={{background:BP,border:"1px solid #1a1520",padding:"8px",textAlign:"center"}}>
+          <div key={r[0]} style={{background:"rgba(0,229,204,0.07)",border:"1px solid #1a1520",padding:"8px",textAlign:"center"}}>
             <div style={{fontSize:"15px",color:CD,marginBottom:"2px"}}>{r[0]}</div>
             <div style={{fontFamily:"Orbitron",fontSize:"15px",fontWeight:700,color:r[2]}}>{r[1]}</div>
           </div>
@@ -2085,7 +2085,7 @@ function TabParlays(){
       {view==="scout"&&(
         <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
 
-          {mlbLoading&&<div style={{display:"flex",alignItems:"center",gap:"10px",padding:"14px",background:BP,border:"1px solid #1a1520"}}><div className="spinA" style={{width:"10px",height:"10px",border:"1px solid #4a3408",borderTopColor:CA,borderRadius:"50%"}}/><span style={{fontFamily:"Orbitron",fontSize:"19px",color:CD,letterSpacing:"2px"}}>FETCHING LIVE DATA...</span></div>}
+          {mlbLoading&&<div style={{display:"flex",alignItems:"center",gap:"10px",padding:"14px",background:"rgba(0,229,204,0.07)",border:"1px solid #1a1520"}}><div className="spinA" style={{width:"10px",height:"10px",border:"1px solid #4a3408",borderTopColor:CA,borderRadius:"50%"}}/><span style={{fontFamily:"Orbitron",fontSize:"19px",color:CD,letterSpacing:"2px"}}>FETCHING LIVE DATA...</span></div>}
 
           {!mlbLoading&&(function(){
             var ranked = scoutData;
@@ -2216,7 +2216,7 @@ function TabParlays(){
                 </div>
                 <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:"5px",marginBottom:"8px"}}>
                   {[["STAKE","$"+pd.stake,CC],["PAYOUT","$"+pd.payout.toLocaleString(),CG],["PROB",pr.toFixed(2)+"%",pr>5?CG:CY],["ROI",roi+"%",CG]].map(function(r){return(
-                    <div key={r[0]} style={{textAlign:"center",background:BP,padding:"6px",border:"1px solid #141020"}}>
+                    <div key={r[0]} style={{textAlign:"center",background:"rgba(0,229,204,0.07)",padding:"6px",border:"1px solid #141020"}}>
                       <div style={{fontSize:"17px",color:CD,marginBottom:"2px"}}>{r[0]}</div>
                       <div style={{fontFamily:"Orbitron",fontSize:"19px",color:r[2],fontWeight:700}}>{r[1]}</div>
                     </div>
@@ -2310,7 +2310,7 @@ function StockPopup({ticker,price,cost,shares,gainP,chgP,onClose}){
   var noteMap={"BUY":"Momentum and fundamentals align.","SELL":"Review thesis before acting.","HOLD":"No strong signal. Maintain position."};
   return(
     <div style={{position:"fixed",top:0,left:0,right:0,bottom:0,background:"rgba(3,3,8,.93)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center"}} onClick={onClose}>
-      <div style={{background:BP,border:"2px solid "+CA+"55",padding:"20px",maxWidth:"460px",width:"92%",maxHeight:"82vh",overflowY:"auto"}} onClick={function(e){e.stopPropagation();}}>
+      <div style={{background:"rgba(0,229,204,0.07)",border:"2px solid "+CA+"55",padding:"20px",maxWidth:"460px",width:"92%",maxHeight:"82vh",overflowY:"auto"}} onClick={function(e){e.stopPropagation();}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"12px"}}>
           <div><div style={{fontFamily:"Orbitron",fontSize:"24px",fontWeight:900,color:CA}}>{ticker}</div><div style={{fontSize:"19px",color:CD,letterSpacing:"2px",marginTop:"2px"}}>POSITION ANALYSIS</div></div>
           <button style={{background:"transparent",border:"none",color:CD,cursor:"pointer",fontSize:"20px"}} onClick={onClose}>x</button>
@@ -2340,7 +2340,7 @@ function StockPopup({ticker,price,cost,shares,gainP,chgP,onClose}){
 function Panel({label,right,children}){
   return(
     <div
-      style={{background:"#010e0c",backdropFilter:"blur(12px)",WebkitBackdropFilter:"blur(12px)",border:"1px solid #003d30",borderRadius:"16px",padding:"14px 16px",marginBottom:"10px",boxShadow:"0 2px 20px rgba(99,102,241,0.07)"}}>
+      style={{background:"rgba(0,229,204,0.07)",backdropFilter:"blur(12px)",WebkitBackdropFilter:"blur(12px)",border:"1px solid #003d30",borderRadius:"16px",padding:"14px 16px",marginBottom:"10px",boxShadow:"0 2px 20px rgba(99,102,241,0.07)"}}>
       {label&&(
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"10px",paddingBottom:"8px",borderBottom:"1px solid #041209"}}>
           <span style={{fontFamily:"Orbitron",fontSize:"15px",fontWeight:700,color:"#00e5cc",letterSpacing:"2px"}}>{label}</span>
@@ -2622,7 +2622,7 @@ function TabJarvis({wakeState,voiceTranscript,marcusReply}){
 
       <Panel label="🍌 NANO BANANA // IMAGE GEN" right={<span style={{color:CD,fontSize:"9px"}}>GEMINI IMAGEN 3</span>}>
         <div style={{display:"flex",gap:"8px",marginBottom:"10px"}}>
-          <input value={imgPrompt} onChange={function(e){setImgPrompt(e.target.value);}} onKeyDown={function(e){if(e.key==='Enter')generateImage();}} placeholder="Describe an image..." style={{flex:1,background:"#010e0c",border:"1px solid #003d30",color:CB,fontFamily:"Courier New",fontSize:"12px",padding:"7px 10px",outline:"none"}}/>
+          <input value={imgPrompt} onChange={function(e){setImgPrompt(e.target.value);}} onKeyDown={function(e){if(e.key==='Enter')generateImage();}} placeholder="Describe an image..." style={{flex:1,background:"rgba(0,229,204,0.07)",border:"1px solid #003d30",color:CB,fontFamily:"Courier New",fontSize:"12px",padding:"7px 10px",outline:"none"}}/>
           <button onClick={generateImage} disabled={imgLoading||!imgPrompt.trim()} className="btn" style={{whiteSpace:"nowrap"}}>{imgLoading?"GENERATING...":"GENERATE"}</button>
         </div>
         {imgErr&&<div style={{color:CR,fontSize:"11px",fontFamily:"Courier New",marginBottom:"8px"}}>ERROR: {imgErr}</div>}
