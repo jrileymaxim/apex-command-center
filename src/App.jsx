@@ -489,10 +489,10 @@ export default function App() {
   useEffect(function(){
     var t1=setTimeout(function(){setBootPhase(1);},120);
     var t2=setTimeout(function(){setBootPhase(2);},420);
-    var t3=setTimeout(function(){setBootPhase(3);},720);
-    var t4=setTimeout(function(){setBootPhase(4);},1100);
-    var t5=setTimeout(function(){setBootPhase(5);},1500);
-    var t6=setTimeout(function(){setBooting(false);setBootPhase(0);},1900);
+    var t3=setTimeout(function(){setBootPhase(3);},900);
+    var t4=setTimeout(function(){setBootPhase(4);},1600);
+    var t5=setTimeout(function(){setBootPhase(5);},2400);
+    var t6=setTimeout(function(){setBooting(false);setBootPhase(0);},2900);
     return function(){[t1,t2,t3,t4,t5,t6].forEach(clearTimeout);};
   },[]);
   useEffect(function(){
