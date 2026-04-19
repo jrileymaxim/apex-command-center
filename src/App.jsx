@@ -1,4 +1,16 @@
 
+function EnterScreen({onEnter}) {
+  return (
+    <div onClick={onEnter} style={{position:"fixed",top:0,left:0,right:0,bottom:0,background:"#000c1a",zIndex:10000,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",cursor:"pointer"}}>
+      <style>{"@keyframes epulse{0%,100%{opacity:0.4;transform:scale(1)}50%{opacity:1;transform:scale(1.04)}}"}</style>
+      <div style={{color:"#00aaff",fontFamily:"Orbitron,monospace",fontSize:"11px",letterSpacing:"5px",marginBottom:"32px",opacity:0.5}}>APEX COMMAND CENTER</div>
+      <div style={{color:"#00aaff",fontFamily:"Orbitron,monospace",fontSize:"18px",letterSpacing:"6px",animation:"epulse 1.8s ease-in-out infinite",textShadow:"0 0 30px rgba(0,170,255,0.6)"}}>[ CLICK TO ENTER ]</div>
+      <div style={{marginTop:"40px",width:"1px",height:"40px",background:"linear-gradient(rgba(0,170,255,0),rgba(0,170,255,0.4),rgba(0,170,255,0))"}}/>
+    </div>
+  );
+}
+
+
 function BootScreen({phase,flash}) {
   var lines=["▶ INITIALIZING NEXUS PROTOCOL","▶ CONNECTING TO MARKETS","▶ LOADING 12 POSITIONS","▶ MARCUS AI ONLINE","▶ SYSTEM READY"];
   var shown=phase>=3?Math.min(phase-2,5):0;
@@ -342,6 +354,7 @@ export default function App() {
   const [booting,setBooting] = useState(true);
   const [bootPhase,setBootPhase] = useState(0);
   const [briefFlash,setBriefFlash] = useState(false);
+  const [entering,setEntering] = useState(true);
   var alertOn=false,setAlert=function(){};
 
   // ── HEY MARCUS VOICE SYSTEM ─────────────────────────────
@@ -486,7 +499,7 @@ export default function App() {
     rec.start();
   }
 
-  useEffect(function(){
+  useEffect(function(){if(entering)return;
     var t1=setTimeout(function(){setBootPhase(1);},120);
     var t2=setTimeout(function(){setBootPhase(2);},420);
     var t3=setTimeout(function(){setBootPhase(3);},900);
@@ -498,35 +511,25 @@ export default function App() {
       fetch('/api/tts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:'Hello Mr. Witcomb'})})
       .then(function(r){return r.arrayBuffer();})
       .then(function(buf){
-        function playAudio(){
-          try{
-            var ac=new (window.AudioContext||window.webkitAudioContext)();
-            ac.resume().then(function(){
-              ac.decodeAudioData(buf.slice(0),function(decoded){
-                var src=ac.createBufferSource();
-                src.buffer=decoded;src.connect(ac.destination);src.start(0);
-              },function(){
-                var u=new SpeechSynthesisUtterance('Hello Mr. Witcomb');
-                window.speechSynthesis.speak(u);
-              });
+        try{
+          var ac=window._apexAC||new (window.AudioContext||window.webkitAudioContext)();
+          ac.resume().then(function(){
+            ac.decodeAudioData(buf,function(decoded){
+              var src=ac.createBufferSource();
+              src.buffer=decoded;src.connect(ac.destination);src.start(0);
+            },function(){
+              var u=new SpeechSynthesisUtterance('Hello Mr. Witcomb');
+              window.speechSynthesis.speak(u);
             });
-          }catch(e){
-            var u=new SpeechSynthesisUtterance('Hello Mr. Witcomb');
-            window.speechSynthesis.speak(u);
-          }
+          });
+        }catch(e){
+          var u=new SpeechSynthesisUtterance('Hello Mr. Witcomb');
+          window.speechSynthesis.speak(u);
         }
-        document.addEventListener('click',function greet(){
-          document.removeEventListener('click',greet);
-          playAudio();
-        },{once:true});
-        document.addEventListener('keydown',function greet(){
-          document.removeEventListener('keydown',greet);
-          playAudio();
-        },{once:true});
       }).catch(function(){});
     },2900);
     return function(){[t1,t2,t3,t4,t5,t6].forEach(clearTimeout);};
-  },[]);
+  },[entering]);
   useEffect(function(){
     // Boot sequence: phase 0→5 over 2s
     var t1=setTimeout(function(){setBootPhase(1);},100);
@@ -699,7 +702,7 @@ export default function App() {
 
   return (
     <div style={{height:"100vh",overflow:"hidden",background:BG,color:"#005c7a",fontFamily:"'Share Tech Mono',monospace",display:"flex",flexDirection:"column",position:"relative"}} className={alertOn?"alertMode":""}>
-    {booting&&<BootScreen phase={bootPhase}/>}
+    {entering&&<EnterScreen onEnter={function(){setEntering(false);var ac=new (window.AudioContext||window.webkitAudioContext)();ac.resume();window._apexAC=ac;}}/>}{!entering&&booting&&<BootScreen phase={bootPhase}/>}
     {briefFlash&&<BriefFlash active={briefFlash}/>}
     
       {conf.map(function(c){return <div key={c.id} className="cfp" style={{left:c.l+"%",top:"-12px",background:c.c,animationDelay:c.dl+"s"}}/> ;})}
