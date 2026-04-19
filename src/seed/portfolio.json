@@ -1,0 +1,52 @@
+{
+  "themes": [
+    {
+      "id": "water-infra",
+      "name": "Water Infrastructure",
+      "thesis": "Aging US pipes, PFAS regulation, Western drought, and regulated rate-base growth.",
+      "color": "#2AFF8F"
+    },
+    {
+      "id": "ai-power",
+      "name": "AI Power & Compute",
+      "thesis": "Data centers need electrons, cooling, and next-gen compute. Nuclear renaissance plus thermal and quantum.",
+      "color": "#4AE0FF"
+    },
+    {
+      "id": "options",
+      "name": "Options",
+      "thesis": "Asymmetric convexity plays via long-dated calls.",
+      "color": "#B84AFF"
+    }
+  ],
+  "positions": [
+    { "id": "pnr-001",  "ticker": "PNR",  "type": "equity", "shares": 1,    "account": "investing", "themeIds": ["water-infra"] },
+    { "id": "awk-001",  "ticker": "AWK",  "type": "equity", "shares": 1,    "account": "investing", "themeIds": ["water-infra"] },
+    { "id": "vlto-001", "ticker": "VLTO", "type": "equity", "shares": 0.5,  "account": "investing", "themeIds": ["water-infra"] },
+    { "id": "gwrs-001", "ticker": "GWRS", "type": "equity", "shares": 10,   "account": "investing", "themeIds": ["water-infra"] },
+    { "id": "cdzi-001", "ticker": "CDZI", "type": "equity", "shares": 9,    "account": "investing", "themeIds": ["water-infra"] },
+    { "id": "grc-001",  "ticker": "GRC",  "type": "equity", "shares": 0.04, "account": "investing", "themeIds": ["water-infra"] },
+    {
+      "id": "soun-leaps-combo",
+      "ticker": "SOUN",
+      "type": "option",
+      "account": "investing",
+      "themeIds": ["options"],
+      "legs": [
+        { "contracts": 1, "strike": 10, "expiration": "2027-01-15", "optionType": "call" },
+        { "contracts": 1, "strike": 10, "expiration": "2028-01-21", "optionType": "call" }
+      ],
+      "combinedGreeks": { "delta": 1.20, "gamma": 0.1072, "theta": -0.002, "iv": 0.95 },
+      "greeksUpdatedAt": "2026-04-16T00:00:00Z",
+      "notes": "Breakeven ~$10.14. May 7 earnings key catalyst."
+    }
+  ],
+  "watchlist": ["IONQ", "VRT", "CCJ", "OKLO"],
+  "catalysts": [
+    { "id": "grc-q1-26",  "ticker": "GRC",  "type": "earnings", "date": "2026-04-23", "importance": 3, "notes": "Q1 2026 earnings", "autoPopulated": false },
+    { "id": "vlto-q1-26", "ticker": "VLTO", "type": "earnings", "date": "2026-04-29", "importance": 4, "notes": "Q1 2026 earnings", "autoPopulated": false },
+    { "id": "awk-q1-26",  "ticker": "AWK",  "type": "earnings", "date": "2026-05-06", "importance": 4, "notes": "Q1 2026 earnings", "autoPopulated": false },
+    { "id": "soun-q1-26", "ticker": "SOUN", "type": "earnings", "date": "2026-05-07", "importance": 5, "notes": "Q1 2026 earnings. LEAPS exposure.", "autoPopulated": false },
+    { "id": "oklo-q1-26", "ticker": "OKLO", "type": "earnings", "date": "2026-05-19", "importance": 3, "notes": "Q1 2026 earnings", "autoPopulated": false }
+  ]
+}
