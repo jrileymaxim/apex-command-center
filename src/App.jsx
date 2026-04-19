@@ -492,7 +492,34 @@ export default function App() {
     var t3=setTimeout(function(){setBootPhase(3);},900);
     var t4=setTimeout(function(){setBootPhase(4);},1600);
     var t5=setTimeout(function(){setBootPhase(5);},2400);
-    var t6=setTimeout(function(){setBooting(false);setBootPhase(0);},2900);
+    var t6=setTimeout(function(){
+      setBooting(false);setBootPhase(0);
+      fetch('/api/tts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:'Hello Mr. Witcomb'})})
+      .then(function(r){return r.json();})
+      .then(function(d){
+        if(d&&d.audio){
+          try{
+            var bytes=atob(d.audio);
+            var buf=new Uint8Array(bytes.length);
+            for(var i=0;i<bytes.length;i++) buf[i]=bytes.charCodeAt(i);
+            var ac=new (window.AudioContext||window.webkitAudioContext)();
+            ac.decodeAudioData(buf.buffer,function(decoded){
+              var src=ac.createBufferSource();
+              src.buffer=decoded;src.connect(ac.destination);src.start(0);
+            });
+          }catch(e){
+            var u=new SpeechSynthesisUtterance('Hello Mr. Witcomb');
+            window.speechSynthesis.speak(u);
+          }
+        } else {
+          var u=new SpeechSynthesisUtterance('Hello Mr. Witcomb');
+          window.speechSynthesis.speak(u);
+        }
+      }).catch(function(){
+        var u=new SpeechSynthesisUtterance('Hello Mr. Witcomb');
+        window.speechSynthesis.speak(u);
+      });
+    },2900);
     return function(){[t1,t2,t3,t4,t5,t6].forEach(clearTimeout);};
   },[]);
   useEffect(function(){
