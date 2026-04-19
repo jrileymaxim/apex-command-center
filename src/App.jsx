@@ -146,7 +146,7 @@ function thetaCalc(avgCost, contracts, daysToExpiry, iv) {
   var dailyDecay = premium * 0.008; // approximate daily theta for LEAPS
   var weeklyDecay = dailyDecay * 5;
   var remaining = Math.max(0, premium - (dailyDecay * (365 - daysToExpiry)));
-  return {dailyDecay: dailyDecay.toFixed(2), weeklyDecay: weeklyDecay.toFixed(2), premium: premium.toFixed(0)};
+  return {dailyDecay: dailyDecay.toFixed(2), weeklyDecay: weeklyDecay.toFixed(2), premium: premium.toFixed(0), remaining: remaining.toFixed(0)};
 }
 
 // Discovery picks — curated high-conviction AI/tech small caps
@@ -1785,12 +1785,7 @@ const PARLAY_DATA = [
 // ── ENHANCED SCOUT ENGINE ─────────────────────────────────────────────────────
 
 // 2026 Vegas preseason win totals (O/U lines — best early-season predictor)
-var VEGAS_WINS = {
-  LAD:100,ATL:95,NYY:92,PHI:89,NYM:88,SD:87,HOU:86,MIN:86,
-  CLE:85,ATH:85,SEA:84,BAL:83,TOR:82,BOS:80,TEX:79,MIL:79,
-  STL:78,TB:78,AZ:77,CHC:76,CIN:76,SF:75,DET:74,PIT:73,
-  KC:72,MIA:71,WSH:68,COL:65,CWS:64,LAA:64,
-};
+
 
 async function fetchMLBStandings() {
   try {
@@ -1960,7 +1955,7 @@ const MLB = MLB_STATIC;
 
 function getLegSt(team,type,mlbData){
   var MLB_USE=mlbData||MLB_STATIC;
-  var s=MLB.find(function(x){return x.t===team;});
+  var s=MLB_USE.find(function(x){return x.t===team;});
   if(!s)return{color:CD,icon:"?",conf:50,label:"UNKNOWN"};
   var tracking=type==="make"?s.status==="make":s.status==="miss";
   if(tracking&&s.conf>=75)return{color:CG,icon:"✓",conf:s.conf,label:"ON TRACK",w:s.w,l:s.l};
