@@ -3,28 +3,34 @@ import { useQuotes } from "../hooks/useQuotes";
 import { useState, useEffect } from "react";
 import ThemeCard from "../components/ThemeCard";
 import ClusterBanner from "../components/ClusterBanner";
+import AnalystDrift from "../components/AnalystDrift";
 import { fmtDateTime } from "../lib/format";
 
 export default function Home() {
   const { themes, positions, catalysts: seedCatalysts } = usePortfolio();
   const [catalysts, setCatalysts] = useState(seedCatalysts);
-  const [catalystSource, setCatalystSource] = useState('seed');
+  const [catalystSource, setCatalystSource] = useState("seed");
 
-  // Fetch live earnings dates from /api/catalysts on mount
   useEffect(() => {
-    fetch('/api/catalysts')
+    fetch("/api/catalysts")
       .then(r => r.json())
-      .then(data => {
-        if (data.catalysts?.length) {
-          setCatalysts(data.catalysts);
-          setCatalystSource(data.source || 'live');
+      .then(d => {
+        if (d.catalysts?.length) {
+          setCatalysts(d.catalysts);
+          setCatalystSource(d.source || "live");
         }
       })
-      .catch(() => {}); // silently keep seed data on failure
+      .catch(() => {});
   }, []);
 
   const tickers = [...new Set(positions.map(p => p.ticker))];
   const { quotes, loading } = useQuotes(tickers);
+
+  // Enrich positions with live quotes for AnalystDrift
+  const enriched = positions.map(p => ({
+    ...p,
+    price: quotes[p.ticker]?.price ?? null,
+  }));
 
   const catalystsByTheme = (themeId) => {
     const themeTickers = new Set(
@@ -64,10 +70,12 @@ export default function Home() {
         ))}
       </section>
 
+      <AnalystDrift positions={enriched.filter(p => p.type === "equity")} />
+
       <footer className="hud-footer">
         <span className="hud-footer-text">
-          APEX · v2.0.0 · Phase 2B
-          {catalystSource === 'finnhub' && ' · LIVE EARNINGS'}
+          APEX · v2.0.0 · Phase 2C
+          {catalystSource === "finnhub" && " · LIVE EARNINGS"}
         </span>
       </footer>
     </main>
