@@ -61,7 +61,7 @@ export default async function handler(req) {
         delta: g.delta, gamma: g.gamma, theta: g.theta, vega: g.vega,
         dailyTheta: g.theta * 100 * l.contracts,
         weeklyTheta: g.theta * 100 * l.contracts * 5,
-        breakeven: l.strike + l.avgCost,
+        breakeven: Math.round((l.strike + l.avgCost) * 100) / 100,
         breakevenGapPct: ((l.strike + l.avgCost - spot) / spot) * 100,
         intrinsic: Math.max(0, spot - l.strike),
         timeValue: Math.max(0, g.price - Math.max(0, spot - l.strike)),
