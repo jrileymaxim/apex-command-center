@@ -1,3 +1,41 @@
+
+function BootScreen({phase,flash}) {
+  var lines=["▶ INITIALIZING NEXUS PROTOCOL","▶ CONNECTING TO MARKETS","▶ LOADING 12 POSITIONS","▶ MARCUS AI ONLINE","▶ SYSTEM READY"];
+  var shown=phase>=3?Math.min(phase-2,5):0;
+  return (
+    <div style={{position:"fixed",top:0,left:0,right:0,bottom:0,background:"#000c1a",zIndex:9999,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",fontFamily:"Courier New,monospace",opacity:phase>=5?0:1,transition:phase>=5?"opacity 0.4s":"none",pointerEvents:phase>=5?"none":"all"}}>
+      <style>{"        @keyframes apexScan{0%{top:-4px}100%{top:110vh}}        @keyframes apexGlitch{0%,85%,100%{transform:translate(0,0)}86%{transform:translate(-3px,1px)}88%{transform:translate(3px,-1px)}90%{transform:translate(-1px,0)}}          @keyframes apexPulse{0%,100%{opacity:1}50%{opacity:0.6}}        @keyframes apexFadeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}        @keyframes apexBar{from{width:0}to{width:100%}}      "}</style>
+      {phase>=1&&<div style={{position:"absolute",left:0,right:0,height:"2px",background:"rgba(0,180,255,0.7)",top:"0",animation:"apexScan 0.5s linear forwards",boxShadow:"0 0 20px 4px rgba(0,170,255,0.5)"}}/>}
+      <div style={{textAlign:"center",marginBottom:"32px",animation:phase>=5?"apexGlitch 0.3s":"none"}}>
+        {phase>=2&&<div style={{color:"#00aaff",fontSize:"52px",fontFamily:"Orbitron,monospace",fontWeight:"bold",letterSpacing:"10px",animation:"apexFadeIn 0.3s ease-out",textShadow:"0 0 40px rgba(0,170,255,0.6),0 0 80px rgba(0,100,255,0.3)"}}>APEX</div>}
+        {phase>=2&&<div style={{color:"#336688",fontSize:"12px",letterSpacing:"7px",marginTop:"4px",animation:"apexFadeIn 0.3s ease-out 0.1s both"}}>COMMAND CENTER</div>}
+        {phase>=2&&<div style={{width:"220px",height:"1px",background:"linear-gradient(90deg,transparent,rgba(0,170,255,0.6),transparent)",margin:"14px auto",animation:"apexFadeIn 0.3s ease-out 0.2s both"}}/>}
+      </div>
+      {phase>=3&&<div style={{textAlign:"left",width:"300px",marginBottom:"16px"}}>
+        {lines.slice(0,shown).map(function(l,i){return(
+          <div key={i} style={{color:i===4?"#00ff88":"#336688",fontSize:"11px",letterSpacing:"1px",padding:"3px 0",animation:"apexFadeIn 0.2s ease-out",fontFamily:"Courier New,monospace",fontWeight:i===4?700:400}}>{l}</div>
+        );})}
+      </div>}
+      {phase>=4&&<div style={{width:"300px"}}>
+        <div style={{height:"2px",background:"rgba(0,150,255,0.15)",position:"relative",overflow:"hidden"}}>
+          <div style={{position:"absolute",top:0,left:0,height:"100%",background:"linear-gradient(90deg,#004488,#00aaff)",boxShadow:"0 0 12px rgba(0,170,255,0.8)",animation:"apexBar 0.5s ease-out forwards"}}/>
+        </div>
+        <div style={{color:"#004488",fontSize:"8px",letterSpacing:"2px",marginTop:"4px",textAlign:"right",fontFamily:"Orbitron,monospace"}}>NEXUS v2.0</div>
+      </div>}
+    </div>
+  );
+}
+
+function BriefFlash({active}) {
+  if(!active) return null;
+  return(
+    <div style={{position:"fixed",top:0,left:0,right:0,bottom:0,zIndex:8888,background:"#000c1a",pointerEvents:"none",animation:"apexFadeOut 0.8s ease-out forwards"}}>
+      <style>{"        @keyframes apexFadeOut{0%{opacity:1}60%{opacity:0.3}100%{opacity:0}}        @keyframes apexScan2{0%{top:-4px}100%{top:110vh}}      "}</style>
+      <div style={{position:"absolute",left:0,right:0,height:"1px",background:"rgba(0,180,255,0.5)",top:"0",animation:"apexScan2 0.4s linear forwards",boxShadow:"0 0 12px 2px rgba(0,170,255,0.4)"}}/>
+    </div>
+  );
+}
+
 import { useState, useEffect, useRef } from "react";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from "recharts";
 
@@ -301,6 +339,9 @@ const CSS = `
 // ── MAIN APP ───────────────────────────────────────────────────────────────────
 export default function App() {
   const [tab,setTab]       = useState("briefing");
+  const [booting,setBooting] = useState(true);
+  const [bootPhase,setBootPhase] = useState(0);
+  const [briefFlash,setBriefFlash] = useState(false);
   var alertOn=false,setAlert=function(){};
 
   // ── HEY MARCUS VOICE SYSTEM ─────────────────────────────
@@ -445,6 +486,25 @@ export default function App() {
     rec.start();
   }
 
+  useEffect(function(){
+    var t1=setTimeout(function(){setBootPhase(1);},120);
+    var t2=setTimeout(function(){setBootPhase(2);},420);
+    var t3=setTimeout(function(){setBootPhase(3);},720);
+    var t4=setTimeout(function(){setBootPhase(4);},1100);
+    var t5=setTimeout(function(){setBootPhase(5);},1500);
+    var t6=setTimeout(function(){setBooting(false);setBootPhase(0);},1900);
+    return function(){[t1,t2,t3,t4,t5,t6].forEach(clearTimeout);};
+  },[]);
+  useEffect(function(){
+    // Boot sequence: phase 0→5 over 2s
+    var t1=setTimeout(function(){setBootPhase(1);},100);
+    var t2=setTimeout(function(){setBootPhase(2);},400);
+    var t3=setTimeout(function(){setBootPhase(3);},700);
+    var t4=setTimeout(function(){setBootPhase(4);},1100);
+    var t5=setTimeout(function(){setBootPhase(5);},1500);
+    var t6=setTimeout(function(){setBooting(false);setBootPhase(0);},1900);
+    return function(){clearTimeout(t1);clearTimeout(t2);clearTimeout(t3);clearTimeout(t4);clearTimeout(t5);clearTimeout(t6);};
+  },[]);
   useEffect(function(){
     if(voiceOn){
       setWakeState("listening");
@@ -607,7 +667,9 @@ export default function App() {
 
   return (
     <div style={{height:"100vh",overflow:"hidden",background:BG,color:"#005c7a",fontFamily:"'Share Tech Mono',monospace",display:"flex",flexDirection:"column",position:"relative"}} className={alertOn?"alertMode":""}>
-
+    {booting&&<BootScreen phase={bootPhase}/>}
+    {briefFlash&&<BriefFlash active={briefFlash}/>}
+    
       {conf.map(function(c){return <div key={c.id} className="cfp" style={{left:c.l+"%",top:"-12px",background:c.c,animationDelay:c.dl+"s"}}/> ;})}
 
       <div style={{position:"fixed",left:0,right:0,height:"3px",pointerEvents:"none",zIndex:200,background:"linear-gradient(transparent,rgba(240,163,10,.05),transparent)",animation:"scan 10s linear infinite"}}/>
@@ -638,7 +700,7 @@ export default function App() {
       {/* TABS */}
       <div style={{position:"relative",zIndex:10,flexShrink:0,display:"flex",background:"#040410",borderBottom:"1px solid #14100a"}}>
         {TABS.map(function(t){return (
-          <button key={t.id} className={"tab"+(tab===t.id?" on":"")} onClick={function(){setTab(t.id);setBdg(function(b){var nb=Object.assign({},b);nb[t.id]=false;return nb;});}}>
+          <button key={t.id} className={"tab"+(tab===t.id?" on":"")} onClick={function(){if(t.id==="briefing"&&tab!=="briefing"){setBriefFlash(true);setTimeout(function(){setBriefFlash(false);},800);}setTab(t.id);setBdg(function(b){var nb=Object.assign({},b);nb[t.id]=false;return nb;});}}>
             {bdg[t.id]&&<div className="bdg"/>}
             <span className="ti">{t.icon}</span>
             <span className="tl">{t.l}</span>
