@@ -677,100 +677,117 @@ export default function App() {
 
 // ── BRIEFING TAB ───────────────────────────────────────────────────────────────
 function TabBriefing({alf,onAlf,wx,city,setCity,onWx,fg,enriched,totP,eod,onEod}) {
-  var isMonday = new Date().getDay()===1;
-  var report = weeklyReport(enriched||[], totP||0, fg);
-  function wIcon(c) {
-    var cl=(c||"").toLowerCase();
-    if(cl.includes("thunder"))return"⛈";
-    if(cl.includes("rain")||cl.includes("shower"))return"🌧";
-    if(cl.includes("snow"))return"❄";
-    if(cl.includes("fog"))return"🌫";
-    if(cl.includes("cloud")||cl.includes("overcast"))return"☁";
-    if(cl.includes("clear")||cl.includes("sun")||cl.includes("sky"))return"☀";
-    return"◈";
-  }
+  var sounSpark=[
+    {i:0,v:7.1},{i:1,v:6.9},{i:2,v:7.2},{i:3,v:7.0},{i:4,v:7.3},{i:5,v:7.2},
+    {i:6,v:7.5},{i:7,v:7.4},{i:8,v:7.7},{i:9,v:7.6},{i:10,v:7.9},{i:11,v:7.7},
+    {i:12,v:7.8},{i:13,v:8.0},{i:14,v:7.9},{i:15,v:8.1},{i:16,v:8.0},{i:17,v:8.2},
+    {i:18,v:8.1},{i:19,v:8.06}
+  ];
+  var pos=enriched&&enriched.length>0?enriched:POSITIONS.map(function(p){return Object.assign({},p,{gainP:null,price:null,mkt:null,cost:p.sh*p.avg});});
+  var totCost=pos.reduce(function(a,p){return a+(p.cost||p.sh*p.avg||0);},0);
+  var totMkt=pos.reduce(function(a,p){return a+(p.mkt||0);},0);
+  var totGain=totMkt-totCost;
+  var totRet=totCost>0?totGain/totCost*100:0;
+  var hasLive=(enriched&&enriched.length>0&&enriched.some(function(p){return p.price;}));
+  var sorted=pos.slice().sort(function(a,b){return (b.gainP||0)-(a.gainP||0);});
+  var maxAbs=Math.max.apply(null,sorted.map(function(p){return Math.abs(p.gainP||0);}));
+  if(!maxAbs||maxAbs===0) maxAbs=30;
+  var briefText=alf||'"The afternoon demands focus. Today is Saturday, April 18, 2026. Eleven positions, two SOUN LEAPS, four MLB futures settling October 31st — all require your attention. Markets are indifferent to emotion. Your edge is preparation."';
+  var panelSt={
+    background:"rgba(0,140,255,0.09)",
+    backgroundImage:"linear-gradient(rgba(0,150,255,0.07) 1px,transparent 1px),linear-gradient(90deg,rgba(0,150,255,0.07) 1px,transparent 1px)",
+    backgroundSize:"22px 22px",
+    border:"1px solid rgba(0,150,255,0.2)",
+    borderTop:"2px solid rgba(0,180,255,0.65)",
+    borderRadius:"0",
+    padding:"14px 16px",
+    marginBottom:"0",
+    boxShadow:"0 0 24px rgba(0,140,255,0.1)"
+  };
+  var statColors=[CA,"#40ccff",hasLive&&totGain>=0?CG:CR,hasLive&&totRet>=0?CG:CR];
+  var statLabels=["TOTAL COST","MKT VALUE","TOTAL GAIN","RETURN"];
+  var statVals=[
+    "$"+totCost.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}),
+    hasLive?"$"+totMkt.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):"—",
+    hasLive?(totGain>=0?"+":"")+totGain.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):"—",
+    hasLive?(totRet>=0?"+":"")+totRet.toFixed(2)+"%":"—"
+  ];
   return (
-    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
-      <Panel label={"◈ MARCUS — MORNING BRIEFING"} right={<button className="btn bsm" onClick={onAlf}>↻</button>}>
-        {alf.s==="done"&&(
-          <div className="fi">
-            <p style={{fontSize:"15px",lineHeight:1.9,color:CB,fontStyle:"italic",marginBottom:"12px"}}>"{alf.text}"</p>
-            <div style={{fontSize:"15px",letterSpacing:"2px",color:CD}}>— MARCUS ▪ APEX</div>
-          </div>
-        )}
-      </Panel>
-      <Panel label={"EOD BRIEFING"} right={<button className="btn bsm" onClick={onEod}>GENERATE</button>}>
-        {!eod&&<div style={{fontSize:"19px",color:CD}}>Refresh Portfolio first, then hit GENERATE.</div>}
-        {eod&&(
-          <div className="fi">
-            {eod.split("\n").map(function(line,li){
-              if(li===0) return <div key={li} style={{fontFamily:"Orbitron",fontSize:"15px",color:CA,marginBottom:"8px"}}>{line}</div>;
-              if(line==="") return <div key={li} style={{height:"4px"}}></div>;
-              return <div key={li} style={{fontSize:"17px",color:CB,lineHeight:1.8}}>{line}</div>;
-            })}
-            <div style={{marginTop:"8px",fontSize:"15px",color:CD}}>— MARCUS</div>
-          </div>
-        )}
-      </Panel>
-
-      <Panel label={"◈ MARKET SENTIMENT"}>
-        {fg.s==="done"&&(
-          <div className="fi" style={{display:"flex",flexDirection:"column",alignItems:"center",gap:"8px"}}>
-            <Gauge score={fg.score} label={fg.label}/>
-            <div style={{fontSize:"15px",letterSpacing:"2px",color:CD,textAlign:"center"}}>AVG DAY CHANGE: {fg.avg>0?"+":""}{fg.avg}%</div>
-          </div>
-        )}
-        {fg.s!=="done"&&<div style={{fontSize:"19px",color:CD}}>Loads with portfolio data...</div>}
-      </Panel>
-
-      <Panel label={"◈ ATMOSPHERIC CONDITIONS"}>
-        <div style={{display:"flex",gap:"6px",marginBottom:"10px"}}>
-          <input className="inp" value={city} onChange={function(e){setCity(e.target.value);}} onKeyDown={function(e){if(e.key==="Enter")onWx();}} placeholder="TARGET CITY..."/>
-          <button className="btn" onClick={onWx} style={{padding:"6px 10px"}}>SCAN</button>
-        </div>
-        {wx.s==="idle"&&<div style={{fontSize:"19px",color:CD}}>▸ Enter city to scan conditions</div>}
-        {wx.s==="loading"&&<Spinner label="SCANNING ATMOSPHERE"/>}
-        {wx.s==="err"&&<ErrMsg text={wx.err||"SENSORS OFFLINE"}/>}
-        {wx.s==="done"&&wx.data&&(
-          <div className="fi">
-            <div style={{fontSize:"15px",color:CD,marginBottom:"8px",letterSpacing:"1px"}}>LOC: {wx.data.city&&wx.data.city.toUpperCase()}</div>
-            <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"10px"}}>
-              <span style={{fontSize:"34px"}}>{wIcon(wx.data.cond)}</span>
-              <div>
-                <div style={{fontFamily:"Orbitron",fontSize:"26px",fontWeight:900,color:CA}}>{wx.data.temp}</div>
-                <div style={{fontSize:"17px",color:CB,marginTop:"2px"}}>{wx.data.cond}</div>
-              </div>
-            </div>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"4px"}}>
-              {[["FEELS",wx.data.feels],["HUMID",wx.data.humidity],["WIND",wx.data.wind],["H/L",wx.data.high+"/"+wx.data.low]].map(function(r){return (
-                <div key={r[0]} style={{background:BG,padding:"5px 8px",border:"1px solid #141020"}}>
-                  <div style={{fontSize:"15px",color:CD}}>{r[0]}</div>
-                  <div style={{fontSize:"15px",color:CB,marginTop:"1px"}}>{r[1]}</div>
-                </div>
-              );})}
-            </div>
-          </div>
-        )}
-      </Panel>
-
-      <Panel label={isMonday?"◈ MARCUS — WEEKLY REPORT":"◈ MARCUS — PORTFOLIO SNAPSHOT"}>
-        <div style={{fontSize:"17px",color:CB,lineHeight:1.8,fontStyle:"italic",marginBottom:"8px"}}>"{report}"</div>
-        <div style={{fontSize:"15px",color:CD,letterSpacing:"2px"}}>— MARCUS {isMonday?"▪ MONDAY REVIEW":""}</div>
-      </Panel>
-
-      <Panel label={"◈ SYSTEM STATUS"}>
-        {[["MARCUS","ONLINE",CG],["PORTFOLIO","LIVE",CG],["WEATHER","LIVE",CG],["INTEL","LIVE",CG],["SOUN OPS","LIVE",CG],["PARLAYS","LIVE",CG],["EARNINGS","LIVE",CG],["BENCHMARKS","LIVE",CG],["JOURNAL","LIVE",CG],["PWA","READY",CG]].map(function(r){return (
-          <div key={r[0]} style={{display:"flex",justifyContent:"space-between",padding:"5px 0",borderBottom:"1px solid #0c0a14"}}>
-            <span style={{fontSize:"19px",letterSpacing:"1px"}}>{r[0]}</span>
-            <span style={{fontFamily:"Orbitron",fontSize:"15px",color:r[2],padding:"2px 6px",background:r[2]+"18",border:"1px solid "+r[2]+"33"}}>{r[1]}</span>
+    <div style={{padding:"8px",display:"flex",flexDirection:"column",gap:"8px",height:"calc(100vh - 82px)",overflow:"hidden"}}>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"8px",flexShrink:0}}>
+        {statLabels.map(function(label,i){return (
+          <div key={i} style={Object.assign({},panelSt,{padding:"10px 14px",borderTop:"2px solid "+statColors[i]+"99"})}>
+            <div style={{color:CD,fontFamily:"Orbitron",fontSize:"8px",letterSpacing:"2px",marginBottom:"4px"}}>{label}</div>
+            <div style={{color:statColors[i],fontFamily:"Orbitron",fontSize:"20px",fontWeight:"bold",lineHeight:1}}>{statVals[i]}</div>
           </div>
         );})}
-      </Panel>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px",flex:1,minHeight:0,overflow:"hidden"}}>
+        <div style={{display:"flex",flexDirection:"column",gap:"8px",overflow:"hidden"}}>
+          <div style={Object.assign({},panelSt,{flex:"1 1 auto",overflow:"hidden",display:"flex",flexDirection:"column"})}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"12px"}}>
+              <span style={{color:CA,fontFamily:"Orbitron",fontSize:"10px",letterSpacing:"2px",fontWeight:"bold"}}>◈ MARCUS — MORNING BRIEFING</span>
+              <button onClick={onAlf} className="btn bsm" style={{padding:"3px 10px",fontSize:"9px"}}>↺ REFRESH</button>
+            </div>
+            <div style={{color:CC,fontFamily:"'Courier New',monospace",fontSize:"13px",fontStyle:"italic",lineHeight:"1.75",flex:1}}>{briefText}</div>
+            <div style={{color:CD,fontFamily:"Courier New",fontSize:"9px",marginTop:"10px",borderTop:"1px solid rgba(0,150,255,0.1)",paddingTop:"8px"}}>— MARCUS ■ APEX</div>
+          </div>
+          <div style={Object.assign({},panelSt,{flexShrink:0})}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"8px"}}>
+              <span style={{color:CA,fontFamily:"Orbitron",fontSize:"10px",letterSpacing:"2px",fontWeight:"bold"}}>◈ SOUN LIVE FEED</span>
+              <span style={{color:CG,fontFamily:"Orbitron",fontSize:"11px",fontWeight:"bold"}}>$8.06 <span style={{color:CD,fontSize:"9px"}}>+4.9%</span></span>
+            </div>
+            <div style={{color:CD,fontFamily:"Courier New",fontSize:"9px",marginBottom:"8px",letterSpacing:"1px"}}>$10C 1/15/27 · BE: $11.24 &nbsp;·&nbsp; $10C 1/21/28 · BE: $12.38</div>
+            <ResponsiveContainer width="100%" height={100}>
+              <AreaChart data={sounSpark} margin={{top:2,right:2,left:0,bottom:0}}>
+                <defs>
+                  <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#00aaff" stopOpacity={0.25}/>
+                    <stop offset="95%" stopColor="#00aaff" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <XAxis dataKey="i" hide={true}/>
+                <YAxis hide={true} domain={[6.7,8.4]}/>
+                <Tooltip contentStyle={{background:"#000e20",border:"1px solid rgba(0,160,255,0.3)",color:"#80ccff",fontFamily:"Courier New",fontSize:"10px"}} formatter={function(v){return ["$"+v.toFixed(2),"SOUN"];}} labelFormatter={function(){return "";}}/>
+                <Area type="monotone" dataKey="v" stroke="#00aaff" strokeWidth={2} fill="url(#sg)"/>
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+        <div style={Object.assign({},panelSt,{display:"flex",flexDirection:"column",overflow:"hidden"})}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"12px",flexShrink:0}}>
+            <span style={{color:CA,fontFamily:"Orbitron",fontSize:"10px",letterSpacing:"2px",fontWeight:"bold"}}>◈ POSITIONS — {pos.length} HOLDINGS ■ {hasLive?"LIVE":"CACHED"}</span>
+            <span style={{color:hasLive?CG:CD,fontFamily:"Orbitron",fontSize:"8px"}}>{hasLive?"● LIVE":"● LOAD PORTFOLIO"}</span>
+          </div>
+          <div style={{overflowY:"auto",flex:1}}>
+            {sorted.map(function(p){
+              var pct=p.gainP||0;
+              var barW=maxAbs>0?Math.abs(pct)/maxAbs*100:0;
+              var isGain=pct>=0;
+              var ticker=p.t||p.ticker||"?";
+              return (
+                <div key={ticker} style={{display:"flex",alignItems:"center",gap:"8px",padding:"7px 0",borderBottom:"1px solid rgba(0,150,255,0.08)"}}>
+                  <div style={{width:"46px",color:CA,fontFamily:"Orbitron",fontSize:"11px",fontWeight:"bold",flexShrink:0}}>{ticker}</div>
+                  <div style={{width:"42px",color:CD,fontFamily:"Courier New",fontSize:"9px",flexShrink:0}}>{p.sh}sh</div>
+                  <div style={{flex:1,height:"3px",background:"rgba(0,150,255,0.1)",position:"relative",borderRadius:"0"}}>
+                    <div style={{position:"absolute",top:0,left:0,height:"3px",width:barW+"%",background:isGain?CG:CR,opacity:0.8}}/>
+                  </div>
+                  <div style={{width:"54px",color:isGain?CG:CR,fontFamily:"Orbitron",fontSize:"10px",textAlign:"right",flexShrink:0,fontWeight:"bold"}}>
+                    {hasLive?(isGain?"+":"")+pct.toFixed(1)+"%":"—"}
+                  </div>
+                  <div style={{width:"54px",color:CC,fontFamily:"Courier New",fontSize:"9px",textAlign:"right",flexShrink:0}}>
+                    {p.price?"$"+p.price.toFixed(2):"$"+(p.avg||0).toFixed(2)}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
 
-// ── PORTFOLIO TAB ──────────────────────────────────────────────────────────────
 function TabPortfolio({enriched,totCost,totMkt,totGain,totP,leaps,status,live,onRefresh,bench}) {
   var up=totGain>=0;
   var [popup,setPopup]=useState(null);
