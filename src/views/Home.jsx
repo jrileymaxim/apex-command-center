@@ -63,7 +63,7 @@ function DebatePanel({ ticker }) {
   }, [ticker]);
   if (loading) return (
     <div style={{ padding: '12px 16px', background: 'rgba(0,0,0,0.3)', fontSize: 11, color: Y, letterSpacing: 1 }}>
-      RESEARCHING {ticker} — SCANNING WEB FOR REAL DATA...
+      RESEARCHING {ticker} â SCANNING WEB FOR REAL DATA...
     </div>
   );
   if (!data) return null;
@@ -92,7 +92,7 @@ function TopPickCard() {
   }, []);
   if (loading) return (
     <div style={{ background: 'rgba(255,215,0,0.04)', border: '1px solid rgba(255,215,0,0.2)', borderRadius: 8, padding: '12px 16px', marginBottom: 12 }}>
-      <div style={{ fontSize: 9, color: Y, letterSpacing: 2, marginBottom: 6 }}>AI TOP PICK — SCANNING MARKET...</div>
+      <div style={{ fontSize: 9, color: Y, letterSpacing: 2, marginBottom: 6 }}>AI TOP PICK â SCANNING MARKET...</div>
       <div style={{ height: 3, background: 'rgba(255,215,0,0.15)', borderRadius: 2 }} />
     </div>
   );
@@ -101,7 +101,7 @@ function TopPickCard() {
     <div style={{ background: 'rgba(255,215,0,0.04)', border: '1px solid rgba(255,215,0,0.3)', borderLeft: '4px solid ' + Y, borderRadius: 8, padding: '14px 16px', marginBottom: 12 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
         <div>
-          <div style={{ fontSize: 9, color: Y, letterSpacing: 3, marginBottom: 4 }}>AI TOP PICK — HIDDEN GEM</div>
+          <div style={{ fontSize: 9, color: Y, letterSpacing: 3, marginBottom: 4 }}>AI TOP PICK â HIDDEN GEM</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <span style={{ fontSize: 20, fontWeight: 700, color: '#fff', fontFamily: 'JetBrains Mono,monospace' }}>{pick.ticker}</span>
             <span style={{ fontSize: 12, color: DIM }}>{pick.name}</span>
@@ -128,7 +128,7 @@ function PosRow({ pos, quote, rhPnl, analyst, insider }) {
   const dayPct = quote?.chgPct ?? null;
   const gainAmt = rhPnl ? rhPnl.gainAmt : (price && pos.avgCost ? (price - pos.avgCost) * pos.shares : null);
   const gainPct = rhPnl ? rhPnl.gainPct : (pos.avgCost && gainAmt !== null ? gainAmt / (pos.avgCost * pos.shares) * 100 : null);
-  const theme = THEME_META[pos.themeIds?.[0]] || { label: '—', color: '#888' };
+  const theme = THEME_META[pos.themeIds?.[0]] || { label: 'â', color: '#888' };
   const upside = analyst?.mean && price ? ((analyst.mean - price) / price * 100) : null;
   const signal = getSignal(dayPct, analyst ? { ...analyst, price } : null, insider);
   const isAlert = dayPct !== null && Math.abs(dayPct) >= 3;
@@ -149,21 +149,21 @@ function PosRow({ pos, quote, rhPnl, analyst, insider }) {
           <span style={{ fontSize: 9, padding: '2px 5px', background: theme.color + '22', color: theme.color, borderRadius: 3 }}>{theme.label}</span>
           <span style={{ fontSize: 10, color: DIM }}>{pos.shares}sh</span>
         </div>
-        <span style={{ fontSize: 11, color: DIM, textAlign: 'right' }}>{price ? '$' + price.toFixed(2) : '—'}</span>
+        <span style={{ fontSize: 11, color: DIM, textAlign: 'right' }}>{price ? '$' + price.toFixed(2) : 'â'}</span>
         <span style={{ fontSize: 11, color: col(dayPct || 0), textAlign: 'right', fontFamily: 'JetBrains Mono,monospace' }}>
-          {dayPct !== null ? (sgn(dayPct) + dayPct.toFixed(2) + '%') : '—'}
+          {dayPct !== null ? (sgn(dayPct) + dayPct.toFixed(2) + '%') : 'â'}
         </span>
         <span style={{ fontSize: 11, color: gainAmt !== null ? col(gainAmt) : DIM, textAlign: 'right', fontFamily: 'JetBrains Mono,monospace' }}>
-          {gainAmt !== null ? (sgn(gainAmt) + '$' + Math.abs(gainAmt).toFixed(2)) : '—'}
+          {gainAmt !== null ? (sgn(gainAmt) + '$' + Math.abs(gainAmt).toFixed(2)) : 'â'}
         </span>
         <div style={{ textAlign: 'right' }}>
           <div style={{ fontSize: 11, color: gainPct !== null ? col(gainPct) : DIM, fontFamily: 'JetBrains Mono,monospace' }}>
-            {gainPct !== null ? (sgn(gainPct) + gainPct.toFixed(2) + '%') : '—'}
+            {gainPct !== null ? (sgn(gainPct) + gainPct.toFixed(2) + '%') : 'â'}
           </div>
           {upside !== null && <div style={{ fontSize: 9, color: upside > 0 ? G : R }}>{sgn(upside) + upside.toFixed(0)}% to tgt</div>}
         </div>
         <span style={{ fontSize: 9, padding: '2px 6px', background: signal.color + '18', color: signal.color, border: '1px solid ' + signal.color + '44', borderRadius: 3, textAlign: 'center', fontWeight: 700 }}>{signal.label}</span>
-        <span style={{ fontSize: 10, color: DIM, textAlign: 'center' }}>{expanded ? '▲' : '▼'}</span>
+        <span style={{ fontSize: 10, color: DIM, textAlign: 'center' }}>{expanded ? 'â²' : 'â¼'}</span>
       </div>
       {expanded && (
         <div style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
@@ -196,14 +196,14 @@ function LeapsMini({ onData }) {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
         <div>
           <div style={{ fontSize: 10, color: '#B84AFF', letterSpacing: 2, marginBottom: 2 }}>SOUN LEAPS</div>
-          <div style={{ fontSize: 11, color: DIM }}>2 contracts · $10C · SOUN @ ${data.spot.toFixed(2)}</div>
+          <div style={{ fontSize: 11, color: DIM }}>2 contracts Â· $10C Â· SOUN @ ${data.spot.toFixed(2)}</div>
         </div>
         <div style={{ textAlign: 'right' }}>
           <div style={{ fontSize: 22, fontWeight: 700, color: combined.totalPnl >= 0 ? G : R, fontFamily: 'JetBrains Mono,monospace' }}>
             {combined.totalPnl >= 0 ? '+' : ''}{Math.abs(combined.totalPnl).toFixed(0)}
           </div>
           <div style={{ fontSize: 11, color: combined.totalPnl >= 0 ? G : R }}>
-            {((combined.totalPnl / combined.totalCost) * 100).toFixed(1)}% · cost ${combined.totalCost.toFixed(0)}
+            {((combined.totalPnl / combined.totalCost) * 100).toFixed(1)}% Â· cost ${combined.totalCost.toFixed(0)}
           </div>
         </div>
       </div>
@@ -221,7 +221,7 @@ function LeapsMini({ onData }) {
               <div style={{ height: 3, background: 'rgba(255,255,255,0.08)', borderRadius: 2 }}>
                 <div style={{ height: '100%', width: bePct + '%', background: '#B84AFF', borderRadius: 2 }} />
               </div>
-              <div style={{ fontSize: 9, color: DIM, marginTop: 2, textAlign: 'right' }}>BE ${l.breakeven} · {bePct.toFixed(0)}%</div>
+              <div style={{ fontSize: 9, color: DIM, marginTop: 2, textAlign: 'right' }}>BE ${l.breakeven} Â· {bePct.toFixed(0)}%</div>
             </div>
           );
         })}
@@ -372,7 +372,7 @@ export default function Home() {
           {alerts > 0 && <span style={{ fontSize: 10, color: Y, padding: '2px 8px', border: '1px solid ' + Y + '44', borderRadius: 4 }}>&#9889; {alerts} MOVERS</span>}
           {insiderAlerts > 0 && <span style={{ fontSize: 10, color: '#B84AFF', padding: '2px 8px', border: '1px solid #B84AFF44', borderRadius: 4 }}>SEC {insiderAlerts} FILINGS</span>}
           <button onClick={() => setShowSync(true)} style={{ fontSize: 10, padding: '4px 12px', background: sync ? 'rgba(0,255,136,0.08)' : 'rgba(184,74,255,0.12)', border: '1px solid ' + (sync ? '#2AFF8F44' : '#B84AFF66'), borderRadius: 5, color: sync ? G : '#B84AFF', cursor: 'pointer', letterSpacing: 1 }}>
-            {sync ? ('● SYNCED · ' + syncAge) : '↻ SYNC RH'}
+            {sync ? ('â SYNCED Â· ' + syncAge) : 'â» SYNC RH'}
           </button>
           <span style={{ fontSize: 14, fontWeight: 700, color: '#fff', fontFamily: 'JetBrains Mono,monospace' }}>{timeStr}</span>
         </div>
@@ -393,7 +393,7 @@ export default function Home() {
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 10, margin: '14px 0' }}>
           <StatCard label="PORTFOLIO VALUE" value={'$' + portfolioValue.toFixed(2)} sub={sync ? 'as of ' + syncAge : 'estimated'} />
-          <StatCard label="DAY P&amp;L" value={(dayPnl >= 0 ? '+' : '') + '$' + Math.abs(dayPnl).toFixed(2)} valueColor={col(dayPnl)} sub={loading ? 'loading...' : 'live · today only'} />
+          <StatCard label="DAY P&L" value={(dayPnl >= 0 ? '+' : '') + '$' + Math.abs(dayPnl).toFixed(2)} valueColor={col(dayPnl)} sub={loading ? 'loading...' : 'live Â· today only'} />
           <StatCard label="TOTAL RETURN" value={(totalReturn >= 0 ? '+' : '') + '$' + Math.abs(totalReturn).toFixed(2)} valueColor={col(totalReturn)} sub={sync ? 'realized + unrealized' : 'stocks + LEAPS est.'} />
           <StatCard label="RETURN %" value={returnPct !== null ? ((returnPct >= 0 ? '+' : '') + returnPct.toFixed(2) + '%') : 'SYNC FOR %'} valueColor={returnPct !== null ? col(returnPct) : '#B84AFF'} sub={marginUsed > 0 ? 'margin: $' + marginUsed.toFixed(0) : sync ? ('deposited $' + amountDeposited.toFixed(0)) : null} />
         </div>
@@ -403,7 +403,7 @@ export default function Home() {
 
         <div style={{ display: 'grid', gridTemplateColumns: '50px 1fr 60px 65px 75px 80px 90px 30px', gap: 6, padding: '6px 12px', marginBottom: 4 }}>
           {['TICKER', 'THEME', 'PRICE', 'DAY', 'P+L', 'RETURN', 'SIGNAL', ''].map(h => (
-            <span key={h} style={{ fontSize: 9, color: DIM, letterSpacing: 1 }}>{h === 'P+L' ? 'P&amp;L' : h}</span>
+            <span key={h} style={{ fontSize: 9, color: DIM, letterSpacing: 1 }}>{h === 'P+L' ? 'P&L' : h}</span>
           ))}
         </div>
 
@@ -413,7 +413,7 @@ export default function Home() {
               <div style={{ width: 6, height: 6, borderRadius: '50%', background: grp.meta.color }} />
               <span style={{ fontSize: 10, color: grp.meta.color, letterSpacing: 2 }}>{grp.meta.label.toUpperCase()}</span>
               <span style={{ fontSize: 9, color: DIM, marginLeft: 'auto' }}>
-                {grp.positions.length} positions · ${grp.positions.reduce((a, p) => { const px = quotes[p.ticker]?.price ?? p.avgCost; return a + px * p.shares; }, 0).toFixed(2)}
+                {grp.positions.length} positions Â· ${grp.positions.reduce((a, p) => { const px = quotes[p.ticker]?.price ?? p.avgCost; return a + px * p.shares; }, 0).toFixed(2)}
               </span>
             </div>
             <div style={{ border: '1px solid rgba(255,255,255,0.06)', borderTop: 'none', borderRadius: '0 0 6px 6px', overflow: 'hidden' }}>
@@ -444,7 +444,7 @@ export default function Home() {
                   return (
                     <div key={c.id || c.ticker + c.date} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderLeft: '3px solid ' + urgCol, borderRadius: 5, padding: '6px 10px', minWidth: 90 }}>
                       <div style={{ fontSize: 11, fontWeight: 700, color: '#fff' }}>{c.ticker}</div>
-                      <div style={{ fontSize: 9, color: urgCol, marginTop: 1 }}>{days}d · {c.date.slice(5)}</div>
+                      <div style={{ fontSize: 9, color: urgCol, marginTop: 1 }}>{days}d Â· {c.date.slice(5)}</div>
                       <div style={{ fontSize: 9, color: DIM, marginTop: 2 }}>{c.type}</div>
                     </div>
                   );
